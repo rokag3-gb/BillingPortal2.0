@@ -1,20 +1,20 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Mate365 Billing Portal Web App
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+## 개발환경 설정
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+Python 3.x 필요
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+```bash
+# Python virtualenv 가상환경 진입
+. venv/bin/activate
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+# 가상 환경에 의존성 받기
+pip install -r requirements.txt
+
+# 개발 테스트 서버 실행
+python manage.py runserver
+# 또는 python3 manage.py runserver
+
+# 가상환경 나오기
+deactivate
+```
