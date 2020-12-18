@@ -1,5 +1,5 @@
 {% extends 'portal/base.html' %}
-{% block content %}
+{% block body %}
 <div class="container-fluid">
   <form
     method="post"
@@ -23,7 +23,7 @@
     </div>
     {% endif %}
     {% endif %}
-    <h3 style="text-align: center;">Mate365 Billing Login</h3>
+    <h2 style="text-align: center;">Mate365 Billing Login</h2>
     {% csrf_token %}
     <div class="input-group mb-3">
       <span class="input-group-text" id="basic-addon1">@</span>
@@ -53,7 +53,7 @@
       로그인
     </button>
     <input type="hidden" name="next" value="{{ next }}" />
-    <button class="w-100 btn btn-lg btn-link">암호 복구</button>
+    <button class="w-100 btn btn-lg btn-link">비밀번호 복구</button>
   </form>
 </div>
 {% endblock %}
