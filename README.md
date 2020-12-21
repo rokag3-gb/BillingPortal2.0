@@ -41,4 +41,14 @@ deactivate
         - `ODBC Driver 13 for SQL Server` - 기본값
         - `SQL Server Native Client 11.0`
         - `FreeTDS`
-        
+- SMTP 이메일 서버 인증 정보
+    - `EMAIL_HOST`: SMTP 호스트 주소
+    - `EMAIL_PORT`: SMTP 서버 포트(기본값: `587`)
+    - `EMAIL_HOST_USER`: SMTP 인증 사용자명
+    - `EMAIL_HOST_PASSWORD`: SMTP 인증 암호
+    - `EMAIL_USE_TLS`: 연결에 TLS(포트 `587`) 사용 여부 (기본값: `True`)
+    - `EMAIL_USE_SSL`: 연결에 TLS(포트 `465`) 사용 여부 (기본값: `False`)
+        - `EMAIL_USE_TLS`, `EMAIL_USE_SSL` 둘 중 하나만 `True` 여야 합니다.
+    - `EMAIL_TIMEOUT`: 시간 걸리는 작업 타임아웃 시간(초 단위) (기본값 `None`)
+    - `EMAIL_SSL_KEYFILE`: SSL 연결시 사용할 PEM 포맷 자격증명 파일(기본값: `None`)
+    - `EMAIL_SSL_CERTFILE`: SSL 연결시 사용할 PEM 포맷 키 파일(기본값: `None`)
