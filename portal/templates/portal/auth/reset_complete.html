@@ -1,0 +1,14 @@
+{% extends 'portal/base.html' %}
+{% block body %}
+<div class="container-fluid">
+  <form method="post" action="{% url 'password_reset_complete' %}" style="max-width: 500px; margin: 100px auto">
+    <h2 style="text-align: center;">Mate365 Billing </h2>
+    <p>비밀번호가 복구 되었습니다. 새 비밀번호로 로그인 하세요.</p>
+   
+    {% csrf_token %}
+    <a class="w-100 btn btn-lg btn-primary" type="submit" value="login">
+      로그인
+    </a>
+  </form>
+</div>
+{% endblock %}

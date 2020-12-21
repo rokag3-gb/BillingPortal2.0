@@ -46,6 +46,7 @@ deactivate
     - `EMAIL_PORT`: SMTP 서버 포트(기본값: `587`)
     - `EMAIL_HOST_USER`: SMTP 인증 사용자명
     - `EMAIL_HOST_PASSWORD`: SMTP 인증 암호
+    - `EMAIL_FROM`: 이메일 발신 주소
     - `EMAIL_USE_TLS`: 연결에 TLS(포트 `587`) 사용 여부 (기본값: `True`)
     - `EMAIL_USE_SSL`: 연결에 TLS(포트 `465`) 사용 여부 (기본값: `False`)
         - `EMAIL_USE_TLS`, `EMAIL_USE_SSL` 둘 중 하나만 `True` 여야 합니다.

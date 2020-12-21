@@ -3,7 +3,7 @@
 <div class="container-fluid">
   <form
     method="post"
-    action="{% url 'recover' %}"
+    action="{% url 'password_reset' %}"
     style="max-width: 500px; margin: 100px auto"
   >
     
@@ -27,7 +27,7 @@
         name="{{ form.email.html_name }}"
       />
     </div>
-    <button class="w-100 btn btn-lg btn-primary" type="submit" value="recover">
+    <button class="w-100 btn btn-lg btn-primary" type="submit" value="password_reset">
       비밀번호 복구
     </button>
     <a class="w-100 btn btn-lg btn-link" href="/auth/login">뒤로</a>
