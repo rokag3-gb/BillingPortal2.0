@@ -7,3 +7,7 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def index(request: HttpRequest) -> HttpResponse:
     return render(request, 'portal/index.html')
+
+@login_required
+def settings(request: HttpRequest) -> HttpResponse:
+    return render(request, 'portal/settings/index.html')

@@ -1,0 +1,13 @@
+{% extends 'portal/shell.html' %}
+
+{% block content %}
+<div class="container-xxl">
+    <div class="card" style="margin-top: 20px;">
+        <div class="card-body">
+            <h2>{{ user.get_full_name }}</h2>
+            <p><b>{{ user.get_username }}</b> {{ user.email }}</p>
+            <a type="button" class="btn btn-light" href="{% url 'password_change' %}">비밀번호 변경</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
