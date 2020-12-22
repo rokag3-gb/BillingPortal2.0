@@ -1,0 +1,13 @@
+{% extends 'portal/shell.html' %}
+
+{% block content %}
+<div class="container-xxl">
+    <div class="card" style="margin-top: 20px;">
+        <div class="card-body">
+            <h2>변경 완료</h2>
+            <p>새 비밀번호로 변경되었습니다.</p>
+            <a type="button" class="btn btn-light" href="{% url 'settings' %}">설정 화면으로 돌아가기</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
