@@ -37,6 +37,7 @@ deactivate
     - `DB_NAME`: 접속할 데이터베이스 이름
     - `DB_USER`: 인증에 사용할 로그인 사용자명
     - `DB_PASSWORD`: 인증에 사용할 로그인 암호
+    - `DB_PORT`: DB 접속 포트
     - `DB_DRIVER`: 사용할 데이터베이스 드라이버
         - `ODBC Driver 13 for SQL Server` - 기본값
         - `SQL Server Native Client 11.0`
