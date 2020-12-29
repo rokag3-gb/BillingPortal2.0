@@ -1,0 +1,13 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="{% static 'portal/css/bootstrap.min.css' %}">
+        <script src="{% static 'portal/js/jquery.min.js' %}"></script>
+        <script src="{% static 'portal/js/bootstrap.bundle.min.js' %}"></script>
+    </head>
+    <body>
+      {% block body %}
+      {% endblock %}
+    </body>
+</html>

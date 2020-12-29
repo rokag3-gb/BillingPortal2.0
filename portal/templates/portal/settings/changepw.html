@@ -1,0 +1,55 @@
+{% extends 'portal/shell.html' %}
+
+{% block content %}
+<div class="container-xxl">
+    <div class="card" style="margin-top: 20px;">
+        <div class="card-body">
+            <form method="post" style="max-width: 500px; margin: 100px auto">
+                <h2>비밀번호 변경</h2>
+                <p>기존 비밀번호와 새로 사용할 비밀번호를 입력하세요.</p>
+                {% csrf_token %}
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">**</span>
+                    <input type="{{ form.old_password.field.widget.input_type }}"
+                        value="{{ form.old_password.value|default_if_none:'' }}" class="form-control"
+                        placeholder="기존 비밀번호" aria-label="기존 비밀번호" aria-describedby="basic-addon1"
+                        name="{{ form.old_password.html_name }}" />
+                </div>
+                {% if form.old_password.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ form.old_password.errors }}
+                </div>
+                {% endif %}
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">**</span>
+                    <input type="{{ form.new_password1.field.widget.input_type }}"
+                        value="{{ form.new_password1.value|default_if_none:'' }}" class="form-control"
+                        placeholder="새 비밀번호" aria-label="새 비밀번호" aria-describedby="basic-addon1"
+                        name="{{ form.new_password1.html_name }}" />
+                </div>
+                {% if form.new_password1.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ form.new_password1.errors }}
+                </div>
+                {% endif %}
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">**</span>
+                    <input type="{{ form.new_password2.field.widget.input_type }}"
+                        value="{{ form.new_password2.value|default_if_none:'' }}" class="form-control"
+                        placeholder="비밀번호 확인" aria-label="비밀번호 확인" aria-describedby="basic-addon1"
+                        name="{{ form.new_password2.html_name }}" />
+                </div>
+                {% if form.new_password2.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ form.new_password2.errors }}
+                </div>
+                {% endif %}
+                <button class="w-100 btn btn-lg btn-primary" type="submit">
+                    비밀번호 변경
+                </button>
+                <a class="w-100 btn btn-lg btn-link" href="{% url 'settings' %}">취소</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
