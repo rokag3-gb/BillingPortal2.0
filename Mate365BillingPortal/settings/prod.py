@@ -4,7 +4,9 @@ import os
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [os.getenv('WEBSITE_HOSTNAME','')]
+
+SECRET_KEY = os.getenv('SECRET_KEY','')
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
