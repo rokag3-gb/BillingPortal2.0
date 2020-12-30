@@ -39,6 +39,7 @@ deactivate
     - `DB_PASSWORD`: 인증에 사용할 로그인 암호
     - `DB_PORT`: DB 접속 포트
     - `DB_DRIVER`: 사용할 데이터베이스 드라이버
+        - `ODBC Driver 17 for SQL Server` - App Service 리눅스 환경에서 사용
         - `ODBC Driver 13 for SQL Server` - 기본값
         - `SQL Server Native Client 11.0`
         - `FreeTDS`
@@ -54,3 +55,5 @@ deactivate
     - `EMAIL_TIMEOUT`: 시간 걸리는 작업 타임아웃 시간(초 단위) (기본값 `None`)
     - `EMAIL_SSL_KEYFILE`: SSL 연결시 사용할 PEM 포맷 자격증명 파일(기본값: `None`)
     - `EMAIL_SSL_CERTFILE`: SSL 연결시 사용할 PEM 포맷 키 파일(기본값: `None`)
+- 기타
+    - `SECRET_KEY`: 암호 해싱 등에 사용하는 임의 문자열(프로덕션 설정 사용시만 필수)
