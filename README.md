@@ -24,6 +24,17 @@ python manage.py runserver
 # 가상환경 나오기
 deactivate
 ```
+## 테스트 실행
+```bash
+# 전체 테스트 실행
+python manage.py test
+
+# Mate365BillingPortal.tests.EnvtoolsTests 테스트만 실행
+python manage.py test Mate365BillingPortal.tests.EnvtoolsTests
+
+# Mate365BillingPortal 디렉터리 아래 테스트만 실행
+python manage.py test Mate365BillingPortal/
+```
 
 ## 환경변수
 
