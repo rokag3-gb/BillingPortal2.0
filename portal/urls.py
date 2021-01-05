@@ -19,5 +19,8 @@ urlpatterns = [
     path('settings/changepw', auth_views.PasswordChangeView.as_view(
         template_name='portal/settings/changepw.html'), name='password_change'),
     path('settings/changepw/done', auth_views.PasswordChangeDoneView.as_view(
-        template_name='portal/settings/pwchanged.html'), name='password_change_done')
+        template_name='portal/settings/pwchanged.html'), name='password_change_done'),
+    path('dashboard', views.dashboard, name='dashboard'),
+    path('profile', views.profile, name='profile'),
+    path('messages', views.messages, name='messages'),
 ]

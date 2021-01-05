@@ -47,7 +47,15 @@
   </div>
 </nav>
 <main>
-  {% block content %}
-  {% endblock %}
+  <div style="display: flex; flex-direction: row; padding: 10px;">
+    <div>
+      {% include '_sidebar.html' %}
+    </div>
+    <div style="flex: 1;">
+      {% block content %}
+      {% endblock %}
+    </div>
+  </div>
+  </div>
 </main>
 {% endblock %}
