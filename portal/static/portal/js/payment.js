@@ -54,9 +54,23 @@
                                                                                  //조인코드(select)
                                                                                  //국민 앱카드 사용(select)                                                                                  
                                                                                                                  
-      /*--가상계좌--*/                        
+      /*--가상계좌--*/                   
+      var vacct_until = new Date();
+      vacct_until.setDate(vacct_until.getDate() + 7);   
+      var vmonth =  today.getMonth() + 1
+      if(parseInt(month) < 10)
+      {
+        vmonth = "0" + vmonth;
+      }
+
+      var vdate = today.getDate()
+      if(parseInt(date) < 10)
+      {
+        vdate = "0" + vdate;
+      } 
+      console.log(`${today.getFullYear()}${vmonth}${vdate}`)
       frm_pay.EP_vacct_bank.value     = "";                                      //가상계좌 사용가능한 은행 LIST 
-      frm_pay.EP_vacct_end_date.value = "20171231";                              //입금 만료 날짜
+      frm_pay.EP_vacct_end_date.value = `${today.getFullYear()}${vmonth}${vdate}`;    //입금 만료 날짜
       frm_pay.EP_vacct_end_time.value = "153025";                                //입금 만료 시간
       
       

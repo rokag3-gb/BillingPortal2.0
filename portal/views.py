@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpRequest
+from django.views.decorators.csrf import csrf_exempt  
 from django.contrib.auth.decorators import login_required
+
 
 sidebar_items = [
     {'name':'대시보드','path':"dashboard"},
@@ -33,3 +35,16 @@ def messages(request: HttpRequest) -> HttpResponse:
 @login_required
 def payment(request: HttpRequest) -> HttpResponse:
     return render(request, 'portal/payment.html', {'sidebar': 'payment', 'sidebar_items': sidebar_items})
+
+# TODO: iframe 이슈로 임시 예외 처리
+@login_required
+@csrf_exempt 
+def payrequest(request: HttpRequest) -> HttpResponse:
+    return render(request, 'portal/pay/request.html')
+
+# TODO: iframe 이슈로 임시 예외 처리
+# @login_required
+@csrf_exempt 
+def payresult(request: HttpRequest) -> HttpResponse:
+    print(request.method)
+    return render(request, 'portal/pay/result.html')
