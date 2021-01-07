@@ -11,7 +11,8 @@ sidebar_items = [
 # Create your views here.
 @login_required
 def index(request: HttpRequest) -> HttpResponse:
-    return render(request, 'portal/index.html')
+    # return render(request, 'portal/index.html')
+    return redirect('/')
 
 @login_required
 def settings(request: HttpRequest) -> HttpResponse:
