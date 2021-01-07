@@ -22,23 +22,23 @@
 
       /*--공통--*/        
       frm_pay.EP_mall_id.value        = "T5102001";                              //가맹점 ID
-      frm_pay.EP_mall_nm.value        = "이지페이8.0 모바일";                    //가맹점명
+      frm_pay.EP_mall_nm.value        = "클라우드메이트";                    //가맹점명
       frm_pay.EP_order_no.value       = "ORDER_" + year + month + date + time;   //가맹점 주문번호    
                                                                                  //결제수단(select)
       frm_pay.EP_currency.value       = "00";                                    //통화코드 : 00-원
-      frm_pay.EP_product_nm.value     = "테스트상품";                            //상품명
-      frm_pay.EP_product_amt.value    = "51004";                                 //상품금액
+      frm_pay.EP_product_nm.value     = "관리형 클라우드 서비스";                            //상품명
+      frm_pay.EP_product_amt.value    = "97845";                                 //상품금액
                                                                                  //가맹점 return_url(윈도우 타입 선택 시, 분기)
       frm_pay.EP_lang_flag.value      = "KOR"                                    //언어: KOR / ENG
-      frm_pay.EP_charset.value        = "EUC-KR"                                 //가맹점 Charset: EUC-KR(default) / UTF-8
-      frm_pay.EP_user_id.value        = "psj1988";                               //가맹점 고객 ID
+      frm_pay.EP_charset.value        = "UTF-8"                                 //가맹점 Charset: EUC-KR(default) / UTF-8
+      frm_pay.EP_user_id.value        = "sugarhill";                               //가맹점 고객 ID
       frm_pay.EP_memb_user_no.value   = "15123485756";                           //가맹점 고객 일련번호
-      frm_pay.EP_user_nm.value        = "홍길동";                                //가맹점 고객명
-      frm_pay.EP_user_mail.value      = "kildong@kicc.co.kr";                    //가맹점 고객 이메일
+      frm_pay.EP_user_nm.value        = "슈가힐";                                //가맹점 고객명
+      frm_pay.EP_user_mail.value      = "dev@cloudmt.co.kr";                    //가맹점 고객 이메일
       frm_pay.EP_user_phone1.value    = "0221471111";                            //가맹점 고객 번호1
       frm_pay.EP_user_phone2.value    = "01012345679";                           //가맹점 고객 번호2
-      frm_pay.EP_user_addr.value      = "서울시 금천구 가산동";                  //가맹점 고객 주소
-      frm_pay.EP_product_type.value   = "0";                                     //상품정보구분 : 0-실물, 1-서비스
+      frm_pay.EP_user_addr.value      = "서울시 구로구";                  //가맹점 고객 주소
+      frm_pay.EP_product_type.value   = "1";                                     //상품정보구분 : 0-실물, 1-서비스
       frm_pay.EP_product_expr.value   = "";                              //서비스기간 : YYYYMMDD
       frm_pay.EP_return_url.value     = "http://localhost:8000/payment/result";      // Return 받을 URL (HTTP부터 입력)
 
