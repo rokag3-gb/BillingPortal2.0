@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 
 sidebar_items = [
     {'name':'대시보드','path':"dashboard"},
-    # {'name':'프로필','path':"profile"},
+    {'name':'지불관리','path':"payment"},
     # {'name':'메시지','path':"messages"}
 ]
 
@@ -30,3 +30,6 @@ def profile(request: HttpRequest) -> HttpResponse:
 def messages(request: HttpRequest) -> HttpResponse:
     return render(request, 'portal/messages.html', {'sidebar': 'messages', 'sidebar_items': sidebar_items})
 
+@login_required
+def payment(request: HttpRequest) -> HttpResponse:
+    return render(request, 'portal/payment.html', {'sidebar': 'payment', 'sidebar_items': sidebar_items})
