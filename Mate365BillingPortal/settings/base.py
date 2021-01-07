@@ -120,3 +120,7 @@ DEFAULT_FROM_EMAIL = os.getenv("EMAIL_FROM")
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# TODO: iframe 이슈로 임시로 X-FRAME 예외 처리
+X_FRAME_OPTIONS = 'ALLOWALL'
+XS_SHARING_ALLOWED_METHODS = ['POST', 'GET', 'OPTIONS', 'PUT', 'DELETE']

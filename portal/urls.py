@@ -24,4 +24,6 @@ urlpatterns = [
     path('profile', views.profile, name='profile'),
     path('messages', views.messages, name='messages'),
     path('payment', views.payment, name='payment'),
+    path('payment/request', views.payrequest, name='payrequest'),
+    path('payment/result', views.payresult, name='payresult'),
 ]
