@@ -6,7 +6,7 @@
     <div class="summary">
 
         <!-- tit_h2 -->
-        <div class="table_row tit_h2">
+        <div class="table_row tit_h2"  style="margin: 10px;">
             <b>
                 <h2><i class="xi xi-chart-bar"></i> Summary</h2>
                 <span>모든 정보는 UTC 기준으로 제공됩니다.</span>
@@ -646,17 +646,11 @@
                 <!-- contBox -->
                 <div class="contBox">
                     <!-- tit_h3 -->
-                    <div class="table_row tit_h3">
-                        <b>
+                    <div class="table_row tit_h3" style="display: flex; flex-direction: row;">
+                        <b style="flex: 1">
                             <h3>월별 사용 금액</h3>
                         </b>
-                        <b class="right">
-                            <a href="#" class="btn_md btn_primary"
-                                onclick="clipperBase.exportCSV(this,&#39;monthly_usage_trend&#39;);"
-                                data-filenm="monthly_usage_trend">
-                                <i class="xi xi-download"></i> Download CSV
-                            </a>
-                        </b>
+                        <button type="button" class="btn btn-primary">Download CSV</button>
                     </div>
                     <!-- //tit_h3 -->
 
