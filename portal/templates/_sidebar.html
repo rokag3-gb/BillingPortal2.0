@@ -1,6 +1,6 @@
 <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
     {% for item in sidebar_items %}
-        <a class="nav-link {% if sidebar == item %} active {% endif %}" id="v-pills-home-tab"  href="{% url item %}" role="tab"
-        aria-controls="v-pills-home" aria-selected="true">{{ item }}</a>
+        <a class="nav-link {% if sidebar == item.path %} active {% endif %}" id="v-pills-home-tab"  href="{% url item.path %}" role="tab"
+        aria-controls="v-pills-home" aria-selected="true">{{ item.name }}</a>
     {% endfor %}
 </div>

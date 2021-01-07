@@ -2,7 +2,11 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest
 from django.contrib.auth.decorators import login_required
 
-sidebar_items = ["dashboard", "profile", "messages"]
+sidebar_items = [
+    {'name':'대시보드','path':"dashboard"},
+    # {'name':'프로필','path':"profile"},
+    # {'name':'메시지','path':"messages"}
+]
 
 # Create your views here.
 @login_required
