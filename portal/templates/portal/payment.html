@@ -136,62 +136,35 @@
         <tr>
             <td>
             <!-- title start -->
-            <table border="0" width="900" cellpadding="0" cellspacing="0">
-            <tr>
-                <td height="30" bgcolor="#FFFFFF" align="left">&nbsp;<img src="../img/arow3.gif" border="0" align="absmiddle">&nbsp;일반 > <b>결제</b></td>
-            </tr>
-            <tr>
-                <td height="2" bgcolor="#2D4677"></td>
-            </tr>
-            </table>
             <!-- title end -->
         
             <!-- mallinfo start -->
-            <table border="0" width="900" cellpadding="0" cellspacing="0">
-            <tr>
-                <td height="30" bgcolor="#FFFFFF">&nbsp;<img src="../img/arow2.gif" border="0" align="absmiddle">&nbsp;<b>가맹점정보</b>(*필수)</td>
-            </tr>
-            </table>
-        
-            <table border="0" width="900" cellpadding="0" cellspacing="1" bgcolor="#DCDCDC">
-            <tr height="25">
-                <td bgcolor="#EDEDED" width="150">&nbsp; *가맹점ID</td>
-                <td bgcolor="#FFFFFF" width="750" colspan="3">&nbsp;<input type="text" id="EP_mall_id" name="EP_mall_id" value="T5102001" size="50" maxlength="8" class="input_F"></td>
+            <!-- 가맹점 정보 -->
+            <table border="0" width="900" cellpadding="0" cellspacing="1">
+            <tr height="25" hidden>
+                <td width="150">&nbsp; *가맹점ID</td>
+                <td width="750" colspan="3">&nbsp;<input type="text" id="EP_mall_id" name="EP_mall_id" value="T5102001" size="50" maxlength="8" class="input_F" hidden></td>
             </tr>
             </table>
             <!-- mallinfo end -->
         
             <!-- webpay start -->
-            <table border="0" width="900" cellpadding="0" cellspacing="0">
-            <tr>
-                <td height="30" bgcolor="#FFFFFF">&nbsp;<img src="../img/arow2.gif" border="0" align="absmiddle">&nbsp;<b>결제 정보</b>(*필수)</td>
-            </tr>
-            </table>
-        
-            <table border="0" width="900" cellpadding="0" cellspacing="1" bgcolor="#DCDCDC">
+            <table border="0" width="900" cellpadding="0" cellspacing="1">
             <tr height="25">
-                <td bgcolor="#EDEDED" width="150">&nbsp; *결제수단</td>
-                <td bgcolor="#FFFFFF" width="300">&nbsp;
-                    <select id="EP_pay_type" name="EP_pay_type" class="input_F">
-                        <option value="11" selected>신용카드</option>
-                        <option value="21">계좌이체</option>
-                        <option value="22">무통장입금</option>
-                        <option value="31">휴대폰</option>
-                        <option value="50">선불결제</option>
-                        <option value="60">간편결제</option>
-                    </select>
+                <td width="300">&nbsp;
+                  
                 </td>
-                <td bgcolor="#EDEDED" width="150">&nbsp; 윈도우 타입</td>
-                <td bgcolor="#FFFFFF" width="300">&nbsp;
+                <td width="150" hidden>&nbsp; 윈도우 타입</td>
+                <td width="300" hidden>&nbsp;
                     <select id="EP_window_type" name="EP_window_type" class="input_F">
                         <option value="iframe" selected>iframe</option>
                         <option value="popup" >popup</option>
                     </select>
                </td>
             </tr>
-            <tr height="25">
-                <td bgcolor="#EDEDED" width="150">&nbsp; *인증타입</td>
-                <td bgcolor="#FFFFFF" width="750" colspan="3">&nbsp;
+            <tr height="25" hidden>
+                <td width="150">&nbsp; *인증타입</td>
+                <td width="750" colspan="3">&nbsp;
                     <select id="EP_cert_type" name="EP_cert_type" class="input_F">
                         <option value="" selected>일반</option>
                         <option value="21">인증</option>
@@ -203,34 +176,35 @@
             <!-- webpay end -->
         
             <!-- order start -->
-            <table border="0" width="900" cellpadding="0" cellspacing="0">
-            <tr>
-                <td height="30" bgcolor="#FFFFFF">&nbsp;<img src="../img/arow2.gif" border="0" align="absmiddle">&nbsp;<b>주문 정보</b>(*필수)</td>
-            </tr>
-            </table>
-        
-            <table border="0" width="900" cellpadding="0" cellspacing="1" bgcolor="#DCDCDC">
+            <table border="0" width="900" cellpadding="0" cellspacing="1" hidden>
             <tr height="25">
-                <td bgcolor="#EDEDED" width="150">&nbsp; *주문번호</td>
-                <td bgcolor="#FFFFFF" width="750" colspan="3">&nbsp;<input type="text" id="EP_order_no" name="EP_order_no" value="" size="50" class="input_F"></td>
+                <td width="150">&nbsp; *주문번호</td>
+                <td width="750" colspan="3">&nbsp;<input type="text" id="EP_order_no" name="EP_order_no" value="" size="50" class="input_F"></td>
             </tr>
             <tr height="25">
-                <td bgcolor="#EDEDED" width="150">&nbsp; 상품명</td>
-                <td bgcolor="#FFFFFF" width="300">&nbsp;<input type="text" id="EP_product_nm" name="EP_product_nm" value="테스트상품" size="50" class="input_A"></td>
-                <td bgcolor="#EDEDED" width="150">&nbsp; 상품금액</td>
-                <td bgcolor="#FFFFFF" width="300">&nbsp;<input type="text" id="EP_product_amt" name="EP_product_amt" value="50000" size="50" class="input_A"></td>
+                <td width="150">&nbsp; 상품명</td>
+                <td width="300">&nbsp;<input type="text" id="EP_product_nm" name="EP_product_nm" value="테스트상품" size="50" class="input_A"></td>
+                <td width="150">&nbsp; 상품금액</td>
+                <td width="300">&nbsp;<input type="text" id="EP_product_amt" name="EP_product_amt" value="50000" size="50" class="input_A"></td>
             </tr>
             </table>
             <!-- order end -->
-        
-            <table border="0" width="900" cellpadding="0" cellspacing="0">
-            <tr>
-                <td height="30" align="center" bgcolor="#FFFFFF"><input type="button" value="결 제" class="input_D" style="cursor:hand;" onclick="javascript:f_cert();"></td>
-            </tr>
-            </table>
             </td>
         </tr>
         </table>
+
+        <div class="input-group mb-3">
+          <span class="input-group-text">결제수단</span>
+          <select id="EP_pay_type" name="EP_pay_type" class="form-select">
+              <option value="11" selected>신용카드</option>
+              <option value="21">계좌이체</option>
+              <option value="22">무통장입금</option>
+              <option value="31">휴대폰</option>
+              <option value="50">선불결제</option>
+              <option value="60">간편결제</option>
+          </select>
+          <button class="btn btn-primary" type="submit" id="button-addon2" onclick="javascript:f_cert();">결제</button>
+        </div>
         </form>
 
       <h1>지난 통합 비용 청구서 및 납부 내역</h1>
