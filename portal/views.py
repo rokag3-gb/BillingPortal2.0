@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpRequest
 from django.contrib.auth.decorators import login_required
 
@@ -12,7 +12,7 @@ sidebar_items = [
 @login_required
 def index(request: HttpRequest) -> HttpResponse:
     # return render(request, 'portal/index.html')
-    return redirect('/')
+    return redirect('/dashboard')
 
 @login_required
 def settings(request: HttpRequest) -> HttpResponse:
