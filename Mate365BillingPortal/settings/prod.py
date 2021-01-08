@@ -25,11 +25,5 @@ DATABASES = {
     }
 }
 
-KICC_EASYPAY = {
-    "JS_URL":"https://pg.easypay.co.kr/webpay/EasypayCard_Web.js",
-    "STORE_ID":"",
-    "STORE_NAME":"",
-    "CHARSET": "UTF-8",
-    "CURRENCY": "00", # 00: KRW
-    "LANG": "KOR"
-}
+KICC_EASYPAY_JS_URL = "http://pg.easypay.co.kr/webpay/EasypayCard_Web.js"
+BASE_URL = f'{os.getenv("BASEURL_PROTOCOL","https")}://{os.getenv("WEBSITE_HOSTNAME","")}'
