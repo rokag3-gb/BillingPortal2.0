@@ -25,5 +25,5 @@ DATABASES = {
     }
 }
 
-KICC_EASYPAY_JS_URL = "https://pg.easypay.co.kr/webpay/EasypayCard_Web.js"
+KICC_EASYPAY_JS_URL = "https://testpg.easypay.co.kr/webpay/EasypayCard_Web.js"
 BASE_URL = f'{os.getenv("BASEURL_PROTOCOL","https")}://{os.getenv("WEBSITE_HOSTNAME","")}'
