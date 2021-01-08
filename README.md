@@ -68,3 +68,6 @@ python manage.py test Mate365BillingPortal/
     - `EMAIL_SSL_CERTFILE`: SSL 연결시 사용할 PEM 포맷 키 파일(기본값: `None`)
 - 기타
     - `SECRET_KEY`: 암호 해싱 등에 사용하는 임의 문자열(프로덕션 설정 사용시만 필수)
+- PG(결제대행사) 모듈 연동 관련
+    - `PG_STORE_ID`: 가맹점 ID
+    = `PG_STORE_NAME`: 가맹점 이름
