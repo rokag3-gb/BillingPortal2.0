@@ -3,7 +3,7 @@
 {% block content %}
 
 <script type="text/javascript" src="{% static 'portal/js/payment.js' %}"></script>
-<script type="text/javascript" src="{{payment.JS_URL}}"></script>  
+<script type="text/javascript" src="{{payment_js}}"></script>  
 <script>
   window.onload = function()
   {
@@ -62,14 +62,14 @@
         <input type="text" id="EP_mall_id" name="EP_mall_id" value="{{payment.STORE_ID}}" size="50" maxlength="8" hidden>
         <input type="hidden" id="EP_mall_nm"        name="EP_mall_nm"           value="{{payment.STORE_NAME}}">         <!-- 가맹점명-->
         <input type="hidden" id="EP_currency"       name="EP_currency"          value="{{payment.CURRENCY}}">       <!-- 통화코드 // 00 : 원화-->
-        <input type="hidden" id="EP_return_url"     name="EP_return_url"        value="http://{{request.META.HTTP_HOST}}/payment/result">         <!-- 가맹점 CALLBACK URL // -->
+        <input type="hidden" id="EP_return_url"     name="EP_return_url"        value="{{baseurl}}/payment/result">         <!-- 가맹점 CALLBACK URL // -->
         <input type="hidden" id="EP_ci_url"         name="EP_ci_url"            value="">         <!-- CI LOGO URL // -->
         <input type="hidden" id="EP_lang_flag"      name="EP_lang_flag"         value="{{payment.LANG}}">         <!-- 언어 // -->
         <input type="hidden" id="EP_charset"        name="EP_charset"           value="{{payment.CHARSET}}">   <!-- 가맹점 CharSet // EUC-KR,UTF-8 사용시 대문자 이용-->
-        <input type="hidden" id="EP_user_id"        name="EP_user_id"           value="">         <!-- 가맹점 고객ID // -->
-        <input type="hidden" id="EP_memb_user_no"   name="EP_memb_user_no"      value="">         <!-- 가맹점 고객일련번호 // -->
-        <input type="hidden" id="EP_user_nm"        name="EP_user_nm"           value="">         <!-- 가맹점 고객명 // -->
-        <input type="hidden" id="EP_user_mail"      name="EP_user_mail"         value="">         <!-- 가맹점 고객 E-mail // -->
+        <input type="hidden" id="EP_user_id"        name="EP_user_id"           value="{{ user.get_username }}">         <!-- 가맹점 고객ID // -->
+        <input type="hidden" id="EP_memb_user_no"   name="EP_memb_user_no"      value="{{ user.id | stringformat:"020d" }}">         <!-- 가맹점 고객일련번호 // -->
+        <input type="hidden" id="EP_user_nm"        name="EP_user_nm"           value="{{ user.get_full_name }}">         <!-- 가맹점 고객명 // -->
+        <input type="hidden" id="EP_user_mail"      name="EP_user_mail"         value="{{ user.email }}">         <!-- 가맹점 고객 E-mail // -->
         <input type="hidden" id="EP_user_phone1"    name="EP_user_phone1"       value="">         <!-- 가맹점 고객 연락처1 // -->
         <input type="hidden" id="EP_user_phone2"    name="EP_user_phone2"       value="">         <!-- 가맹점 고객 연락처2 // -->
         <input type="hidden" id="EP_user_addr"      name="EP_user_addr"         value="">         <!-- 가맹점 고객 주소 // -->
@@ -204,7 +204,7 @@
               <option value="50">선불결제</option>
               <option value="60">간편결제</option>
           </select>
-          <button class="btn btn-primary" type="submit" id="button-addon2" onclick="javascript:f_cert();">결제</button>
+          <button class="btn btn-primary" type="submit" id="button-addon2" onclick="javascript:f_cert();">지금 결제</button>
         </div>
         </form>
 

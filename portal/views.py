@@ -37,8 +37,15 @@ def messages(request: HttpRequest) -> HttpResponse:
 
 @login_required
 def payment(request: HttpRequest) -> HttpResponse:
-    # print(request.META.HTTP_HOST)
-    return render(request, 'portal/payment.html', {'sidebar': 'payment', 'sidebar_items': sidebar_items, 'payment': getattr(conf, "KICC_EASYPAY", {})})
+    print(request.META["HTTP_HOST"])
+    context = {
+        'sidebar': 'payment', 
+        'sidebar_items': sidebar_items,
+        'payment': getattr(conf, "KICC_EASYPAY", {}),
+        'payment_js': getattr(conf, "KICC_EASYPAY_JS_URL", ""),
+        'baseurl': getattr(conf, "BASE_URL", "")
+     }
+    return render(request, 'portal/payment.html', context)
 
 # TODO: iframe 이슈로 임시 예외 처리
 # @csrf_exempt 
