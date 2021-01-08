@@ -1,5 +1,6 @@
 from .base import *
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -16,4 +17,13 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     },
+}
+
+KICC_EASYPAY = {
+    "JS_URL":"http://testpg.easypay.co.kr/webpay/EasypayCard_Web.js",
+    "STORE_ID":"T5102001",
+    "STORE_NAME":"CLOUDMATE",
+    "CHARSET": "UTF-8",
+    "CURRENCY": "00", # 00: KRW
+    "LANG": "KOR"
 }

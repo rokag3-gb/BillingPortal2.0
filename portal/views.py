@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpRequest
 from django.views.decorators.csrf import csrf_exempt  
 from django.contrib.auth.decorators import login_required
+from django.conf import settings as conf
+from django.views.decorators.clickjacking import xframe_options_sameorigin
+from django.contrib.sites.shortcuts import get_current_site
 
 
 sidebar_items = [
@@ -17,7 +20,7 @@ def index(request: HttpRequest) -> HttpResponse:
     return redirect('/dashboard')
 
 @login_required
-def settings(request: HttpRequest) -> HttpResponse:
+def preference(request: HttpRequest) -> HttpResponse:
     return render(request, 'portal/settings/index.html')
 
 @login_required
@@ -34,17 +37,20 @@ def messages(request: HttpRequest) -> HttpResponse:
 
 @login_required
 def payment(request: HttpRequest) -> HttpResponse:
-    return render(request, 'portal/payment.html', {'sidebar': 'payment', 'sidebar_items': sidebar_items})
+    # print(request.META.HTTP_HOST)
+    return render(request, 'portal/payment.html', {'sidebar': 'payment', 'sidebar_items': sidebar_items, 'payment': getattr(conf, "KICC_EASYPAY", {})})
 
 # TODO: iframe 이슈로 임시 예외 처리
+# @csrf_exempt 
 @login_required
-@csrf_exempt 
+@xframe_options_sameorigin
 def payrequest(request: HttpRequest) -> HttpResponse:
     return render(request, 'portal/pay/request.html')
 
 # TODO: iframe 이슈로 임시 예외 처리
 # @login_required
 @csrf_exempt 
+@xframe_options_sameorigin
 def payresult(request: HttpRequest) -> HttpResponse:
     print(request.method)
     return render(request, 'portal/pay/result.html')
