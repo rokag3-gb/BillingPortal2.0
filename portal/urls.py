@@ -15,9 +15,15 @@ urlpatterns = [
         template_name='portal/auth/reset_confirm.html'), name='password_reset_confirm'),
     path('auth/reset/done/', auth_views.PasswordResetCompleteView.as_view(
         template_name='portal/auth/reset_complete.html'), name='password_reset_complete'),
-    path('settings/', views.settings, name='settings'),
+    path('settings/', views.preference, name='settings'),
     path('settings/changepw', auth_views.PasswordChangeView.as_view(
         template_name='portal/settings/changepw.html'), name='password_change'),
     path('settings/changepw/done', auth_views.PasswordChangeDoneView.as_view(
-        template_name='portal/settings/pwchanged.html'), name='password_change_done')
+        template_name='portal/settings/pwchanged.html'), name='password_change_done'),
+    path('dashboard', views.dashboard, name='dashboard'),
+    path('profile', views.profile, name='profile'),
+    path('messages', views.messages, name='messages'),
+    path('payment', views.payment, name='payment'),
+    path('payment/request', views.payrequest, name='payrequest'),
+    path('payment/result', views.payresult, name='payresult'),
 ]
