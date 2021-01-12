@@ -128,3 +128,16 @@ KICC_EASYPAY = {
     "CURRENCY": "00", # 00: KRW
     "LANG": "KOR"
 }
+
+POWERBI = {
+    "AUTHMODE": "ServicePrincipal", # MasterUser or ServicePrincipal
+    "WORKSPACE_ID": os.getenv("POWERBI_WORKSPACE_ID",""), # Workspace Id in which the report is present
+    "REPORT_ID": os.getenv("POWERBI_REPORT_ID",""), # Report Id for which Embed token needs to be generated
+    "TENANT_ID": os.getenv("POWERBI_TENANT_ID",""), # Id of the Azure tenant in which AAD app and Power BI report is hosted. Required only for ServicePrincipal authentication mode.
+    "CLIENT_ID": os.getenv("POWERBI_CLIENT_ID",""), # Client Id (Application Id) of the AAD app
+    "CLIENT_SECRET": os.getenv("POWERBI_CLIENT_SECRET",""), # Client Secret (App Secret) of the AAD app. Required only for ServicePrincipal authentication mode.
+    "SCOPE": ['https://analysis.windows.net/powerbi/api/.default'],
+    "AUTHORITY": 'https://login.microsoftonline.com/organizations',
+    "MASTER_USER": os.getenv("POWERBI_MASTER_USER",""), # AUTHMODE가 MasterUser 경우만 사용
+    "MASTER_PASS": os.getenv("POWERBI_MASTER_PASS",""), # AUTHMODE가 MasterUser 경우만 사용
+}
