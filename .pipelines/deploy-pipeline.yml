@@ -1,29 +1,20 @@
 # Python to Linux Web App on Azure
+
 # Build your Python project and deploy it to Azure as a Linux Web App.
 # Change python version to one thats appropriate for your application.
 # https://docs.microsoft.com/azure/devops/pipelines/languages/python
 
 trigger:
 - develop
-
 variables:
-  # Azure Resource Manager connection created during pipeline creation
-  azureServiceConnectionId: '342e0f87-dd95-42de-9669-800d9bed5dfc'
-  
-  # Web app name
-  webAppName: 'mate365billingpreview'
-
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
-
-  # Environment name
-  environmentName: 'mate365billingpreview'
-
-  # Project root folder. Point to the folder containing manage.py file.
-  projectRoot: $(System.DefaultWorkingDirectory)
-  
   # Python version: 3.8
   pythonVersion: '3.8'
+  # Project root folder. Point to the folder containing manage.py file.
+  projectRoot: $(System.DefaultWorkingDirectory)
+  # Environment name
+  environmentName: 'mate365billingpreview'
 
 stages:
 - stage: Build
@@ -80,9 +71,13 @@ stages:
               versionSpec: '$(pythonVersion)'
             displayName: 'Use Python version'
 
-          - task: AzureWebApp@1
-            displayName: 'Deploy Azure Web App : mate365billingpreview'
+          - task: AzureRmWebAppDeployment@4
+            displayName: 'Deploy Azure Web App - mate365billingpreview'
             inputs:
-              azureSubscription: $(azureServiceConnectionId)
-              appName: $(webAppName)
-              package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
+              ConnectionType: 'AzureRM'
+              azureSubscription: 'Azure_Deploy_to_MPN-Production-스폰서쉽-Gold'
+              appType: 'webAppLinux'
+              WebAppName: 'mate365billingpreview'
+              packageForLinux: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
+              RuntimeStack: 'PYTHON|3.8'
+              
