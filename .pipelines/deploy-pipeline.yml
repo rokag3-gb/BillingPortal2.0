@@ -13,6 +13,8 @@ variables:
   pythonVersion: '3.8'
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
+  # Environment name
+  environmentName: 'mate365billingpreview'
 
 stages:
 - stage: Build
