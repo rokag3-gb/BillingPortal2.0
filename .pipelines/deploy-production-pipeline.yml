@@ -7,12 +7,6 @@ trigger:
 - main
 
 variables:
-  # Azure Resource Manager connection created during pipeline creation
-  azureServiceConnectionId: '342e0f87-dd95-42de-9669-800d9bed5dfc'
-  
-  # Web app name
-  webAppName: 'mate365billing'
-
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
 
@@ -79,10 +73,11 @@ stages:
             inputs:
               versionSpec: '$(pythonVersion)'
             displayName: 'Use Python version'
-
-          - task: AzureWebApp@1
-            displayName: 'Deploy Azure Web App : mate365billing'
+          - task: AzureRmWebAppDeployment@4
             inputs:
-              azureSubscription: $(azureServiceConnectionId)
-              appName: $(webAppName)
-              package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
+              ConnectionType: 'AzureRM'
+              azureSubscription: 'Azure_Deploy_to_MPN-Production-스폰서쉽-Gold'
+              appType: 'webAppLinux'
+              WebAppName: 'mate365billing'
+              packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+              RuntimeStack: 'PYTHON|3.8'
