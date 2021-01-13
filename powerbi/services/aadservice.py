@@ -1,7 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
 
-from flask import current_app as app
 from django.conf import settings
 import msal
 
