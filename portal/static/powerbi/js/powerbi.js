@@ -85,6 +85,12 @@ window.onload = function () {
                 console.error(errorMsg);
                 return;
             });
+            setInterval(function () {
+                report.refresh()
+                    .catch(error => {
+                        // Refresh error
+                    });
+            }, 1000 * 30);
         })
         .catch(function (error) {
             // Show error container
