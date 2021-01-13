@@ -4,6 +4,22 @@
 window.onload = function () {
     let reportContainer = document.getElementById("pbi-report-container");
     let errorContainer = document.getElementById("pbi-error-container");
+
+    const hiddenBasicFilter = {
+        $schema: "http://powerbi.com/product/schema#basic",
+        target: {
+            table: "T_Customer",
+            column: "CustomerName"
+        },
+        operator: "In",
+        values: ["Com2uS Corporation"], // FIXME: 변수 받아서 필터 적용할것
+        filterType: 1,
+        requireSingleSelection: true,
+        displaySettings: {
+            isHiddenInViewMode: true
+        }
+    };
+
     // Initialize iframe for embedding report
     powerbi.bootstrap(reportContainer, { type: "report" });
 
@@ -44,7 +60,8 @@ window.onload = function () {
                     expanded: false
                 }
             }
-        }
+        },
+        filters: [hiddenBasicFilter]
     };
 
     fetch("/powerbi/token")
@@ -85,6 +102,14 @@ window.onload = function () {
                 console.error(errorMsg);
                 return;
             });
+
+            
+
+            // report.setFilters([hiddenBasicFilter])
+            //     .catch(errors => {
+            //         // Handle error
+            //         console.log(errors)
+            //     });
             setInterval(function () {
                 report.refresh()
                     .catch(error => {
@@ -104,5 +129,5 @@ window.onload = function () {
             // Show error message on UI
             errorContainer.html("리포트 로드 중 오류 발생");
         });
-
 }
+
