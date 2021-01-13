@@ -18,5 +18,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('billingadmin/', admin.site.urls),
-    path('', include('portal.urls'))
+    path('', include('portal.urls')),
+    path('powerbi/', include('powerbi.urls'))
 ]
