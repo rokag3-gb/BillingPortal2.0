@@ -71,3 +71,22 @@ python manage.py test Mate365BillingPortal/
 - PG(결제대행사) 모듈 연동 관련
     - `PG_STORE_ID`: 가맹점 ID
     = `PG_STORE_NAME`: 가맹점 이름
+- PowerBI 관련
+    - `POWERBI_AUTHMODE`
+        - PowerBI 리포트 조회를 위한 인증방식
+        - `ServicePrincipal`(기본) 또는 `MasterUser`
+    - `POWERBI_WORKSPACE_ID`: PowerBI 워크스페이스 ID
+    - `POWERBI_REPORT_ID`: PowerBI 워크스페이스에 속한 보고서 ID(Embed 토큰 생성할 대상 보고서)
+    - `POWERBI_TENANT_ID`
+        - PowerBI 워크스페이스에 연결된 Azure AD App 의 디렉터리(테넌트) ID
+        - `ServicePrincipal` 인증방식 사용시만 설정
+    - `POWERBI_CLIENT_ID`
+        - PowerBI 워크스페이스에 연결된 Azure AD App 의 애플리케이션(클라이언트) ID
+    - `POWERBI_CLIENT_SECRET`
+        - PowerBI 워크스페이스에 연결된 Azure AD App 의 클라이언트 비밀
+    - `POWERBI_MASTER_USER`
+        - PowerBI Azure AD 마스터 사용자 이메일
+        - `MasterUser` 인증방식 사용시만 설정
+    - `POWERBI_MASTER_PASS`
+        - PowerBI Azure AD 마스터 사용자 암호
+        - `MasterUser` 인증방식 사용시만 설정
