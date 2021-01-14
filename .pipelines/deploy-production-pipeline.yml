@@ -74,10 +74,11 @@ stages:
               versionSpec: '$(pythonVersion)'
             displayName: 'Use Python version'
           - task: AzureRmWebAppDeployment@4
+            displayName: 'Deploy Azure Web App - mate365billing'
             inputs:
               ConnectionType: 'AzureRM'
               azureSubscription: 'Azure_Deploy_to_MPN-Production-스폰서쉽-Gold'
               appType: 'webAppLinux'
               WebAppName: 'mate365billing'
-              packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+              packageForLinux: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
               RuntimeStack: 'PYTHON|3.8'
