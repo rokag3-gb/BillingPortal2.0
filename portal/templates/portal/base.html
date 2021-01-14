@@ -1,22 +1,35 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-    <head>
-        <link rel="stylesheet" type="text/css" href="{% static 'portal/css/bootstrap.min.css' %}">
-        <link rel="stylesheet" type="text/css" href="{% static 'portal/css/custom.css' %}">
-        <script src="{% static 'portal/js/jquery.min.js' %}"></script>
-        <script src="{% static 'portal/js/bootstrap.bundle.min.js' %}"></script>      
-        
-    </head>
-    <body>
-      {% block body %}
-      {% endblock %}
-      <div class="card" style="margin: 20px;">
-        <div class="card-body">
-          (주)클라우드메이트  |  대표이사 : 윤주현  |  서울시 구로구 경인로 576  |  <a href="https://cloudmt.co.kr/?page_id=3">개인정보처리방침</a>
-          연락처 : 82-2-2069-1980  |  E-MAIL : contact@cloudmt.co.kr  |  사업자번호 : 789-81-01310 | © 2021~Present CLOUDMATE. All Rights Reserved.
-        </div>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'portal/css/bootstrap.min.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'portal/css/custom.css' %}"
+    />
+    <script src="{% static 'portal/js/jquery.min.js' %}"></script>
+    <script src="{% static 'portal/js/bootstrap.bundle.min.js' %}"></script>
+  </head>
+  <body>
+    {% block body %} {% endblock %}
+    <div class="card" style="margin: 20px">
+      <div class="card-body">
+        (주)클라우드메이트 | 대표이사 : 윤주현 | 서울시 구로구 경인로 576 |
+        <a href="https://cloudmt.co.kr/?page_id=3">개인정보처리방침</a>
+        연락처 : 82-2-2069-1980 | E-MAIL : contact@cloudmt.co.kr | 사업자번호 :
+        789-81-01310 | © 2021~Present CLOUDMATE. All Rights Reserved.
       </div>
-      <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
-    </body>
+    </div>
+    <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
+  </body>
 </html>
