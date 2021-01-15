@@ -1,247 +1,127 @@
-{% extends 'portal/shell.html' %}
-{% load static %}
-{% block content %}
+{% extends 'portal/shell.html' %} {% load static %} {% block content %}
 
-<script type="text/javascript" src="{% static 'portal/js/payment.js' %}"></script>
-<script type="text/javascript" src="{{payment_js}}"></script>  
-<script>
-  window.onload = function()
-  {
-    f_init()
-  }
-</script>
-<div style="padding:10px;">
-    <h1>이번 달 통합 비용 청구서</h1>
-    <h2>2020. 12. 1. ~ 2020. 12. 31.</h2>
-    <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">제품/서비스</th>
-            <th scope="col">상세</th>
-            <th scope="col">금액</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Azure 서비스</td>
-            <td>Subscription 1개, Category 4개</td>
-            <td>97,845원</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Microsoft 부가서비스</td>
-            <td>Product 5개</td>
-            <td>0원</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>Microsoft Support</td>
-            <td>Support 미사용</td>
-            <td>0원</td>
-          </tr>
-          <tr>
-            <th scope="row">4</th>
-            <td>Cloudmate 서비스</td>
-            <td>Service 미사용</td>
-            <td>0원</td>
-          </tr>
-          <tr class="table-secondary">
-            <th scope="row" colspan="3">합계</th>
-            <td>97,845원</td>
-          </tr>
-        </tbody>
-      </table>
+<div style="padding: 10px">
+  <h1>이번 달 통합 비용 청구서</h1>
+  <h2>2020. 12. 1. ~ 2020. 12. 31.</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">제품/서비스</th>
+        <th scope="col">상세</th>
+        <th scope="col">금액</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">1</th>
+        <td>Azure 서비스</td>
+        <td>Subscription 1개, Category 4개</td>
+        <td>97,845원</td>
+      </tr>
+      <tr>
+        <th scope="row">2</th>
+        <td>Microsoft 부가서비스</td>
+        <td>Product 5개</td>
+        <td>0원</td>
+      </tr>
+      <tr>
+        <th scope="row">3</th>
+        <td>Microsoft Support</td>
+        <td>Support 미사용</td>
+        <td>0원</td>
+      </tr>
+      <tr>
+        <th scope="row">4</th>
+        <td>Cloudmate 서비스</td>
+        <td>Service 미사용</td>
+        <td>0원</td>
+      </tr>
+      <tr class="table-secondary">
+        <th scope="row" colspan="3">합계</th>
+        <td>97,845원</td>
+      </tr>
+    </tbody>
+  </table>
+  <button
+    type="button"
+    class="btn btn-primary"
+    data-bs-toggle="modal"
+    data-bs-target="#paymentModal"
+  >
+    지금 결제
+  </button>
 
-      <form name="frm_pay" method="post" action="">
-        {% csrf_token %}
-        <!--------------------------->
-        <!-- ::: 공통 인증 요청 값 -->
-        <!--------------------------->
-        <input type="text" id="EP_mall_id" name="EP_mall_id" value="{{payment.STORE_ID}}" size="50" maxlength="8" hidden>
-        <input type="hidden" id="EP_mall_nm"        name="EP_mall_nm"           value="{{payment.STORE_NAME}}">         <!-- 가맹점명-->
-        <input type="hidden" id="EP_currency"       name="EP_currency"          value="{{payment.CURRENCY}}">       <!-- 통화코드 // 00 : 원화-->
-        <input type="hidden" id="EP_return_url"     name="EP_return_url"        value="{{baseurl}}/payment/result">         <!-- 가맹점 CALLBACK URL // -->
-        <input type="hidden" id="EP_ci_url"         name="EP_ci_url"            value="">         <!-- CI LOGO URL // -->
-        <input type="hidden" id="EP_lang_flag"      name="EP_lang_flag"         value="{{payment.LANG}}">         <!-- 언어 // -->
-        <input type="hidden" id="EP_charset"        name="EP_charset"           value="{{payment.CHARSET}}">   <!-- 가맹점 CharSet // EUC-KR,UTF-8 사용시 대문자 이용-->
-        <input type="hidden" id="EP_user_id"        name="EP_user_id"           value="{{ user.get_username }}">         <!-- 가맹점 고객ID // -->
-        <input type="hidden" id="EP_memb_user_no"   name="EP_memb_user_no"      value="{{ user.id | stringformat:"020d" }}">         <!-- 가맹점 고객일련번호 // -->
-        <input type="hidden" id="EP_user_nm"        name="EP_user_nm"           value="{{ user.get_full_name }}">         <!-- 가맹점 고객명 // -->
-        <input type="hidden" id="EP_user_mail"      name="EP_user_mail"         value="{{ user.email }}">         <!-- 가맹점 고객 E-mail // -->
-        <input type="hidden" id="EP_user_phone1"    name="EP_user_phone1"       value="">         <!-- 가맹점 고객 연락처1 // -->
-        <input type="hidden" id="EP_user_phone2"    name="EP_user_phone2"       value="">         <!-- 가맹점 고객 연락처2 // -->
-        <input type="hidden" id="EP_user_addr"      name="EP_user_addr"         value="">         <!-- 가맹점 고객 주소 // -->
-        <input type="hidden" id="EP_user_define1"   name="EP_user_define1"      value="">         <!-- 가맹점 필드1 // -->
-        <input type="hidden" id="EP_user_define2"   name="EP_user_define2"      value="">         <!-- 가맹점 필드2 // -->
-        <input type="hidden" id="EP_user_define3"   name="EP_user_define3"      value="">         <!-- 가맹점 필드3 // -->
-        <input type="hidden" id="EP_user_define4"   name="EP_user_define4"      value="">         <!-- 가맹점 필드4 // -->
-        <input type="hidden" id="EP_user_define5"   name="EP_user_define5"      value="">         <!-- 가맹점 필드5 // -->
-        <input type="hidden" id="EP_user_define6"   name="EP_user_define6"      value="">         <!-- 가맹점 필드6 // -->
-        <input type="hidden" id="EP_product_type"   name="EP_product_type"      value="">         <!-- 상품정보구분 // -->
-        <input type="hidden" id="EP_product_expr"   name="EP_product_expr"      value="">         <!-- 서비스 기간 // (YYYYMMDD) -->
-        <input type="hidden" id="EP_disp_cash_yn"   name="EP_disp_cash_yn"      value="">         <!-- 현금영수증 화면표시여부 //미표시 : "N", 그외: DB조회 -->
-        
-        
-        <!--------------------------->
-        <!-- ::: 카드 인증 요청 값 -->
-        <!--------------------------->
-        
-        <input type="hidden" id="EP_usedcard_code"      name="EP_usedcard_code"     value="">      <!-- 사용가능한 카드 LIST // FORMAT->카드코드:카드코드: ... :카드코드 EXAMPLE->029:027:031 // 빈값 : DB조회-->
-        <input type="hidden" id="EP_quota"              name="EP_quota"             value="">      <!-- 할부개월 (카드코드-할부개월) -->
-        <input type="hidden" id="EP_os_cert_flag"       name="EP_os_cert_flag"      value="2">     <!-- 해외안심클릭 사용여부(변경불가) // -->
-        <input type="hidden" id="EP_noinst_flag"        name="EP_noinst_flag"       value="">      <!-- 무이자 여부 (Y/N) // -->
-        <input type="hidden" id="EP_noinst_term"        name="EP_noinst_term"       value="">      <!-- 무이자 기간 (카드코드-더할할부개월) // -->
-        <input type="hidden" id="EP_set_point_card_yn"  name="EP_set_point_card_yn" value="">      <!-- 카드사포인트 사용여부 (Y/N) // -->
-        <input type="hidden" id="EP_point_card"         name="EP_point_card"        value="">      <!-- 포인트카드 LIST  // -->
-        <input type="hidden" id="EP_join_cd"            name="EP_join_cd"           value="">      <!-- 조인코드 // -->
-        <input type="hidden" id="EP_kmotion_useyn"      name="EP_kmotion_useyn"     value="Y">     <!-- 국민앱카드 사용유무 (Y/N)// -->
-        
-        <!------------------------------->
-        <!-- ::: 가상계좌 인증 요청 값 -->
-        <!------------------------------->
-        
-        <input type="hidden" id="EP_vacct_bank"         name="EP_vacct_bank"        value="">      <!-- 가상계좌 사용가능한 은행 LIST // -->
-        <input type="hidden" id="EP_vacct_end_date"     name="EP_vacct_end_date"    value="">      <!-- 입금 만료 날짜 // -->
-        <input type="hidden" id="EP_vacct_end_time"     name="EP_vacct_end_time"    value="">      <!-- 입금 만료 시간 // -->
-        
-        <!------------------------------->
-        <!-- ::: 선불카드 인증 요청 값 -->
-        <!------------------------------->
-        
-        <input type="hidden" id="EP_prepaid_cp"         name="EP_prepaid_cp"        value="">      <!-- 선불카드 CP // FORMAT->코드:코드: ... :코드 EXAMPLE->CCB:ECB // 빈값 : DB조회-->
-        
-        <!--------------------------------->
-        <!-- ::: 인증응답용 인증 요청 값 -->
-        <!--------------------------------->
-        
-        <input type="hidden" id="EP_res_cd"             name="EP_res_cd"            value="">      <!--  응답코드 // -->
-        <input type="hidden" id="EP_res_msg"            name="EP_res_msg"           value="">      <!--  응답메세지 // -->
-        <input type="hidden" id="EP_tr_cd"              name="EP_tr_cd"             value="">      <!--  결제창 요청구분 // -->
-        <input type="hidden" id="EP_ret_pay_type"       name="EP_ret_pay_type"      value="">      <!--  결제수단 // -->
-        <input type="hidden" id="EP_ret_complex_yn"     name="EP_ret_complex_yn"    value="">      <!--  복합결제 여부 (Y/N) // -->
-        <input type="hidden" id="EP_card_code"          name="EP_card_code"         value="">      <!--  카드코드 (ISP:KVP카드코드 MPI:카드코드) // -->
-        <input type="hidden" id="EP_eci_code"           name="EP_eci_code"          value="">      <!--  MPI인 경우 ECI코드 // -->
-        <input type="hidden" id="EP_card_req_type"      name="EP_card_req_type"     value="">      <!--  거래구분 // -->
-        <input type="hidden" id="EP_save_useyn"         name="EP_save_useyn"        value="">      <!--  카드사 세이브 여부 (Y/N) // -->
-        <input type="hidden" id="EP_trace_no"           name="EP_trace_no"          value="">      <!--  추적번호 // -->
-        <input type="hidden" id="EP_sessionkey"         name="EP_sessionkey"        value="">      <!--  세션키 // -->
-        <input type="hidden" id="EP_encrypt_data"       name="EP_encrypt_data"      value="">      <!--  암호화전문 // -->
-        <input type="hidden" id="EP_spay_cp"            name="EP_spay_cp"           value="">      <!--  간편결제 CP 코드 // -->
-        <input type="hidden" id="EP_card_prefix"        name="EP_card_prefix"       value="">      <!--  신용카드prefix // -->
-        <input type="hidden" id="EP_card_no_7"          name="EP_card_no_7"         value="">      <!--  신용카드번호 앞7자리 // -->
-        
-        
-        <table border="0" width="910" cellpadding="10" cellspacing="0">
-        <tr>
-            <td>
-            <!-- title start -->
-            <!-- title end -->
-        
-            <!-- mallinfo start -->
-            <!-- 가맹점 정보 -->
-            <table border="0" width="900" cellpadding="0" cellspacing="1">
-            <tr height="25" hidden>
-                <td width="150">&nbsp; *가맹점ID</td>
-                <td width="750" colspan="3">&nbsp;</td>
-            </tr>
-            </table>
-            <!-- mallinfo end -->
-        
-            <!-- webpay start -->
-            <table border="0" width="900" cellpadding="0" cellspacing="1">
-            <tr height="25">
-                <td width="300">&nbsp;
-                  
-                </td>
-                <td width="150" hidden>&nbsp; 윈도우 타입</td>
-                <td width="300" hidden>&nbsp;
-                    <select id="EP_window_type" name="EP_window_type" class="input_F">
-                        <option value="iframe" selected>iframe</option>
-                        <option value="popup" >popup</option>
-                    </select>
-               </td>
-            </tr>
-            <tr height="25" hidden>
-                <td width="150">&nbsp; *인증타입</td>
-                <td width="750" colspan="3">&nbsp;
-                    <select id="EP_cert_type" name="EP_cert_type" class="input_F">
-                        <option value="" selected>일반</option>
-                        <option value="21">인증</option>
-                        <option value="22">비인증</option>
-                    </select>
-                </td>	
-            </tr>
-            </table>
-            <!-- webpay end -->
-        
-            <!-- order start -->
-            <table border="0" width="900" cellpadding="0" cellspacing="1" hidden>
-            <tr height="25">
-                <td width="150">&nbsp; *주문번호</td>
-                <td width="750" colspan="3">&nbsp;<input type="text" id="EP_order_no" name="EP_order_no" value="" size="50" class="input_F"></td>
-            </tr>
-            <tr height="25">
-                <td width="150">&nbsp; 상품명</td>
-                <td width="300">&nbsp;<input type="text" id="EP_product_nm" name="EP_product_nm" value="테스트상품" size="50" class="input_A"></td>
-                <td width="150">&nbsp; 상품금액</td>
-                <td width="300">&nbsp;<input type="text" id="EP_product_amt" name="EP_product_amt" value="50000" size="50" class="input_A"></td>
-            </tr>
-            </table>
-            <!-- order end -->
-            </td>
-        </tr>
-        </table>
-
-        <div class="input-group mb-3">
-          <span class="input-group-text">결제수단</span>
-          <select id="EP_pay_type" name="EP_pay_type" class="form-select">
-              <option value="11" selected>신용카드</option>
-              <option value="21">계좌이체</option>
-              <option value="22">무통장입금</option>
-              <option value="31">휴대폰</option>
-              <option value="50">선불결제</option>
-              <option value="60">간편결제</option>
-          </select>
-          <button class="btn btn-primary" type="submit" id="button-addon2" onclick="javascript:f_cert();">지금 결제</button>
+  <div
+    class="modal fade"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+    id="paymentModal"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">지금 결제</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
         </div>
-        </form>
-
-      <h1>지난 통합 비용 청구서 및 납부 내역</h1>
-      <div class="accordion accordion-flush" id="accordionFlushExample">
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="flush-headingOne" style="width: 100%;">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-              2020. 11.
-            </button>
-          </h2>
-          <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-            <div class="accordion-body">Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.</div>
-          </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-floating mb-3">
+              <input type="name" value="{{ user.get_full_name }}" class="form-control" id="cardOwner" required>
+              <label for="cardOwner">카드 소유자 성명</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="date" class="form-control" id="birthday" required>
+              <label for="birthday">생년월일</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="email" value="{{ user.email }}" class="form-control" id="email" required>
+              <label for="email">이메일</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="tel" class="form-control" id="phoneNumber" required>
+              <label for="phoneNumber">휴대전화</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="tel" class="form-control" id="cardNumber" required maxlength="16">
+              <label for="cardNumber">카드번호</label>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-md">
+                <div class="form-floating">
+                  <input type="month" class="form-control" id="validYear" required>
+                  <label for="validYear">카드 유효기간 (년/월) YYMM</label>
+                </div>
+              </div>
+              <div class="col-md">
+                <div class="form-floating">
+                  <input type="password" class="form-control" id="cardpass" maxlength="2" required>
+                  <label for="cardpass">카드 암호 앞 2자리 **</label>
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">결제</button>
+          </form>
         </div>
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="flush-headingTwo" style="width: 100%;">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                2020. 10.
-            </button>
-          </h2>
-          <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-            <div class="accordion-body">Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.</div>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="flush-headingThree" style="width: 100%;">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-                2020. 9.
-            </button>
-          </h2>
-          <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
-            <div class="accordion-body">Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.</div>
-          </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            취소
+          </button>
+          <button type="button" class="btn btn-primary">결제</button>
         </div>
       </div>
+    </div>
+  </div>
 </div>
-
 
 {% endblock %}
