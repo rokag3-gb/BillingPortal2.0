@@ -9,7 +9,7 @@ import xml.etree.ElementTree as ET
 from zeep import Client, Settings
 
 pg_config = getattr(conf, "PG_BACKEND", {})
-settings = Settings(raw_response=True)
+settings = Settings(raw_response=False)
 payment_backend = Client(pg_config["SOAP_URL"], settings=settings)
 
 sidebar_items = [
@@ -58,7 +58,9 @@ def payment(request: HttpRequest) -> HttpResponse:
             payment_form['card_password'],
             "961008" 
         )
-        return JsonResponse({"result":"ok"})
+        # print("Statue code: ", result.status_code)
+        print(result)
+        return JsonResponse(json.loads(result))
     else:
         context = {
             'sidebar': 'payment', 
