@@ -46,18 +46,3 @@ def payment(request: HttpRequest) -> HttpResponse:
         'baseurl': getattr(conf, "BASE_URL", "")
      }
     return render(request, 'portal/payment.html', context)
-
-# TODO: iframe 이슈로 임시 예외 처리
-# @csrf_exempt 
-@login_required
-@xframe_options_sameorigin
-def payrequest(request: HttpRequest) -> HttpResponse:
-    return render(request, 'portal/pay/request.html')
-
-# TODO: iframe 이슈로 임시 예외 처리
-# @login_required
-@csrf_exempt 
-@xframe_options_sameorigin
-def payresult(request: HttpRequest) -> HttpResponse:
-    print(request.method)
-    return render(request, 'portal/pay/result.html')
