@@ -1,197 +1,275 @@
-{% extends 'portal/shell.html' %} {% load static %} {% block content %}
-<script src="{% static 'portal/js/payment.js' %}"></script>
-<div style="padding: 10px">
-  <h1>이번 달 통합 비용 청구서</h1>
-  <h2>2020. 12. 1. ~ 2020. 12. 31.</h2>
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">제품/서비스</th>
-        <th scope="col">상세</th>
-        <th scope="col">금액</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>Azure 서비스</td>
-        <td>Subscription 1개, Category 4개</td>
-        <td>97,845원</td>
-      </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td>Microsoft 부가서비스</td>
-        <td>Product 5개</td>
-        <td>0원</td>
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <td>Microsoft Support</td>
-        <td>Support 미사용</td>
-        <td>0원</td>
-      </tr>
-      <tr>
-        <th scope="row">4</th>
-        <td>Cloudmate 서비스</td>
-        <td>Service 미사용</td>
-        <td>0원</td>
-      </tr>
-      <tr class="table-secondary">
-        <th scope="row" colspan="3">합계</th>
-        <td>97,845원</td>
-      </tr>
-    </tbody>
-  </table>
-  <button
-    type="button"
-    class="btn btn-primary"
-    data-bs-toggle="modal"
-    data-bs-target="#paymentModal"
-  >
-    지금 결제
-  </button>
+{% extends '_base.html' %}
+{% load static %}
+{% block navbar %}
+  {% include '_base_navbar_left.html' %}
+{% endblock %}
+{% block contents %}
+  <div class="content">
+    {% block navbar-top %}{% include '_base_navbar_top.html' %}{% endblock %}
+    <div class="card mb-3">
+      <div class="bg-holder d-none d-lg-block bg-card" style="background-image:url({% static 'img/illustrations/corner-4.png' %});opacity: 0.7;">
+      </div>
+      <!--/.bg-holder-->
 
-  <div
-    class="modal fade"
-    tabindex="-1"
-    aria-labelledby="exampleModalLabel"
-    id="paymentModal"
-    data-bs-backdrop="static"
-    data-bs-keyboard="false"
-  >
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">지금 결제</h5>
+      <div class="card-body">
+        <h5>2021/01 통합 비용 청구서: #2737</h5>
+        <p class="fs--1">2020. 12. 01. ~ 2020. 12. 31.</p>
+        <div><strong class="mr-2">Status: </strong>
+          <div class="badge badge-pill badge-soft-success fs--2">결제완료<span class="fas fa-check ml-1" data-fa-transform="shrink-2"></span></div>
         </div>
-        <div class="modal-body" id="payment-form">
-          <div id="payment-error-container" hidden>
-            <div class="alert alert-danger" role="alert" id="payment-error">
-
-            </div>
-          </div>
-          <form>
-            {% csrf_token %}
-            <div class="form-floating mb-3">
-              <input
-                type="name"
-                value="{{ user.get_full_name }}"
-                class="form-control"
-                id="card_owner"
-                required
-              />
-              <label for="card_owner">카드 소유자 성명</label>
-            </div>
-            <div class="form-floating mb-3">
-              <input
-                type="date"
-                class="form-control"
-                id="owner_birthday"
-                required
-              />
-              <label for="owner_birthday">생년월일</label>
-            </div>
-            <div class="form-floating mb-3">
-              <input
-                type="email"
-                value="{{ user.email }}"
-                class="form-control"
-                id="owner_email"
-                required
-              />
-              <label for="owner_email">이메일</label>
-            </div>
-            <div class="form-floating mb-3">
-              <input
-                type="tel"
-                class="form-control"
-                id="phone_number"
-                required
-              />
-              <label for="phone_number">휴대전화</label>
-            </div>
-            <div class="form-floating mb-3">
-              <input
-                type="tel"
-                class="form-control"
-                id="card_number"
-                required
-                maxlength="16"
-              />
-              <label for="card_number">카드번호</label>
-            </div>
-            <div class="row g-2 mb-3">
-              <div class="col-md">
-                <div class="form-floating">
-                  <input
-                    type="month"
-                    class="form-control"
-                    id="valid_until"
-                    required
-                  />
-                  <label for="valid_until">카드 유효기간 (년/월) YYMM</label>
-                </div>
-              </div>
-              <div class="col-md">
-                <div class="form-floating">
-                  <input
-                    type="password"
-                    class="form-control"
-                    id="card_password"
-                    maxlength="2"
-                    required
-                  />
-                  <label for="card_password">카드 암호 앞 2자리 **</label>
-                </div>
-              </div>
-            </div>
-          </form>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-              onclick="resetPaymentDialog()"
-            >
-              취소
-            </button>
-            <button
-              type="button"
-              onclick="submitPayment()"
-              class="btn btn-primary"
-            >
-              결제
-            </button>
-          </div>
+      </div>
+    </div>
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="table-responsive fs--1">
+          <table class="table table-striped border-bottom">
+            <thead class="bg-200 text-900">
+              <tr>
+                <th class="border-0">Products</th>
+                <th class="border-0 text-center">Quantity</th>
+                <th class="border-0 text-right">Rate</th>
+                <th class="border-0 text-right">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="align-middle">
+                  <h6 class="mb-0 text-nowrap">Azure 서비스</h6>
+                  <p class="mb-0">Subscription 1개, Category 4개</p>
+                </td>
+                <td class="align-middle text-center">2</td>
+                <td class="align-middle text-right">$65.00</td>
+                <td class="align-middle text-right">97,845원</td>
+              </tr>
+              <tr>
+                <td class="align-middle">
+                  <h6 class="mb-0 text-nowrap">Microsoft 부가서비스</h6>
+                  <p class="mb-0">Product 5개</p>
+                </td>
+                <td class="align-middle text-center">1</td>
+                <td class="align-middle text-right">$2,100.00</td>
+                <td class="align-middle text-right">0원</td>
+              </tr>
+              <tr>
+                <td class="align-middle">
+                  <h6 class="mb-0 text-nowrap">Microsoft Support</h6>
+                  <p class="mb-0">Support 미사용</p>
+                </td>
+                <td class="align-middle text-center">8</td>
+                <td class="align-middle text-right">$5,00.00</td>
+                <td class="align-middle text-right">0원</td>
+              </tr>
+              <tr>
+                <td class="align-middle">
+                  <h6 class="mb-0 text-nowrap">Cloudmate 서비스</h6>
+                  <p class="mb-0">Service 미사용</p>
+                </td>
+                <td class="align-middle text-center">8</td>
+                <td class="align-middle text-right">$5,00.00</td>
+                <td class="align-middle text-right">0원</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div class="modal-body" id="payment-progress" hidden style="text-align: center;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-credit-card-2-front" viewBox="0 0 16 16">
-            <path d="M14 3a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h12zM2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2z"/>
-            <path d="M2 5.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5z"/>
-          </svg>
-          <h3>결제 진행 중...</h3>
-        </div>
-        <div class="modal-body" id="payment-success" hidden  style="text-align: center;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
-            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-            <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-          </svg>
-          <h3>결제가 완료되었습니다.</h3>
-          <div class="modal-footer">
-            <button
-              type="button"
-              onclick="resetPaymentDialog()"
-              data-bs-dismiss="modal"
-              class="btn btn-primary"
-            >
-              확인
-            </button>
+        <div class="row no-gutters justify-content-end">
+          <div class="col-auto">
+            <table class="table table-sm table-borderless fs--1 text-right">
+              <tr>
+                <th class="text-900">Subtotal:</th>
+                <td class="font-weight-semi-bold">97,845원</td>
+              </tr>
+              <tr>
+                <th class="text-900">Tax 5%:</th>
+                <td class="font-weight-semi-bold">----원</td>
+              </tr>
+              <tr class="border-top">
+                <th class="text-900">Total:</th>
+                <td class="font-weight-semi-bold">100,000원</td>
+              </tr>
+            </table>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-lg-4 col-md-4">
+            <h5 class="mb-3 fs-0">Billing Address</h5>
+            <h6 class="mb-2">Antony Hopkins</h6>
+            <p class="mb-1 fs--1">2393 Main Avenue<br>Penasauka, New Jersey 87896</p>
+            <p class="mb-0 fs--1"> <strong>Email: </strong><a href="mailto:ricky@gmail.com">antony@example.com</a></p>
+            <p class="mb-0 fs--1"> <strong>Phone: </strong><a href="tel:7897987987">7897987987</a></p>
+          </div>
+          <div class="col-lg-4 col-md-4">
+            <h5 class="mb-3 fs-0">사업자 등록 정보</h5>
+            <h6 class="mb-2">(주)겁나 멋진 회사</h6>
+            <p class="mb-0 fs--1">사업자등록번호: 123-45-67890</p>
+          </div>
+          <div class="col-lg-4 col-md-4">
+            <div class="media"><img class="mr-3" src="{% static 'img/icons/visa.jpg' %}" width="40" alt="">
+              <div class="media-body">
+                <h6 class="mb-0">Antony Hopkins</h6>
+                <p class="mb-0 fs--1">**** **** **** 9809</p>
+              </div>
+            </div>
+            <div class="col-lg-12 text-center">
+              <button class="btn btn-success mt-3 px-5" type="button" data-bs-toggle="modal" data-bs-target="#paymentModal">확인완료 및 결제</button>
+              <p class="fs--1 mt-3 mb-0">By clicking <strong>Confirm & Pay </strong>button you agree to the <a href="#!">Terms &amp; Conditions</a></p>
 
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      id="paymentModal"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">지금 결제</h5>
+          </div>
+          <div class="modal-body" id="payment-form">
+            <div id="payment-error-container" hidden>
+              <div class="alert alert-danger" role="alert" id="payment-error">
+
+              </div>
+            </div>
+            <form>
+              {% csrf_token %}
+              <div class="form-floating mb-3">
+                <input
+                  type="name"
+                  value="{{ user.get_full_name }}"
+                  class="form-control"
+                  id="card_owner"
+                  required
+                />
+                <label for="card_owner">카드 소유자 성명</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input
+                  type="date"
+                  class="form-control"
+                  id="owner_birthday"
+                  required
+                />
+                <label for="owner_birthday">생년월일</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input
+                  type="email"
+                  value="{{ user.email }}"
+                  class="form-control"
+                  id="owner_email"
+                  required
+                />
+                <label for="owner_email">이메일</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input
+                  type="tel"
+                  class="form-control"
+                  id="phone_number"
+                  required
+                />
+                <label for="phone_number">휴대전화</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input
+                  type="tel"
+                  class="form-control"
+                  id="card_number"
+                  required
+                  maxlength="16"
+                />
+                <label for="card_number">카드번호</label>
+              </div>
+              <div class="row g-2 mb-3">
+                <div class="col-md">
+                  <div class="form-floating">
+                    <input
+                      type="month"
+                      class="form-control"
+                      id="valid_until"
+                      required
+                    />
+                    <label for="valid_until">카드 유효기간 (년/월) YYMM</label>
+                  </div>
+                </div>
+                <div class="col-md">
+                  <div class="form-floating">
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="card_password"
+                      maxlength="2"
+                      required
+                    />
+                    <label for="card_password">카드 암호 앞 2자리 **</label>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+                onclick="resetPaymentDialog()"
+              >
+                취소
+              </button>
+              <button
+                type="button"
+                onclick="submitPayment()"
+                class="btn btn-primary"
+              >
+                결제
+              </button>
+            </div>
+          </div>
+          <div class="modal-body" id="payment-progress" hidden style="text-align: center;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-credit-card-2-front" viewBox="0 0 16 16">
+              <path d="M14 3a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h12zM2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2z"/>
+              <path d="M2 5.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5z"/>
+            </svg>
+            <h3>결제 진행 중...</h3>
+          </div>
+          <div class="modal-body" id="payment-success" hidden  style="text-align: center;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+              <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+            </svg>
+            <h3>결제가 완료되었습니다.</h3>
+            <div class="modal-footer">
+              <button
+                type="button"
+                onclick="resetPaymentDialog()"
+                data-bs-dismiss="modal"
+                class="btn btn-primary"
+              >
+                확인
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      {% include '_base_footer.html' %}
+    </footer>
+  </div>
+{% endblock %}
+
+{% block appended_js %}
+  <script src="{% static 'js/payment.js' %}"></script>
 {% endblock %}
