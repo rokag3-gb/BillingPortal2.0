@@ -4,10 +4,10 @@ from django.http import HttpResponse, HttpRequest
 from django.views.decorators.csrf import csrf_exempt  
 from django.contrib.auth.decorators import login_required
 from django.conf import settings as conf
-import json
-import xml.etree.ElementTree as ET
+import json, datetime
 from zeep import Client, Settings
 
+# PG 인증서버 통신용 SOAP 클라이언트
 pg_config = getattr(conf, "PG_BACKEND", {})
 settings = Settings(raw_response=False)
 payment_backend = Client(pg_config["SOAP_URL"], settings=settings)
@@ -44,6 +44,7 @@ def messages(request: HttpRequest) -> HttpResponse:
 def payment(request: HttpRequest) -> HttpResponse:
     if(request.method == "POST"):
         payment_form = json.loads(request.body.decode("utf-8"))
+        print(payment_form)
         result = payment_backend.service.KICC_EasyPay_json(
             pg_config["STORE_ID"],
             "123",
@@ -51,12 +52,12 @@ def payment(request: HttpRequest) -> HttpResponse:
             payment_form['card_owner'],
             payment_form['owner_email'],
             payment_form['card_number'],
-            3000,
+            100,
             payment_form['phone_number'],
-            "22" + "10",
+            datetime.datetime.strptime(payment_form['valid_until'], "%Y-%m").strftime("%y%m"),
             "0",
             payment_form['card_password'],
-            "961008" 
+            datetime.date.fromisoformat(payment_form['owner_birthday']).strftime("%y%m%d")
         )
         # print("Statue code: ", result.status_code)
         print(result)
