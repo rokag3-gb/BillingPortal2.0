@@ -1,43 +1,71 @@
-{% extends 'portal/base.html' %}
-{% block body %}
-<div class="container-fluid">
-  <form method="post" action="{% url 'login' %}" style="max-width: 500px; margin: 100px auto">
-    <h2 style="text-align: center;">Mate365 Billing Login</h2>
-    {% if form.errors %}
-    <div class="alert alert-danger" role="alert">
-      사용자명 또는 비밀번호가 틀렸습니다. 다시 시도해주세요.
+{% extends '_base_auth.html' %}
+{% load static %}
+{% block contents %}
+<div class="container" data-layout="container">
+  <div class="row flex-center min-vh-100 py-6">
+    <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4"><a class="d-flex flex-center mb-4" href="../../index.html"><img class="mr-2" src="{% static 'img/illustrations/falcon.png' %}" alt="" width="58" /><span class="text-sans-serif font-weight-extra-bold fs-5 d-inline-block">MateCost</span></a>
+      <div class="card">
+        <div class="card-body p-4 p-sm-5">
+          <div class="row text-left justify-content-between align-items-center mb-2">
+            <div class="col-auto">
+              <h5>Log in</h5>
+            </div>
+            {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+              사용자명 또는 비밀번호가 틀렸습니다. 다시 시도해주세요.
+            </div>
+            {% endif %}
+          {% if next %}
+          {% if user.is_authenticated %}
+          <div class="alert alert-warning" role="alert">
+            로그인 하신 계정은 이 페이지 접근 권한이 없습니다.
+            접근 권한이 있는 계정으로 로그인 후 다시 시도해주세요.
+          </div>
+          {% else %}
+          <div class="alert alert-warning" role="alert">
+            페이지를 보려면, 먼저 로그인이 필요합니다.
+          </div>
+          {% endif %}
+          {% endif %}
+          </div>
+          <form method="post" action="{% url 'login' %}" >
+            {% csrf_token %}
+            <div class="form-group">
+              <input class="form-control" type="{{ form.username.field.widget.input_type }}"
+                     value="{{ form.username.value|default_if_none:'' }}" placeholder="{{ form.username.label }}"
+                     aria-label="{{ form.username.label }}" name="{{ form.username.html_name }}" />
+            </div>
+            <div class="form-group">
+              <input class="form-control" type="{{ form.password.field.widget.input_type }}"
+                     value="{{ form.password.value|default_if_none:'' }}" placeholder="{{ form.password.label }}"
+                     aria-label="{{ form.password.label }}" name="{{ form.password.html_name }}"
+              />
+            </div>
+            <div class="row justify-content-between align-items-center">
+              <div class="col-auto">
+                <div class="custom-control custom-checkbox">
+                  <input class="custom-control-input" type="checkbox" id="basic-checkbox" checked="checked" />
+                  <label class="custom-control-label" for="basic-checkbox">Remember me</label>
+                </div>
+              </div>
+              <div class="col-auto"><a class="fs--1" href="{% url 'password_reset' %}">Forgot Password?</a></div>
+            </div>
+            <div class="form-group">
+              <button class="btn btn-primary btn-block mt-3" type="submit" name="submit">Log in</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-    {% endif %}
-    {% if next %}
-    {% if user.is_authenticated %}
-    <div class="alert alert-warning" role="alert">
-      로그인 하신 계정은 이 페이지 접근 권한이 없습니다.
-      접근 권한이 있는 계정으로 로그인 후 다시 시도해주세요.
+
+    <div class="card" style="margin: 20px;">
+      <div class="card-body">
+        (주)클라우드메이트 | 대표이사 : 윤주현 | 서울시 구로구 경인로 576 |
+        <a href="https://cloudmt.co.kr/?page_id=3">개인정보처리방침</a>
+        연락처 : 82-2-2069-1980 | E-MAIL : contact@cloudmt.co.kr | 사업자번호 :
+        789-81-01310 | © 2021~Present CLOUDMATE. All Rights Reserved.
+      </div>
     </div>
-    {% else %}
-    <div class="alert alert-warning" role="alert">
-      페이지를 보려면, 먼저 로그인이 필요합니다.
-    </div>
-    {% endif %}
-    {% endif %}
-    {% csrf_token %}
-    <div class="input-group mb-3">
-      <span class="input-group-text" id="basic-addon1">@</span>
-      <input type="{{ form.username.field.widget.input_type }}" value="{{ form.username.value|default_if_none:'' }}"
-        class="form-control" placeholder="{{ form.username.label }}" aria-label="{{ form.username.label }}"
-        aria-describedby="basic-addon1" name="{{ form.username.html_name }}" />
-    </div>
-    <div class="input-group mb-3">
-      <span class="input-group-text" id="basic-addon1">**</span>
-      <input type="{{ form.password.field.widget.input_type }}" value="{{ form.password.value|default_if_none:'' }}"
-        class="form-control" placeholder="{{ form.password.label }}" aria-label="{{ form.password.label }}"
-        aria-describedby="basic-addon1" name="{{ form.password.html_name }}" />
-    </div>
-    <button class="w-100 btn btn-lg btn-primary" type="submit" value="login">
-      로그인
-    </button>
-    <input type="hidden" name="next" value="{{ next }}" />
-    <a class="w-100 btn btn-lg btn-link" href="/auth/recover">비밀번호 복구</a>
-  </form>
+  </div>
 </div>
 {% endblock %}
