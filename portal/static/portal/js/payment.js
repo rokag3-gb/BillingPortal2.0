@@ -26,12 +26,18 @@ function submitPayment() {
       card_number: document.getElementById("card_number").value,
       valid_until: document.getElementById("valid_until").value,
       card_password: document.getElementById("card_password").value,
-      }),
-    })
+    }),
+  })
     .then(function (response) {
       paymentProgress.hidden = true;
       if (response.ok) {
         paymentSuccess.hidden = false;
+      } else if (response.status >= 400 && response.status < 500) {
+        response.json().then(function(json){
+          paymentForm.hidden = false;
+          paymentErrorContainer.hidden = false;
+          paymentError.innerText = `결제 중 오류가 발생했습니다. 입력하신 정보를 다시 확인하세요: ${json['응답메시지']}`;
+        })
       } else if (response.status >= 500 && response.status < 600) {
         paymentForm.hidden = false;
         paymentErrorContainer.hidden = false;
@@ -39,7 +45,7 @@ function submitPayment() {
       }
     })
     .catch(function (error) {
-      console.log(error)
+      console.log(error);
       paymentProgress.hidden = true;
       paymentForm.hidden = false;
       paymentErrorContainer.hidden = false;
