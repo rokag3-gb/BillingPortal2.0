@@ -29,19 +29,31 @@ function submitPayment() {
     }),
   })
     .then(function (response) {
+      paymentProgress.hidden = true;
       if (response.ok) {
-        paymentProgress.hidden = true;
         paymentSuccess.hidden = false;
+      } else if (response.status >= 400 && response.status < 500) {
+        response.json().then(function(json){
+          paymentForm.hidden = false;
+          paymentErrorContainer.hidden = false;
+          paymentError.innerText = `결제 중 오류가 발생했습니다. 입력하신 정보를 다시 확인하세요: ${json['응답메시지']}`;
+        })
+      } else if (response.status >= 500 && response.status < 600) {
+        paymentForm.hidden = false;
+        paymentErrorContainer.hidden = false;
+        paymentError.innerText = "결제 처리 중 서버 내부 오류가 발생했습니다.";
       }
     })
     .catch(function (error) {
+      console.log(error);
+      paymentProgress.hidden = true;
       paymentForm.hidden = false;
       paymentErrorContainer.hidden = false;
       paymentError.innerText = "서버와 통신 중 오류가 발생했습니다.";
     });
 }
 
-function resetPaymentDialog(){
+function resetPaymentDialog() {
   document.getElementById("card_owner").value = "";
   document.getElementById("owner_birthday").value = "";
   document.getElementById("owner_email").value = "";

@@ -21,7 +21,7 @@ window.onload = function () {
     };
 
     // Initialize iframe for embedding report
-    powerbi.bootstrap(reportContainer, { type: "report" });
+    powerbi.bootstrap(reportContainer, { type: "report", embedUrl: 'https://app.powerbi.com/reportEmbed' });
 
     var models = window["powerbi-client"].models;
     var reportLoadConfig = {
