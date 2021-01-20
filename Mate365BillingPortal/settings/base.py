@@ -123,6 +123,10 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+STATICFILES_DIRS = [
+    str(BASE_DIR.joinpath('static')),
+]
+
 PG_BACKEND = {
     "SOAP_URL": os.getenv("PG_SOAP_URL"),
     "STORE_ID": os.getenv("PG_STORE_ID")
