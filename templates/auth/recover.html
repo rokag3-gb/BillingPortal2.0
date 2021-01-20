@@ -1,0 +1,40 @@
+{% extends '_base_auth.html' %}
+{% load static %}
+{% block contents %}
+<div class="container" data-layout="container">
+  <div class="row flex-center min-vh-100 py-6 text-center">
+    <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4"><a class="d-flex flex-center mb-4" href="{% url 'index' %}"><img class="mr-2" src="{% static 'img/illustrations/falcon.png' %}" alt="" width="58" /><span class="text-sans-serif font-weight-extra-bold fs-5 d-inline-block">MateCost</span></a>
+      <div class="card">
+        <div class="card-body p-4 p-sm-5">
+          <h5 class="mb-0">Forgot your password?</h5><small>Enter your email and we'll send you a reset link.</small>
+          <div class="alert alert-danger" role="alert">
+            올바은 이메일 주소 형식이 아닙니다. 다시 시도해주세요.
+          </div>
+          <form class="mt-4" method="post" action="{% url 'password_reset' %}">
+            {% csrf_token %}
+            <div class="form-group">
+              <input class="form-control" type="{{ form.email.field.widget.input_type }}"
+                     value="{{ form.email.value|default_if_none:'' }}" placeholder="{{ form.email.label }}"
+                     aria-label="{{ form.email.label }}" name="{{ form.email.html_name }}"
+              />
+            </div>
+            <div class="form-group">
+              <button class="btn btn-primary btn-block mt-3" type="submit" name="submit">Send reset link</button>
+            </div>
+          </form><a class="fs--1 text-600" href="#!">I can't recover my account using this page<span class="d-inline-block ml-1">&rarr;</span></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin: 20px;">
+      <div class="card-body">
+        (주)클라우드메이트 | 대표이사 : 윤주현 | 서울시 구로구 경인로 576 |
+        <a href="https://cloudmt.co.kr/?page_id=3">개인정보처리방침</a>
+        연락처 : 82-2-2069-1980 | E-MAIL : contact@cloudmt.co.kr | 사업자번호 :
+        789-81-01310 | © 2021~Present CLOUDMATE. All Rights Reserved.
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
