@@ -1,17 +1,28 @@
-{% extends 'portal/base.html' %}
-{% block body %}
-<div class="container-fluid">
-  <form
-    method="post"
-    action="{% url 'password_reset_done' %}"
-    style="max-width: 500px; margin: 100px auto"
-  >
-    
-    <h2 style="text-align: center;">Mate365 Billing</h2>
-    <p>계정 비밀번호 복구를 위한 이메일을 보내드렸습니다. 받은 편지함을 확인하여 비밀번호 복구 절차를 진행하세요.</p>
-   
-    {% csrf_token %}
-    <a class="w-100 btn btn-lg btn-link" href="/auth/login">로그인</a>
-  </form>
+{% extends '_base_auth.html' %}
+{% load static %}
+{% block contents %}
+<div class="container" data-layout="container">
+  <div class="row flex-center min-vh-100 py-6 text-center">
+    <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4"><a class="d-flex flex-center mb-4"
+        href="{% url 'index' %}"><img src="{% static 'img/logos/cloudmate_logo-h40.png' %}" alt="" /></a>
+      <div class="card">
+        <div class="card-body p-4 p-sm-5">
+          <h5 class="mb-0">메일함을 확인하세요</h5>
+          <small>계정 비밀번호 복구를 위한 이메일을 보내드렸습니다. 받은 편지함을 확인하여 비밀번호 복구 절차를 진행하세요.</small>
+          <a class="w-100 btn btn-lg btn-link" href="{% url 'login' %}">로그인</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin: 20px;">
+      <div class="card-body">
+        (주)클라우드메이트 | 대표이사 : 윤주현 | 서울시 구로구 경인로 576 |
+        <a href="https://cloudmt.co.kr/?page_id=3">개인정보처리방침</a>
+        연락처 : 82-2-2069-1980 | E-MAIL : contact@cloudmt.co.kr | 사업자번호 :
+        789-81-01310 | © 2021~Present CLOUDMATE. All Rights Reserved.
+      </div>
+    </div>
+
+  </div>
 </div>
 {% endblock %}
