@@ -64,6 +64,7 @@ window.onload = function () {
         filters: [hiddenBasicFilter]
     };
 
+
     fetch("/powerbi/token")
         .then(function (response) {
             return response.json();
@@ -103,7 +104,7 @@ window.onload = function () {
                 return;
             });
 
-            
+
 
             // report.setFilters([hiddenBasicFilter])
             //     .catch(errors => {
@@ -116,6 +117,20 @@ window.onload = function () {
                         // Refresh error
                     });
             }, 1000 * 30);
+
+            setInterval(function () {
+                console.log("Token refreshing...")
+                fetch("/powerbi/token")
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (json) {
+                        report.setAccessToken(json.accessToken)
+                            .then(function(){
+                                console.log("Token refreshed")
+                            })
+                    })
+            }, 1000 * 60 * 60);
         })
         .catch(function (error) {
             // Show error container
@@ -129,5 +144,5 @@ window.onload = function () {
             // Show error message on UI
             errorContainer.html("리포트 로드 중 오류 발생");
         });
-}
 
+}
