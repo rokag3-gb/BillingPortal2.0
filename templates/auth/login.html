@@ -13,25 +13,25 @@
             <div class="col-auto">
               <h5>Log in</h5>
             </div>
+          </div>
+          <form method="post" action="{% url 'login' %}" >
             {% if form.errors %}
             <div class="alert alert-danger" role="alert">
               사용자명 또는 비밀번호가 틀렸습니다. 다시 시도해주세요.
             </div>
             {% endif %}
-          {% if next %}
-          {% if user.is_authenticated %}
-          <div class="alert alert-warning" role="alert">
-            로그인 하신 계정은 이 페이지 접근 권한이 없습니다.
-            접근 권한이 있는 계정으로 로그인 후 다시 시도해주세요.
-          </div>
-          {% else %}
-          <div class="alert alert-warning" role="alert">
-            페이지를 보려면, 먼저 로그인이 필요합니다.
-          </div>
-          {% endif %}
-          {% endif %}
-          </div>
-          <form method="post" action="{% url 'login' %}" >
+            {% if next %}
+            {% if user.is_authenticated %}
+            <div class="alert alert-warning" role="alert">
+              로그인 하신 계정은 이 페이지 접근 권한이 없습니다.
+              접근 권한이 있는 계정으로 로그인 후 다시 시도해주세요.
+            </div>
+            {% else %}
+            <div class="alert alert-warning" role="alert">
+              페이지를 보려면, 먼저 로그인이 필요합니다.
+            </div>
+            {% endif %}
+            {% endif %}
             {% csrf_token %}
             <div class="form-group">
               <input class="form-control" type="{{ form.username.field.widget.input_type }}"
