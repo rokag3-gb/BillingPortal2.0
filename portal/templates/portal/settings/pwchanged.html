@@ -1,13 +1,29 @@
-{% extends 'portal/shell.html' %}
+{% extends '_base.html' %}
+{% load static %}
+{% block navbar %}
+  {% include '_base_navbar_left.html' %}
+{% endblock %}
+{% block contents %}
+  <div class="content">
+    {% block navbar-top %}{% include '_base_navbar_top.html' %}{% endblock %}
+    <div class="card mb-3">
+      <div class="bg-holder d-none bg-card">
+      </div>
+      <!--/.bg-holder-->
 
-{% block content %}
-<div class="container-xxl">
-    <div class="card" style="margin-top: 20px;">
-        <div class="card-body">
-            <h2>변경 완료</h2>
-            <p>새 비밀번호로 변경되었습니다.</p>
-            <a type="button" class="btn btn-light" href="{% url 'settings' %}">설정 화면으로 돌아가기</a>
-        </div>
+      <div class="card-body">
+        <h2>변경 완료</h2>
+        <p>새 비밀번호로 변경되었습니다.</p>
+        <a type="button" class="btn btn-light" href="{% url 'settings' %}">설정 화면으로 돌아가기</a>
+      </div>
     </div>
-</div>
+
+    <footer>
+      {% include '_base_footer.html' %}
+    </footer>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'js/payment.js' %}"></script>
 {% endblock %}
