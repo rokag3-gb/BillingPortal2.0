@@ -48,8 +48,13 @@ def profile(request: HttpRequest) -> HttpResponse:
 def messages(request: HttpRequest) -> HttpResponse:
     return render(request, 'portal/messages.html', {'sidebar': 'messages', 'sidebar_items': sidebar_items})
 
-@login_required
+
 def payment(request: HttpRequest) -> HttpResponse:
+    org = get_organization(request=request)
+
+    if org is None:
+        return redirect('/dashboard')
+
     if(request.method == "POST"):
         payment_form = json.loads(request.body.decode("utf-8"))
         print(payment_form)

@@ -32,7 +32,7 @@ urlpatterns = [
     path('organization/', include('custom.urls')),
     path('powerbi/', include('powerbi.urls')),
 
-    path('payment/', payment, name='payment'),
+    path('payment/', login_required(payment), name='payment'),
     path('dashboard/', login_required(dashboard), name='dashboard'),
     path('settings/', preference, name='settings'),
     path('profile/', profile, name='profile'),
