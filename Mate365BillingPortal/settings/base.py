@@ -50,7 +50,9 @@ ROOT_URLCONF = 'Mate365BillingPortal.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            str(BASE_DIR.joinpath('templates'))
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -93,9 +95,9 @@ LOGOUT_REDIRECT_URL = "/auth/login"
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'ko-kr'
+LANGUAGE_CODE = 'ko-KR'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -121,12 +123,13 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-KICC_EASYPAY = {
-    "STORE_ID": os.getenv("PG_STORE_ID"),
-    "STORE_NAME": os.getenv("PG_STORE_NAME"),
-    "CHARSET": "UTF-8",
-    "CURRENCY": "00", # 00: KRW
-    "LANG": "KOR"
+STATICFILES_DIRS = [
+    str(BASE_DIR.joinpath('static')),
+]
+
+PG_BACKEND = {
+    "SOAP_URL": os.getenv("PG_SOAP_URL"),
+    "STORE_ID": os.getenv("PG_STORE_ID")
 }
 
 POWERBI = {

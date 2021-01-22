@@ -1,11 +1,15 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.views.decorators.csrf import csrf_exempt  
 from django.contrib.auth.decorators import login_required
 from django.conf import settings as conf
-from django.views.decorators.clickjacking import xframe_options_sameorigin
-from django.contrib.sites.shortcuts import get_current_site
+import json, datetime
+from zeep import Client, Settings
 
+# PG 인증서버 통신용 SOAP 클라이언트
+pg_config = getattr(conf, "PG_BACKEND", {})
+settings = Settings(raw_response=False)
+payment_backend = Client(pg_config["SOAP_URL"], settings=settings)
 
 sidebar_items = [
     {'name':'대시보드','path':"dashboard"},
@@ -37,27 +41,32 @@ def messages(request: HttpRequest) -> HttpResponse:
 
 @login_required
 def payment(request: HttpRequest) -> HttpResponse:
-    print(request.META["HTTP_HOST"])
-    context = {
-        'sidebar': 'payment', 
-        'sidebar_items': sidebar_items,
-        'payment': getattr(conf, "KICC_EASYPAY", {}),
-        'payment_js': getattr(conf, "KICC_EASYPAY_JS_URL", ""),
-        'baseurl': getattr(conf, "BASE_URL", "")
-     }
-    return render(request, 'portal/payment.html', context)
-
-# TODO: iframe 이슈로 임시 예외 처리
-# @csrf_exempt 
-@login_required
-@xframe_options_sameorigin
-def payrequest(request: HttpRequest) -> HttpResponse:
-    return render(request, 'portal/pay/request.html')
-
-# TODO: iframe 이슈로 임시 예외 처리
-# @login_required
-@csrf_exempt 
-@xframe_options_sameorigin
-def payresult(request: HttpRequest) -> HttpResponse:
-    print(request.method)
-    return render(request, 'portal/pay/result.html')
+    if(request.method == "POST"):
+        payment_form = json.loads(request.body.decode("utf-8"))
+        print(payment_form)
+        result = payment_backend.service.KICC_EasyPay_json(
+            pg_config["STORE_ID"],
+            "123",
+            "클라우드사용비용",
+            payment_form['card_owner'],
+            payment_form['owner_email'],
+            payment_form['phone_number'],
+            100,
+            payment_form['card_number'],
+            datetime.datetime.strptime(payment_form['valid_until'], "%Y-%m").strftime("%y%m"),
+            "0",
+            payment_form['card_password'],
+            datetime.date.fromisoformat(payment_form['owner_birthday']).strftime("%y%m%d")
+        )
+        # print("Statue code: ", result.status_code)
+        pgresult = json.loads(result)
+        if(pgresult['응답코드']=='0000'):
+            return JsonResponse(pgresult)
+        else:
+            return JsonResponse(pgresult, status=400)
+    else:
+        context = {
+            'sidebar': 'payment', 
+            'sidebar_items': sidebar_items,
+        }
+        return render(request, 'portal/payment.html', context)

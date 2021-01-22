@@ -5,7 +5,9 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/python
 
 trigger:
+- main
 - develop
+
 variables:
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
@@ -14,7 +16,12 @@ variables:
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
   # Environment name
-  environmentName: 'mate365billingpreview'
+  ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+    environmentName: 'BillingPortal-Production'
+    azWebAppName: 'mate365billing'
+  ${{ if eq(variables['Build.SourceBranchName'], 'develop') }}:
+    environmentName: 'BillingPortal-Staging'
+    azWebAppName: 'mate365billingpreview'
 
 stages:
 - stage: Build
@@ -72,12 +79,12 @@ stages:
             displayName: 'Use Python version'
 
           - task: AzureRmWebAppDeployment@4
-            displayName: 'Deploy Azure Web App - mate365billingpreview'
+            displayName: 'Deploy to Web App $(environmentName)'
             inputs:
               ConnectionType: 'AzureRM'
               azureSubscription: 'Azure_Deploy_to_MPN-Production-스폰서쉽-Gold'
               appType: 'webAppLinux'
-              WebAppName: 'mate365billingpreview'
+              WebAppName: $(azWebAppName)
               packageForLinux: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
               RuntimeStack: 'PYTHON|3.8'
               
