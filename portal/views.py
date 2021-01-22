@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpRequest, JsonResponse
-from django.views.decorators.csrf import csrf_exempt  
-from django.contrib.auth.decorators import login_required
+import datetime
+import json
+
 from django.conf import settings as conf
-import json, datetime
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, HttpRequest, JsonResponse
+from django.shortcuts import render, redirect
 from zeep import Client, Settings
 
 # PG 인증서버 통신용 SOAP 클라이언트

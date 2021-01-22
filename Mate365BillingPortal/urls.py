@@ -14,10 +14,27 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.auth.views import LoginView
 from django.urls import path, include
 
+from custom.views import CustomLoginView
+from portal.views import payment, dashboard, index, preference, profile, messages
+
 urlpatterns = [
+    # FIXME: next 파라미터가 동작하지 않음
+    path('billingadmin/login/', LoginView.as_view(template_name="registration/login.html", ), name='login'),
     path('billingadmin/', admin.site.urls),
-    path('', include('portal.urls')),
-    path('powerbi/', include('powerbi.urls'))
+
+    path('auth/login/', CustomLoginView.as_view(), name='login'),
+    path('auth/', include('django.contrib.auth.urls')),
+
+    path('organization/', include('custom.urls')),
+    path('powerbi/', include('powerbi.urls')),
+
+    path('payment/', payment, name='payment'),
+    path('dashboard/', dashboard, name='dashboard'),
+    path('settings/', preference, name='settings'),
+    path('profile/', profile, name='profile'),
+    path('messages/', messages, name='messages'),
+    path('', index, name='index'),
 ]
