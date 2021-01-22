@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.urls import path, include
 
@@ -32,7 +33,7 @@ urlpatterns = [
     path('powerbi/', include('powerbi.urls')),
 
     path('payment/', payment, name='payment'),
-    path('dashboard/', dashboard, name='dashboard'),
+    path('dashboard/', login_required(dashboard), name='dashboard'),
     path('settings/', preference, name='settings'),
     path('profile/', profile, name='profile'),
     path('messages/', messages, name='messages'),

@@ -8,6 +8,8 @@ from django.shortcuts import render, redirect
 from zeep import Client, Settings
 
 # PG 인증서버 통신용 SOAP 클라이언트
+from custom.services import get_organization
+
 pg_config = getattr(conf, "PG_BACKEND", {})
 settings = Settings(raw_response=False)
 payment_backend = Client(pg_config["SOAP_URL"], settings=settings)
@@ -28,9 +30,15 @@ def index(request: HttpRequest) -> HttpResponse:
 def preference(request: HttpRequest) -> HttpResponse:
     return render(request, 'portal/settings/index.html')
 
-@login_required
+
 def dashboard(request: HttpRequest) -> HttpResponse:
+    org = get_organization(request=request)
+
+    if org is None:
+        return render(request, 'portal/dashboard-none-org.html', {'sidebar': 'dashboard', 'sidebar_items': sidebar_items})
+
     return render(request, 'portal/dashboard.html', {'sidebar': 'dashboard', 'sidebar_items': sidebar_items })
+
 
 @login_required
 def profile(request: HttpRequest) -> HttpResponse:
