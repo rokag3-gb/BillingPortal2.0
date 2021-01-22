@@ -22,7 +22,6 @@ from custom.views import CustomLoginView
 from portal.views import payment, dashboard, index, preference, profile, messages
 
 urlpatterns = [
-    # FIXME: next 파라미터가 동작하지 않음
     path('billingadmin/login/', LoginView.as_view(template_name="registration/login.html", ), name='login'),
     path('billingadmin/', admin.site.urls),
 
