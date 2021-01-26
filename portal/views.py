@@ -1,15 +1,14 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpRequest, JsonResponse
-from django.views.decorators.csrf import csrf_exempt  
-from django.contrib.auth.decorators import login_required
+import datetime
+import json
+
 from django.conf import settings as conf
-import json, datetime
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, HttpRequest, JsonResponse
+from django.shortcuts import render, redirect
 from zeep import Client, Settings
 
-# PG 인증서버 통신용 SOAP 클라이언트
-pg_config = getattr(conf, "PG_BACKEND", {})
-settings = Settings(raw_response=False)
-payment_backend = Client(pg_config["SOAP_URL"], settings=settings)
+from custom.services import get_organization
+
 
 sidebar_items = [
     {'name':'대시보드','path':"dashboard"},
@@ -17,8 +16,7 @@ sidebar_items = [
     # {'name':'메시지','path':"messages"}
 ]
 
-# Create your views here.
-@login_required
+
 def index(request: HttpRequest) -> HttpResponse:
     # return render(request, 'portal/index.html')
     return redirect('/dashboard')
@@ -27,9 +25,15 @@ def index(request: HttpRequest) -> HttpResponse:
 def preference(request: HttpRequest) -> HttpResponse:
     return render(request, 'portal/settings/index.html')
 
-@login_required
+
 def dashboard(request: HttpRequest) -> HttpResponse:
+    org = get_organization(request=request)
+
+    if org is None:
+        return render(request, 'portal/dashboard-none-org.html', {'sidebar': 'dashboard', 'sidebar_items': sidebar_items})
+
     return render(request, 'portal/dashboard.html', {'sidebar': 'dashboard', 'sidebar_items': sidebar_items })
+
 
 @login_required
 def profile(request: HttpRequest) -> HttpResponse:
@@ -39,9 +43,19 @@ def profile(request: HttpRequest) -> HttpResponse:
 def messages(request: HttpRequest) -> HttpResponse:
     return render(request, 'portal/messages.html', {'sidebar': 'messages', 'sidebar_items': sidebar_items})
 
-@login_required
+
 def payment(request: HttpRequest) -> HttpResponse:
-    if(request.method == "POST"):
+    org = get_organization(request=request)
+
+    if org is None:
+        return redirect('/dashboard')
+
+    if request.method == "POST":
+        # PG 인증서버 통신용 SOAP 클라이언트
+        pg_config = getattr(conf, "PG_BACKEND", {})
+        settings = Settings(raw_response=False)
+        payment_backend = Client(pg_config["SOAP_URL"], settings=settings)
+
         payment_form = json.loads(request.body.decode("utf-8"))
         print(payment_form)
         result = payment_backend.service.KICC_EasyPay_json(

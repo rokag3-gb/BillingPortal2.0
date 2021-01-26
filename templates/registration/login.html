@@ -14,7 +14,7 @@
               <h5>Log in</h5>
             </div>
           </div>
-          <form method="post" action="{% url 'login' %}" >
+          <form method="post" action="">
             {% if form.errors %}
             <div class="alert alert-danger" role="alert">
               사용자명 또는 비밀번호가 틀렸습니다. 다시 시도해주세요.
@@ -34,15 +34,10 @@
             {% endif %}
             {% csrf_token %}
             <div class="form-group">
-              <input class="form-control" type="{{ form.username.field.widget.input_type }}"
-                     value="{{ form.username.value|default_if_none:'' }}" placeholder="{{ form.username.label }}"
-                     aria-label="{{ form.username.label }}" name="{{ form.username.html_name }}" />
+              <input class="form-control" type="{{ form.username.field.widget.input_type }}" value="{{ form.username.value|default_if_none:'' }}" placeholder="{{ form.username.label }}" aria-label="{{ form.username.label }}" name="{{ form.username.html_name }}" />
             </div>
             <div class="form-group">
-              <input class="form-control" type="{{ form.password.field.widget.input_type }}"
-                     value="{{ form.password.value|default_if_none:'' }}" placeholder="{{ form.password.label }}"
-                     aria-label="{{ form.password.label }}" name="{{ form.password.html_name }}"
-              />
+              <input class="form-control" type="{{ form.password.field.widget.input_type }}" value="{{ form.password.value|default_if_none:'' }}" placeholder="{{ form.password.label }}" aria-label="{{ form.password.label }}" name="{{ form.password.html_name }}" />
             </div>
             <div class="row justify-content-between align-items-center">
               <div class="col-auto">
