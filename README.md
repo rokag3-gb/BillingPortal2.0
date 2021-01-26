@@ -70,7 +70,7 @@ python manage.py test Mate365BillingPortal/
     - `SECRET_KEY`: 암호 해싱 등에 사용하는 임의 문자열(프로덕션 설정 사용시만 필수)
 - PG(결제대행사) 모듈 연동 관련
     - `PG_STORE_ID`: 가맹점 ID
-    = `PG_STORE_NAME`: 가맹점 이름
+    = `PG_SOAP_URL`: 결제 전용 서버 URL
 - PowerBI 관련
     - `POWERBI_AUTHMODE`
         - PowerBI 리포트 조회를 위한 인증방식
@@ -90,3 +90,6 @@ python manage.py test Mate365BillingPortal/
     - `POWERBI_MASTER_PASS`
         - PowerBI Azure AD 마스터 사용자 암호
         - `MasterUser` 인증방식 사용시만 설정
+- 도메인 관련
+    - `WEBSITE_HOSTNAME`: Azure App Service 에서 자동으로 설정하는 호스트네임 환경변수
+    - `CUSTOM_DOMAIN`: 커스텀 도메인 설정시 사용
