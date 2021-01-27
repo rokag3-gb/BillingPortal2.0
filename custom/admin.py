@@ -1,7 +1,7 @@
 from django.contrib import admin
 from organizations.models import Organization
 
-from custom.models import UserProfile, OrganizationProfile, User
+from custom.models import UserProfile, OrganizationProfile, User, OrganizationVendor
 
 
 class UserProfileInline(admin.StackedInline):
@@ -27,6 +27,12 @@ class OrganizationProfileInline(admin.StackedInline):
 class OrganizationProfileAdmin(admin.ModelAdmin):
     inlines = (OrganizationProfileInline, )
 
+class OrgVendorAdmin(admin.ModelAdmin):
+    model = OrganizationVendor
+    list_display = ['seq', 'orgid', 'vendorcode', 'vendorkey', 'regdate']
+    list_filter = ['orgid', 'vendorcode']
+
 
 admin.site.unregister(Organization)
 admin.site.register(Organization, OrganizationProfileAdmin)
+admin.site.register(OrganizationVendor, OrgVendorAdmin)
