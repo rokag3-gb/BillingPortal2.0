@@ -1,7 +1,7 @@
 from django.contrib import admin
 from organizations.models import Organization
 
-from custom.models import UserProfile, OrganizationProfile, User
+from custom.models import UserProfile, OrganizationProfile, User, OrganizationVendor
 
 
 class UserProfileInline(admin.StackedInline):
@@ -30,3 +30,4 @@ class OrganizationProfileAdmin(admin.ModelAdmin):
 
 admin.site.unregister(Organization)
 admin.site.register(Organization, OrganizationProfileAdmin)
+admin.site.register(OrganizationVendor)
