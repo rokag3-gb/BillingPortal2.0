@@ -22,6 +22,10 @@
           <ul class="nav collapse show" id="home" data-parent="#navbarVerticalCollapse">
             <li class="nav-item active"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
             </li>
+            {% for vendor in request.user.org_last_selected.vendors %}
+            <li class="nav-item active"><a class="nav-link" href="{% url 'dashboard' %}">{{vendor.get_vendorcode_display}}</a>
+            </li>
+            {% endfor %}
           </ul>
         </li>
       </ul>
