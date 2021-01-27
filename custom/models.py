@@ -52,3 +52,14 @@ class Org(Organization):
 class OrgUser(OrganizationUser):
     class Meta:
         proxy = True
+
+class OrganizationVendor(models.Model):
+    seq = models.AutoField(db_column='Seq', primary_key=True)  # Field name made lowercase.
+    orgid = models.ForeignKey(Organization, models.DO_NOTHING, db_column='OrgId')  # Field name made lowercase.
+    vendorcode = models.IntegerField(db_column='VendorCode')  # Field name made lowercase.
+    vendorkey = models.CharField(db_column='VendorKey', max_length=200)  # Field name made lowercase.
+    regdate = models.DateTimeField(db_column='RegDate')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'Organization_Vendor'
