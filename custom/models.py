@@ -55,15 +55,15 @@ class OrgUser(OrganizationUser):
 
 class OrganizationVendor(models.Model):
     class VendorCode(models.IntegerChoices):
-       AWS = 'AWS', 1
-       AZURE = 'AZURE', 2
-       GCP = 'GCP', 3
+       AWS = 1
+       AZURE = 2
+       GCP = 3
     class Meta:
         managed = False
         db_table = 'Organization_Vendor'
     seq = models.AutoField(db_column='Seq', primary_key=True)  # Field name made lowercase.
     orgid = models.ForeignKey(Organization, models.DO_NOTHING, db_column='OrgId')  # Field name made lowercase.
-    vendorcode = models.IntegerField(db_column='VendorCode', choices=VendorCode)  # Field name made lowercase.
+    vendorcode = models.IntegerField(db_column='VendorCode', choices=VendorCode.choices)  # Field name made lowercase.
     vendorkey = models.CharField(db_column='VendorKey', max_length=200)  # Field name made lowercase.
     regdate = models.DateTimeField(db_column='RegDate')  # Field name made lowercase.
 
