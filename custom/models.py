@@ -48,7 +48,6 @@ class Org(Organization):
     class Meta:
         proxy = True
 
-
 class OrgUser(OrganizationUser):
     class Meta:
         proxy = True
@@ -61,10 +60,12 @@ class OrganizationVendor(models.Model):
     class Meta:
         managed = False
         db_table = 'Organization_Vendor'
-    seq = models.AutoField(db_column='Seq', primary_key=True)  # Field name made lowercase.
-    orgid = models.ForeignKey(Organization, models.DO_NOTHING, db_column='OrgId')  # Field name made lowercase.
-    vendorcode = models.IntegerField(db_column='VendorCode', choices=VendorCode.choices)  # Field name made lowercase.
-    vendorkey = models.CharField(db_column='VendorKey', max_length=200)  # Field name made lowercase.
-    regdate = models.DateTimeField(db_column='RegDate')  # Field name made lowercase.
+        verbose_name = "조직별 클라우드 연결"
+        verbose_name_plural = "조직별 클라우드 연결"
+    seq = models.AutoField(db_column='Seq', primary_key=True, verbose_name='순번')  # Field name made lowercase.
+    orgid = models.ForeignKey(Organization, models.DO_NOTHING, db_column='OrgId', verbose_name='조직')  # Field name made lowercase.
+    vendorcode = models.IntegerField(db_column='VendorCode', choices=VendorCode.choices, verbose_name='클라우드 공급자')  # Field name made lowercase.
+    vendorkey = models.CharField(db_column='VendorKey', max_length=200, verbose_name='벤더 키(테넌트ID, 구독ID 등)')  # Field name made lowercase.
+    regdate = models.DateTimeField(db_column='RegDate', verbose_name='등록일시')  # Field name made lowercase.
 
     

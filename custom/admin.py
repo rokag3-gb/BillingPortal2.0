@@ -27,7 +27,12 @@ class OrganizationProfileInline(admin.StackedInline):
 class OrganizationProfileAdmin(admin.ModelAdmin):
     inlines = (OrganizationProfileInline, )
 
+class OrgVendorAdmin(admin.ModelAdmin):
+    model = OrganizationVendor
+    list_display = ['seq', 'orgid', 'vendorcode', 'vendorkey', 'regdate']
+    list_filter = ['orgid', 'vendorcode']
+
 
 admin.site.unregister(Organization)
 admin.site.register(Organization, OrganizationProfileAdmin)
-admin.site.register(OrganizationVendor)
+admin.site.register(OrganizationVendor, OrgVendorAdmin)
