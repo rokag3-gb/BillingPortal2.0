@@ -22,15 +22,22 @@ admin.site.register(User, UserProfileAdmin)
 class OrganizationProfileInline(admin.StackedInline):
     model = OrganizationProfile
     can_delete = False
-
-
 class OrganizationProfileAdmin(admin.ModelAdmin):
+    list_display = ['name', 'is_active', 'slug', 'regnumber', 'location']
+    search_fields = ['id', 'name']
     inlines = (OrganizationProfileInline, )
+    def regnumber(self, obj):
+        return OrganizationProfile.objects.get(org=obj).company_registration_number
+
+    def location(self, obj):
+        return OrganizationProfile.objects.get(org=obj).location
 
 class OrgVendorAdmin(admin.ModelAdmin):
     model = OrganizationVendor
     list_display = ['seq', 'orgid', 'vendorcode', 'vendorkey', 'regdate']
     list_filter = ['orgid', 'vendorcode']
+    autocomplete_fields = ['orgid']
+    search_fields = ['orgid']
 
 
 admin.site.unregister(Organization)
