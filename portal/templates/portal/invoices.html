@@ -66,7 +66,19 @@
         </table>
       </div>
     </div>
-    <div class="card-footer border-top"><small>showing 6 of 342</small></div>
+    <div class="card-footer border-top">
+      <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page=1">&laquo;처음</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">이전</a></li>
+        {% endif %}
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">다음</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">마지막&raquo;</a></li>
+        {% endif %}
+        
+      </ul>
+    </div>
   </div>
   <footer>
     {% include '_base_footer.html' %}
