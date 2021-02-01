@@ -43,6 +43,12 @@ def profile(request: HttpRequest) -> HttpResponse:
 def messages(request: HttpRequest) -> HttpResponse:
     return render(request, 'portal/messages.html', {'sidebar': 'messages', 'sidebar_items': sidebar_items})
 
+def invoices(request: HttpRequest) -> HttpResponse:
+    context = {
+            'sidebar': 'payment', 
+            'sidebar_items': sidebar_items,
+        }
+    return render(request, 'portal/invoices.html', context)
 
 def payment(request: HttpRequest) -> HttpResponse:
     org = get_organization(request=request)
