@@ -19,7 +19,7 @@ from django.contrib.auth.views import LoginView
 from django.urls import path, include
 
 from custom.views import CustomLoginView
-from portal.views import payment, dashboard, index, preference, profile, messages, InvoiceList
+from portal.views import payment, dashboard, index, preference, profile, messages, invoices
 
 
 urlpatterns = [
@@ -33,7 +33,7 @@ urlpatterns = [
     path('powerbi/', include('powerbi.urls')),
 
     path('payment/', login_required(payment), name='payment'),
-    path('invoices/', login_required(InvoiceList.as_view(template_name="portal/invoices.html")), name='invoices'),
+    path('invoices/', login_required(invoices), name='invoices'),
     path('dashboard/', login_required(dashboard), name='dashboard'),
     path('settings/', preference, name='settings'),
     path('profile/', profile, name='profile'),

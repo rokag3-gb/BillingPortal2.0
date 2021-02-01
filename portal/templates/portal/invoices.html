@@ -9,12 +9,16 @@
   <div class="card">
     <div class="card-header d-flex align-items-center justify-content-between border-top py-0">
       <h5 class="mb-0 py-card">청구서 관리<small class="ml-2">결제할 청구서를 모두 선택한 후, "선택 청구서 모두 일괄 결제"를 누릅니다.</small></h5>
-      <div id="bulk-select-replace-element" style="display:flex; flex-direction: row;">
-        <input type="month" class="form-control" id="valid_until" required />
-        <span class="ml-2">...</span>
-        <input type="month" class="form-control ml-2" id="valid_until" required />
-        <button class="btn btn-falcon-default btn-sm ml-2" type="button"><span class="fas fa-search"
-            data-fa-transform="shrink-3 down-2"></span></button>
+      <div id="bulk-select-replace-element" >
+        <form style="display:flex; flex-direction: row;" id="invoice_filter">
+          <input name="page" value="{{request.GET.page}}" hidden />
+          <input type="month" class="form-control" name="date_start" value="{{request.GET.date_start}}" required />
+          <span class="ml-2">...</span>
+          <input type="month" class="form-control ml-2" name="date_end" value="{{request.GET.date_end}}" required />
+          <button class="btn btn-falcon-default btn-sm ml-2" type="submit">
+            <span class="fas fa-search" data-fa-transform="shrink-3 down-2"></span>
+          </button>
+        </form>
       </div>
       <div class="d-none ml-3" id="bulk-select-actions">
         <div class="input-group input-group-sm">
@@ -71,12 +75,12 @@
     <div class="card-footer border-top">
       <ul class="pagination">
         {% if page_obj.has_previous %}
-        <li class="page-item"><a class="page-link" href="?page=1">&laquo;처음</a></li>
-        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">이전</a></li>
+        <li class="page-item"><a class="page-link" onclick="to_page(1)">&laquo;처음</a></li>
+        <li class="page-item"><a class="page-link" onclick="to_page({{ page_obj.previous_page_number }})">이전</a></li>
         {% endif %}
         {% if page_obj.has_next %}
-        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">다음</a></li>
-        <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">마지막&raquo;</a></li>
+        <li class="page-item"><a class="page-link" onclick="to_page({{ page_obj.next_page_number }})">다음</a></li>
+        <li class="page-item"><a class="page-link" onclick="to_page({{ page_obj.paginator.num_pages }})">마지막&raquo;</a></li>
         {% endif %}
         
       </ul>
@@ -89,5 +93,12 @@
 {% endblock %}
 
 {% block extra_js %}
+<script>
+  function to_page(page){
+    let filter = document.forms["invoice_filter"]
+    filter.page.value = page;
+    filter.submit();
+  }
+</script>
 
 {% endblock %}
