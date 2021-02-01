@@ -68,7 +68,7 @@ class OrganizationVendor(models.Model):
     vendorkey = models.CharField(db_column='VendorKey', max_length=200, verbose_name='벤더 키(테넌트ID, 구독ID 등)')  # Field name made lowercase.
     regdate = models.DateTimeField(db_column='RegDate', verbose_name='등록일시', auto_now_add=True)  # Field name made lowercase.
 
-class InvoiceView(models.Model):
+class Invoice(models.Model):
     invoiceId = models.CharField(max_length=57, db_column="InvoiceId", primary_key=True)
     invoiceMonth = models.CharField(max_length=6, db_column="InvoiceMonth")
     invoiceDate = models.DateField(db_column="InvoiceDate")

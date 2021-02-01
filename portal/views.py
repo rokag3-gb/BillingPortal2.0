@@ -6,8 +6,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from zeep import Client, Settings
+from django.views.generic import ListView
 
 from custom.services import get_organization
+from custom.models import Invoice
 
 
 sidebar_items = [
@@ -90,3 +92,7 @@ def payment(request: HttpRequest) -> HttpResponse:
             'sidebar_items': sidebar_items,
         }
         return render(request, 'portal/payment.html', context)
+
+class InvoiceList(ListView):
+    paginate_by = 20
+    model = Invoice
