@@ -120,10 +120,8 @@
             <div
               class="col-md-5 col-xl-12 col-xxl-5 pl-lg-4 pl-xl-2 pl-xxl-5 text-center text-md-left text-xl-center text-xxl-left">
               <hr class="border-dashed d-block d-md-none d-xl-block d-xxl-none my-4">
-              <div class="fs-2 font-weight-semi-bold">All Total: <span class="text-primary">$3320</span></div>
-              <button class="btn btn-success mt-3 px-5" type="submit">Confirm &amp; Pay</button>
-              <p class="fs--1 mt-3 mb-0">By clicking <strong>Confirm & Pay </strong>button you agree to the <a
-                  href="#!">Terms &amp; Conditions</a></p>
+              <div class="fs-2 font-weight-semi-bold">결제금액: <span class="text-primary">$3320</span></div>
+              <button class="btn btn-success mt-3 px-5" type="submit" onclick="submitPayment()">청구서 일괄 결제</button>
             </div>
           </div>
         </div>
@@ -135,61 +133,9 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">지금 결제</h5>
+          <h5 class="modal-title" id="exampleModalLabel">결제</h5>
         </div>
-        <div class="modal-body" id="payment-form">
-          <div id="payment-error-container" hidden>
-            <div class="alert alert-danger" role="alert" id="payment-error">
-
-            </div>
-          </div>
-          <form>
-            {% csrf_token %}
-            <div class="form-floating mb-3">
-              <input type="name" value="{{ user.get_full_name }}" class="form-control" id="card_owner" required />
-              <label for="card_owner">카드 소유자 성명</label>
-            </div>
-            <div class="form-floating mb-3">
-              <input type="date" class="form-control" id="owner_birthday" required />
-              <label for="owner_birthday">생년월일</label>
-            </div>
-            <div class="form-floating mb-3">
-              <input type="email" value="{{ user.email }}" class="form-control" id="owner_email" required />
-              <label for="owner_email">이메일</label>
-            </div>
-            <div class="form-floating mb-3">
-              <input type="tel" class="form-control" id="phone_number" required />
-              <label for="phone_number">휴대전화</label>
-            </div>
-            <div class="form-floating mb-3">
-              <input type="tel" class="form-control" id="card_number" required maxlength="16" />
-              <label for="card_number">카드번호</label>
-            </div>
-            <div class="row g-2 mb-3">
-              <div class="col-md">
-                <div class="form-floating">
-                  <input type="month" class="form-control" id="valid_until" required />
-                  <label for="valid_until">카드 유효기간 (년/월) YYMM</label>
-                </div>
-              </div>
-              <div class="col-md">
-                <div class="form-floating">
-                  <input type="password" class="form-control" id="card_password" maxlength="2" required />
-                  <label for="card_password">카드 암호 앞 2자리 **</label>
-                </div>
-              </div>
-            </div>
-          </form>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="resetPaymentDialog()">
-              취소
-            </button>
-            <button type="button" onclick="submitPayment()" class="btn btn-primary">
-              결제
-            </button>
-          </div>
-        </div>
-        <div class="modal-body" id="payment-progress" hidden style="text-align: center;">
+        <div class="modal-body" id="payment-progress" style="text-align: center;">
           <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
             class="bi bi-credit-card-2-front" viewBox="0 0 16 16">
             <path
@@ -197,7 +143,20 @@
             <path
               d="M2 5.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5z" />
           </svg>
-          <h3>결제 진행 중...</h3>
+          <h3 class="mt-1">결제 진행 중...</h3>
+        </div>
+        <div class="modal-body" id="payment-error-container" hidden style="text-align: center;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+            <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+          </svg>
+          <h3 class="mt-1">결제 오류</h3>
+          <p id="payment-error"></p>
+          <div class="modal-footer">
+            <button type="button" onclick="resetPaymentDialog()" data-dismiss="modal" class="btn btn-primary">
+              확인
+            </button>
+          </div>
         </div>
         <div class="modal-body" id="payment-success" hidden style="text-align: center;">
           <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-check-circle"
@@ -206,9 +165,9 @@
             <path
               d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z" />
           </svg>
-          <h3>결제가 완료되었습니다.</h3>
+          <h3 class="mt-1">결제가 완료되었습니다.</h3>
           <div class="modal-footer">
-            <button type="button" onclick="resetPaymentDialog()" data-dismiss="modal" class="btn btn-primary">
+            <button type="button" onclick="location.href={% url 'invoices' %}" data-dismiss="modal" class="btn btn-primary">
               확인
             </button>
           </div>
