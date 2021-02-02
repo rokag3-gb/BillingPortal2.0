@@ -67,3 +67,19 @@ class OrganizationVendor(models.Model):
     vendorcode = models.IntegerField(db_column='VendorCode', choices=VendorCode.choices, verbose_name='클라우드 공급자')  # Field name made lowercase.
     vendorkey = models.CharField(db_column='VendorKey', max_length=200, verbose_name='벤더 키(테넌트ID, 구독ID 등)')  # Field name made lowercase.
     regdate = models.DateTimeField(db_column='RegDate', verbose_name='등록일시', auto_now_add=True)  # Field name made lowercase.
+
+class Invoice(models.Model):
+    invoiceId = models.CharField(max_length=57, db_column="InvoiceId", primary_key=True)
+    invoiceMonth = models.CharField(max_length=6, db_column="InvoiceMonth")
+    invoiceDate = models.DateField(db_column="InvoiceDate")
+    tenantId = models.CharField(max_length=4, db_column="TenantId")
+    subscriptionId = models.CharField(max_length=50, db_column="SubscriptionId")
+    subscriptionName = models.CharField(max_length=4000, db_column="SubscriptionName")
+    chargeStartDate = models.DateField(db_column="ChargeStartDate")
+    chargeEndDate = models.DateField(db_column="ChargeEndDate")
+    subTotal = models.FloatField(db_column="SubTotal")
+    subTotalRrp = models.FloatField(db_column="SubTotalRrp")
+    datetimeStamp = models.DateTimeField(db_column="datetime_stamp")
+    class Meta:
+        managed = False
+        db_table = "VW_AzureRhipe_invoice"

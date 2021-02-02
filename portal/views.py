@@ -1,6 +1,7 @@
 import datetime
 import json
 
+from django.core.paginator import Paginator
 from django.conf import settings as conf
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpRequest, JsonResponse
@@ -8,6 +9,7 @@ from django.shortcuts import render, redirect
 from zeep import Client, Settings
 
 from custom.services import get_organization
+from custom.models import Invoice
 
 
 sidebar_items = [
@@ -43,6 +45,12 @@ def profile(request: HttpRequest) -> HttpResponse:
 def messages(request: HttpRequest) -> HttpResponse:
     return render(request, 'portal/messages.html', {'sidebar': 'messages', 'sidebar_items': sidebar_items})
 
+def invoices(request: HttpRequest) -> HttpResponse:
+    context = {
+            'sidebar': 'payment', 
+            'sidebar_items': sidebar_items,
+        }
+    return render(request, 'portal/invoices.html', context)
 
 def payment(request: HttpRequest) -> HttpResponse:
     org = get_organization(request=request)
@@ -84,3 +92,21 @@ def payment(request: HttpRequest) -> HttpResponse:
             'sidebar_items': sidebar_items,
         }
         return render(request, 'portal/payment.html', context)
+
+def invoices(request: HttpRequest) -> HttpResponse:
+    date_start = request.GET.get('date_start', default=None)
+    date_end = request.GET.get('date_end', default=None)
+    result = Invoice.objects.all()
+    if date_start:
+        date_start = datetime.datetime.strptime(date_start, "%Y-%m")
+        result = result.filter(invoiceDate__gte=date_start)
+    if date_end:
+        date_end = datetime.datetime.strptime(date_end, "%Y-%m")
+        date_end = date_end.replace(month=date_end.month+1) - datetime.timedelta(days=1)
+        result = result.filter(invoiceDate__lte=date_end)
+    result = result.order_by("-invoiceDate")
+    paginator = Paginator(result, 20) # Show 25 contacts per page.
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'portal/invoices.html', {'page_obj': page_obj})
