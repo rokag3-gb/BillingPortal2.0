@@ -1,5 +1,6 @@
 {% extends '_base.html' %}
 {% load static %}
+{% load humanize %} 
 {% block navbar %}
 {% include '_base_navbar_left.html' %}
 {% endblock %}
@@ -27,7 +28,7 @@
             <option value="Delete">Delete</option>
             <option value="Archive">Archive</option>
           </select> -->
-          <button class="btn btn-falcon-default btn-sm ml-2" type="button" onclick="location.href={% url 'payment' %}">
+          <button class="btn btn-falcon-default btn-sm ml-2" type="button" onclick="document.forms['pass_to_payment'].submit()">
             <span class="fas fa-shopping-basket" data-fa-transform="shrink-3 down-2"></span>
             <span>선택 청구서 모두 일괄 결제</span>
           </button>
@@ -55,11 +56,14 @@
             </tr>
           </thead>
           <tbody id="bulk-select-body">
+            <form action="{% url 'payment' %}" method="POST" id="pass_to_payment" hidden>
+            {% csrf_token %}
             {% for invoice in page_obj %}
                 <tr>
                   <td class="align-middle white-space-nowrap">
                     <div class="custom-control custom-checkbox">
-                      <input class="custom-control-input checkbox-bulk-select-target" type="checkbox" id="checkbox-{{ invoice.invoiceId }}">
+                      <input class="custom-control-input checkbox-bulk-select-target" type="checkbox" id="checkbox-{{ invoice.invoiceId }}"
+                        name="invoice" value="{{ invoice.invoiceId }}">
                       <label class="custom-control-label" for="checkbox-{{ invoice.invoiceId }}"></label>
                     </div>
                   </td>
@@ -67,9 +71,10 @@
                   <td class="align-middle">{{ invoice.invoiceDate }}</td>
                   <td class="align-middle">{{ invoice.subscriptionName }}<br/>{{ invoice.subscriptionId }}</td>
                   <td class="align-middle">{{ invoice.chargeStartDate }}<br/>{{ invoice.chargeEndDate }}</td>
-                  <td class="align-middle white-space-nowrap text-right pr-3">{{ invoice.subTotalRrp }}원</td>
+                  <td class="align-middle white-space-nowrap text-right pr-3">{{ invoice.subTotalRrp | intcomma }}원</td>
                 </tr>
             {% endfor %}
+          </form>
           </tbody>
         </table>
       </div>

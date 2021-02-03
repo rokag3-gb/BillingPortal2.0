@@ -8,7 +8,7 @@ function submitPayment() {
   );
   const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
   paymentErrorContainer.hidden = true;
-  fetch("", {
+  fetch("charge/", {
     method: "POST",
     credentials: "same-origin",
     headers: {
