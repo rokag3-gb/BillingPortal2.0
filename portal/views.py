@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from zeep import Client, Settings
+from django.db.models import Sum
 
 from custom.services import get_organization
 from custom.models import Invoice
@@ -54,10 +55,24 @@ def invoices(request: HttpRequest) -> HttpResponse:
 
 def payment(request: HttpRequest) -> HttpResponse:
     org = get_organization(request=request)
-
     if org is None:
         return redirect('/dashboard')
 
+    if request.method == "POST":
+        invoice_ids = request.POST.getlist("invoice")
+        invoice_details = Invoice.objects.filter(invoiceId__in=invoice_ids)
+        subtotal = invoice_details.aggregate(Sum("subTotalRrp"))
+        context = {
+            'sidebar': 'payment', 
+            'sidebar_items': sidebar_items,
+            'invoices': invoice_details,
+            'subtotal': subtotal
+        }
+        return render(request, 'portal/payment.html', context)
+    else:
+        return redirect('/invoices')
+
+def charge_payment(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         # PG 인증서버 통신용 SOAP 클라이언트
         pg_config = getattr(conf, "PG_BACKEND", {})
@@ -86,12 +101,6 @@ def payment(request: HttpRequest) -> HttpResponse:
             return JsonResponse(pgresult)
         else:
             return JsonResponse(pgresult, status=400)
-    else:
-        context = {
-            'sidebar': 'payment', 
-            'sidebar_items': sidebar_items,
-        }
-        return render(request, 'portal/payment.html', context)
 
 def invoices(request: HttpRequest) -> HttpResponse:
     date_start = request.GET.get('date_start', default=None)
@@ -106,7 +115,6 @@ def invoices(request: HttpRequest) -> HttpResponse:
         result = result.filter(invoiceDate__lte=date_end)
     result = result.order_by("-invoiceDate")
     paginator = Paginator(result, 20) # Show 25 contacts per page.
-
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'portal/invoices.html', {'page_obj': page_obj})
