@@ -15,38 +15,28 @@
         </div>
         <div class="card-body">
           <table class="table table-borderless fs--1 mb-0">
+            {% for item in invoices %}
             <tr class="border-bottom">
-              <th class="pl-0 pt-0">AzureCSP_koreaubuntu
-                <div class="text-400 font-weight-normal fs--2">2020년 12월 1일 ~ 2020년 12월 31일
+              <th class="pl-0 pt-0">{{ item.subscriptionName }}
+                <div class="text-400 font-weight-normal fs--2">{{ item.chargeStartDate }} ~ {{ item.chargeEndDate }}
                 </div>
               </th>
-              <th class="pr-0 text-right pt-0">26,414원</th>
+              <th class="pr-0 text-right pt-0">{{ item.subTotalRrp }}원</th>
             </tr>
-            <tr class="border-bottom">
-              <th class="pl-0">AzureCSP_koreaubuntu
-                <div class="text-400 font-weight-normal fs--2">2020년 11월 1일 ~ 2020년 11월 30일</div>
-              </th>
-              <th class="pr-0 text-right">19,017원</th>
-            </tr>
-            <tr class="border-bottom">
-              <th class="pl-0">AzureCSP_koreaubuntu
-                <div class="text-400 font-weight-normal fs--2">2020년 10월 1일 ~ 2020년 10월 31일</div>
-              </th>
-              <th class="pr-0 text-right">34,680원</th>
-            </tr>
+            {% endfor %}
             <tr class="border-bottom">
               <th class="pl-0">소계</th>
-              <th class="pr-0 text-right">80,111원</th>
+              <th class="pr-0 text-right">{{ subtotal.subTotalRrp__sum }}원</th>
             </tr>
             <tr>
               <th class="pl-0 pb-0">합계</th>
-              <th class="pr-0 text-right pb-0">80,111원</th>
+              <th class="pr-0 text-right pb-0">{{ subtotal.subTotalRrp__sum }}원</th>
             </tr>
           </table>
         </div>
         <div class="card-footer d-flex justify-content-between bg-100">
           <div class="font-weight-semi-bold">총 결제금액</div>
-          <div class="font-weight-bold">80,111원</div>
+          <div class="font-weight-bold">{{ subtotal.subTotalRrp__sum }}원</div>
         </div>
       </div>
     </div>
@@ -117,7 +107,7 @@
             <div
               class="col-md-5 col-xl-12 col-xxl-5 pl-lg-4 pl-xl-2 pl-xxl-5 text-center text-md-left text-xl-center text-xxl-left">
               <hr class="border-dashed d-block d-md-none d-xl-block d-xxl-none my-4">
-              <div class="fs-2 font-weight-semi-bold">결제금액: <span class="text-primary">80,111원</span></div>
+              <div class="fs-2 font-weight-semi-bold">결제금액: <span class="text-primary">{{ subtotal.subTotalRrp__sum }}원</span></div>
               <button class="btn btn-success mt-3 px-5" type="submit" onclick="submitPayment()">청구서 일괄 결제</button>
             </div>
           </div>

@@ -56,12 +56,13 @@
           </thead>
           <tbody id="bulk-select-body">
             <form action="{% url 'payment' %}" method="POST" id="pass_to_payment" hidden>
+            {% csrf_token %}
             {% for invoice in page_obj %}
                 <tr>
                   <td class="align-middle white-space-nowrap">
                     <div class="custom-control custom-checkbox">
                       <input class="custom-control-input checkbox-bulk-select-target" type="checkbox" id="checkbox-{{ invoice.invoiceId }}"
-                       value="{{ invoice.invoiceId }}" name="invoice">
+                        name="invoice" value="{{ invoice.invoiceId }}">
                       <label class="custom-control-label" for="checkbox-{{ invoice.invoiceId }}"></label>
                     </div>
                   </td>
