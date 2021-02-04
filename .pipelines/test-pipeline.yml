@@ -18,10 +18,10 @@ strategy:
   maxParallel: 3
 
 steps:
-- task: WhiteSource@21
+- task: PyLint@0
   inputs:
-    cwd: '$(System.DefaultWorkingDirectory)'
-    projectName: 'MateCost'
+    pythonroot: '$(System.DefaultWorkingDirectory)'
+    reqfile: 'requirements.txt'
 - task: UsePythonVersion@0
   inputs:
     versionSpec: '$(PYTHON_VERSION)'
