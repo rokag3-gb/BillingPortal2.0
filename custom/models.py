@@ -83,3 +83,33 @@ class Invoice(models.Model):
     class Meta:
         managed = False
         db_table = "VW_AzureRhipe_invoice"
+
+class InvoiceOrder(models.Model):
+    orderno = models.AutoField(db_column='OrderNo', primary_key=True)  # Field name made lowercase.
+    orderdate = models.DateField(db_column='OrderDate')  # Field name made lowercase.
+    orderuserid = models.IntegerField(db_column='OrderUserId')  # Field name made lowercase.
+    orgid = models.IntegerField(db_column='OrgId')  # Field name made lowercase.
+    totalamount = models.DecimalField(db_column='TotalAmount', max_digits=19, decimal_places=4)  # Field name made lowercase.
+    paid = models.DecimalField(db_column='Paid', max_digits=19, decimal_places=4)  # Field name made lowercase.
+    iscancel = models.BooleanField(db_column='IsCancel')  # Field name made lowercase.
+    regdate = models.DateTimeField(db_column='RegDate')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'InvoiceOrder'
+
+
+class InvoiceOrderDetail(models.Model):
+    seq = models.AutoField(db_column='Seq', primary_key=True)  # Field name made lowercase.
+    orderno = models.ForeignKey(InvoiceOrder, models.DO_NOTHING, db_column='OrderNo')  # Field name made lowercase.
+    invoicedate = models.DateField(db_column='InvoiceDate')  # Field name made lowercase.
+    invoicemonth = models.CharField(db_column='InvoiceMonth', max_length=6, blank=True, null=True)  # Field name made lowercase.
+    vendorcode = models.CharField(db_column='VendorCode', max_length=7)  # Field name made lowercase.
+    invoiceid = models.CharField(db_column='InvoiceId', max_length=200)  # Field name made lowercase.
+    amount = models.DecimalField(db_column='Amount', max_digits=19, decimal_places=4)  # Field name made lowercase.
+    paid = models.DecimalField(db_column='Paid', max_digits=19, decimal_places=4)  # Field name made lowercase.
+    regdate = models.DateTimeField(db_column='RegDate')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'InvoiceOrderDetail'
