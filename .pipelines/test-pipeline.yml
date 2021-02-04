@@ -16,7 +16,10 @@ strategy:
     Python38:
       PYTHON_VERSION: '3.8'
   maxParallel: 3
-
+- task: WhiteSource@21
+  inputs:
+    cwd: '$(System.DefaultWorkingDirectory)'
+    projectName: 'MateCost'
 steps:
 - task: UsePythonVersion@0
   inputs:
