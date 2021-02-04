@@ -22,6 +22,8 @@ steps:
   inputs:
     pythonroot: '$(System.DefaultWorkingDirectory)'
     reqfile: 'requirements.txt'
+    modules: 'Mate365BillingPortal custom portal powerbi'
+
 - task: UsePythonVersion@0
   inputs:
     versionSpec: '$(PYTHON_VERSION)'
