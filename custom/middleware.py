@@ -1,0 +1,53 @@
+from django.contrib.auth.middleware import get_user
+from django.shortcuts import redirect
+from django.urls import reverse
+
+from policy.models import PolicyInfoExpired, PolicyInfoProtectionExpired
+
+
+class PolicyCheckMiddleware(object):
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+
+        # GET 요청인 경우
+        if request.method == 'GET':
+            pass
+        # ip별로 방문한 기록을 통해 방문자 통계를 구한다.
+
+        return response
+
+
+def policy_check_middleware(get_response):
+    none_check_pages = (
+        reverse('login'),
+        reverse('logout'),
+        reverse('confirm'),
+        reverse('info-latest'), reverse('info-protection-latest'),
+    )
+
+    def middleware(request):
+        if request.path in none_check_pages:
+            return get_response(request)
+
+        user = get_user(request=request)
+
+        if user.is_anonymous:
+            return get_response(request)
+
+        try:
+            if user.all_policy_checked is None:
+                user.check_all_policy()
+
+        except (PolicyInfoExpired, PolicyInfoProtectionExpired) as e:
+            return redirect('confirm')
+
+        if user.all_policy_checked:
+            return get_response(request)
+
+        # TODO: 만약 약관 또는 개인정보처리방침이 갱신이 되었지만 사용가능하다면, message 로 알림을 전달하기
+        return get_response(request)
+
+    return middleware

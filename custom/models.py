@@ -2,18 +2,59 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils import timezone
 from organizations.models import Organization, OrganizationUser
+
+from Mate365BillingPortal.settings import POLICY_INFO, POLICY_INFO_PROTECTION
+from policy.models import PolicyInfoExpired, PolicyInfoProtectionExpired
 
 
 class User(AbstractUser):
+    all_policy_checked = None
     org_last_selected = models.ForeignKey(
         Organization, null=True, default=None, blank=True, on_delete=models.SET_DEFAULT)
+
+    def check_all_policy(self):
+        if self.is_staff:
+            self.all_policy_checked = True
+            return True
+
+        if self.profile.info not in POLICY_INFO['able']:
+            raise PolicyInfoExpired
+
+        if self.profile.info_protection not in POLICY_INFO_PROTECTION['able']:
+            raise PolicyInfoProtectionExpired
+
+        self.all_policy_checked = True
+        return True
 
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='profile', primary_key=True, on_delete=models.CASCADE)
     phone = models.CharField(max_length=16, blank=True)
     location = models.CharField(max_length=64, blank=True)
+    info = models.CharField('동의한 이용약관', max_length=16, null=True, default=None, blank=True)
+    info_updated_at = models.DateTimeField('이용약관 동의 시간', null=True, default=None, blank=True)
+    info_protection = models.CharField('동의한 개인정보보호', max_length=16, null=True, default=None, blank=True)
+    info_protection_updated_at = models.DateTimeField('개인정보보호 동의 시간', null=True, default=None, blank=True)
+
+    def agree_info(self, info_number):
+        latest_info = POLICY_INFO['latest']
+
+        if POLICY_INFO['latest'] != info_number:
+            raise ValueError('유효하지 않은 동의 약관 입니다.')
+
+        self.info = info_number
+        self.info_updated_at = timezone.now()
+
+    def agree_info_protection(self, info_protection_number):
+        latest_info_protection = POLICY_INFO['latest']
+
+        if POLICY_INFO_PROTECTION['latest'] != latest_info_protection:
+            raise ValueError('유효하지 않은 동의 약관 입니다.')
+
+        self.info_protection = info_protection_number
+        self.info_protection_updated_at = timezone.now()
 
 
 @receiver(post_save, sender=User)

@@ -39,5 +39,6 @@ urlpatterns = [
     path('settings/', preference, name='settings'),
     path('profile/', profile, name='profile'),
     path('messages/', messages, name='messages'),
+    path('policy/', include('policy.urls')),
     path('', index, name='index'),
 ]
