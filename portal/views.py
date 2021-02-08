@@ -62,7 +62,7 @@ def payment(request: HttpRequest) -> HttpResponse:
         invoice_ids = request.POST.getlist("invoice")
         invoice_details = Invoice.objects.filter(invoiceId__in=invoice_ids)
         subtotal = invoice_details.aggregate(Sum("amountRrp"))
-        order = InvoiceOrder.objects.create(
+        order = InvoiceOrder(
             orderDate = datetime.datetime.now(),
             orderUserId = request.user,
             orgId = org,
@@ -70,13 +70,14 @@ def payment(request: HttpRequest) -> HttpResponse:
             paid = 0,
             isCancel = True,
         )
+        order.save()
         order.createDetails(invoice_details)
         context = {
             'sidebar': 'payment', 
             'sidebar_items': sidebar_items,
             'invoices': invoice_details,
             'subtotal': subtotal,
-            'order_id': order.id
+            'order_id': order.orderNo
         }
         return render(request, 'portal/payment.html', context)
     else:

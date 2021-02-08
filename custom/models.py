@@ -108,7 +108,7 @@ class InvoiceOrder(models.Model):
     
     def createDetails(self, orderDetails: List[Invoice]):
         for item in orderDetails:
-            InvoiceOrderDetail.objects.create(
+            detail = InvoiceOrderDetail(
                 orderNo = self,
                 invoiceDate = item.invoiceDate,
                 invoiceMonth = item.invoiceMonth,
@@ -117,6 +117,7 @@ class InvoiceOrder(models.Model):
                 amount = item.amountRrp,
                 paid = 0
             )
+            detail.save()
 
 
 class InvoiceOrderDetail(models.Model):
