@@ -28,6 +28,12 @@ class User(AbstractUser):
         self.all_policy_checked = True
         return True
 
+    def can_use_create_card(self):
+        if self.profile.using_credit_card in POLICY_USING_CREDIT_CARD['able']:
+            return True
+
+        return False
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='profile', primary_key=True, on_delete=models.CASCADE)
