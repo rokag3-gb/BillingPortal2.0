@@ -37,9 +37,8 @@ def confirm(request):
     if request.method == "POST":
         form = PolicyForm(request.POST)
         if form.is_valid():
-            user.profile.agree_info(info_number=form.cleaned_data['info_protection'])
-            user.profile.agree_info_protection(info_protection_number=form.cleaned_data['info_protection'])
-            user.profile.save()
+            user.profile.agree_info(number=form.cleaned_data['info_protection'])
+            user.profile.agree_info_protection(number=form.cleaned_data['info_protection'])
             return redirect('dashboard')
     else:
         form = PolicyForm()

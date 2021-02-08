@@ -5,7 +5,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 from organizations.models import Organization, OrganizationUser
 
-from Mate365BillingPortal.settings import POLICY_INFO, POLICY_INFO_PROTECTION
+from Mate365BillingPortal.settings import POLICY_INFO, POLICY_INFO_PROTECTION, POLICY_USING_CREDIT_CARD
 from policy.models import PolicyInfoExpired, PolicyInfoProtectionExpired
 
 
@@ -38,23 +38,29 @@ class UserProfile(models.Model):
     info_protection = models.CharField('동의한 개인정보보호', max_length=16, null=True, default=None, blank=True)
     info_protection_updated_at = models.DateTimeField('개인정보보호 동의 시간', null=True, default=None, blank=True)
 
-    def agree_info(self, info_number):
-        latest_info = POLICY_INFO['latest']
-
-        if POLICY_INFO['latest'] != info_number:
+    def agree_info(self, number):
+        if POLICY_INFO['latest'] != number:
             raise ValueError('유효하지 않은 동의 약관 입니다.')
 
-        self.info = info_number
+        self.info = number
         self.info_updated_at = timezone.now()
+        self.save()
 
-    def agree_info_protection(self, info_protection_number):
-        latest_info_protection = POLICY_INFO['latest']
-
-        if POLICY_INFO_PROTECTION['latest'] != latest_info_protection:
+    def agree_info_protection(self, number):
+        if POLICY_INFO_PROTECTION['latest'] != number:
             raise ValueError('유효하지 않은 동의 약관 입니다.')
 
-        self.info_protection = info_protection_number
+        self.info_protection = number
         self.info_protection_updated_at = timezone.now()
+        self.save()
+
+    def agree_using_credit_card(self, number):
+        if POLICY_USING_CREDIT_CARD['latest'] != number:
+            raise ValueError('유효하지 않은 동의 약관 입니다.')
+
+        self.info_protection = number
+        self.info_protection_updated_at = timezone.now()
+        self.save()
 
 
 @receiver(post_save, sender=User)

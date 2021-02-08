@@ -168,3 +168,10 @@ POLICY_INFO_PROTECTION = {
         '20210204',
     ]
 }
+
+POLICY_USING_CREDIT_CARD = {
+    'latest': '20210204',
+    'able': [
+        '20210204',
+    ]
+}
