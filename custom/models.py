@@ -87,6 +87,7 @@ class Invoice(models.Model):
 class Invoice(models.Model):
     seq = models.AutoField(db_column='Seq', primary_key=True)  # Field name made lowercase.
     invoiceMonth = models.CharField(db_column='InvoiceMonth', max_length=6)  # Field name made lowercase.
+    invoiceDate = models.DateField(db_column='InvoiceDate')
     invoiceId = models.CharField(db_column='InvoiceId', unique=True, max_length=13, blank=True, null=True)  # Field name made lowercase.
     orgId = models.IntegerField(db_column='OrgId')  # Field name made lowercase.
     orgKey = models.CharField(db_column='OrgKey', max_length=7)  # Field name made lowercase.
