@@ -68,10 +68,10 @@
                     </div>
                   </td>
                   <th class="align-middle">{{ invoice.invoiceId }}</th>
-                  <td class="align-middle">{{ invoice.invoiceDate }}</td>
-                  <td class="align-middle">{{ invoice.subscriptionName }}<br/>{{ invoice.subscriptionId }}</td>
+                  <td class="align-middle">{{ invoice.invoiceMonth }}</td>
+                  <td class="align-middle">{{ invoice.vendorName }}</td>
                   <td class="align-middle">{{ invoice.chargeStartDate }}<br/>{{ invoice.chargeEndDate }}</td>
-                  <td class="align-middle white-space-nowrap text-right pr-3">{{ invoice.subTotalRrp | intcomma }}원</td>
+                  <td class="align-middle white-space-nowrap text-right pr-3">{{ invoice.amountRrp | intcomma }}원</td>
                 </tr>
             {% endfor %}
           </form>
