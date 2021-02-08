@@ -1,31 +1,31 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from Mate365BillingPortal.settings import POLICY_TERMS_OF_USE, POLICY_INFO_PROTECTION
+from Mate365BillingPortal.settings import POLICY_TERMS_OF_USE, POLICY_INFO_PROTECTION, POLICY_USING_CREDIT_CARD
 
 
 class PolicyForm(forms.Form):
-    info = forms.CharField(max_length=16)
-    info_protection = forms.CharField(max_length=16)
-    checked = forms.BooleanField(required=True)
+    terms_of_use = forms.CharField(max_length=16, required=True)
+    info_gathering = forms.CharField(max_length=16, required=True)
+    using_credit_card = forms.CharField(max_length=16)
 
-    def clean_info(self):
-        info = self.cleaned_data['info']
-        if info != POLICY_TERMS_OF_USE['latest']:
-            raise ValidationError('잘못된 이용약관 요청 입니다.', code='invalid info')
+    def clean_terms_of_use(self):
+        terms_of_use = self.cleaned_data['terms_of_use']
+        if terms_of_use != POLICY_TERMS_OF_USE['latest']:
+            raise ValidationError('잘못된 이용약관 요청 입니다.', code='invalid Terms Of Use')
 
-        return info
+        return terms_of_use
 
-    def clean_info_protection(self):
-        info_protection = self.cleaned_data['info_protection']
-        if info_protection != POLICY_INFO_PROTECTION['latest']:
-            raise ValidationError('잘못된 개인정보처리방침 요청 입니다.', code='invalid info-protection')
+    def clean_info_gathering(self):
+        info_gathering = self.cleaned_data['info_gathering']
+        if info_gathering != POLICY_INFO_PROTECTION['latest']:
+            raise ValidationError('잘못된 개인정보처리방침 요청 입니다.', code='invalid Info Gathering')
 
-        return info_protection
+        return info_gathering
 
-    def clean_checked(self):
-        checked = self.cleaned_data['checked']
-        if not checked:
-            raise ValidationError('모두 허용에 체그되어 있지 않습니다.', code='unchecked')
+    def clean_using_credit_card(self):
+        using_credit_card = self.cleaned_data['using_credit_card']
+        if using_credit_card != POLICY_USING_CREDIT_CARD['latest']:
+            raise ValidationError('잘못된 신용카드 처리 허용 요청 입니다.', code='invalid credit card')
 
-        return checked
+        return using_credit_card

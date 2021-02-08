@@ -50,15 +50,20 @@ def confirm(request):
     if request.method == "POST":
         form = PolicyForm(request.POST)
         if form.is_valid():
-            user.profile.agree_terms_of_use(number=form.cleaned_data['info_protection'])
-            user.profile.agree_info_gathering(number=form.cleaned_data['info_protection'])
+            user.profile.agree_terms_of_use(number=form.cleaned_data['terms_of_use'])
+            user.profile.agree_info_gathering(number=form.cleaned_data['info_gathering'])
+
+            if form.cleaned_data['using_credit_card']:
+                user.profile.agree_using_credit_card(number=form.cleaned_data['using_credit_card'])
+
             return redirect('dashboard')
     else:
         form = PolicyForm()
 
     context = {
-        'info': POLICY_TERMS_OF_USE,
-        'info_protection': POLICY_INFO_PROTECTION,
+        'terms_of_use': POLICY_TERMS_OF_USE,
+        'info_gathering': POLICY_INFO_PROTECTION,
+        'using_credit_card': POLICY_USING_CREDIT_CARD,
         'form': form,
     }
 

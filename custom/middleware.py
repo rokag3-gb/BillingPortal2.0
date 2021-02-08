@@ -10,7 +10,7 @@ def policy_check_middleware(get_response):
         reverse('login'),
         reverse('logout'),
         reverse('confirm'),
-        reverse('info-latest'), reverse('info-protection-latest'),
+        reverse('terms-of-use-latest'), reverse('info-gathering-latest'), reverse('using-credit-card-latest'),
     )
 
     def middleware(request):

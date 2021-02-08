@@ -30,14 +30,14 @@
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <div class="input-group-text">
-                  <input type="checkbox" aria-label="서비스 이용 약관 동의">
+                  <input type="checkbox" id="terms_of_use" name="terms_of_use" aria-label="서비스 이용 약관 동의" value="{{ terms_of_use.latest }}">
                 </div>
                 <span class="input-group-text">필수</span>
               </div>
               <input class="form-control" type="text" value="서비스 이용 약관 동의" readonly="">
               <div class="input-group-append">
                 <span class="input-group-text">
-                  <a href="{% url 'info-latest' %}" target="_blank">상세보기</a>
+                  <a href="{% url 'terms-of-use-latest' %}" target="_blank">상세보기</a>
                 </span>
               </div>
             </div>
@@ -50,14 +50,14 @@
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <div class="input-group-text">
-                  <input type="checkbox" aria-label="개인정보 수집 및 이용 동의">
+                  <input type="checkbox" id="info_gathering" name="info_gathering" aria-label="개인정보 수집 및 이용 동의" value="{{ info_gathering.latest }}">
                 </div>
                 <span class="input-group-text">필수</span>
               </div>
               <input class="form-control" type="text" value="개인정보 수집 및 이용에 대한 안내" readonly="">
               <div class="input-group-append">
                 <span class="input-group-text">
-                  <a href="{% url 'info-protection-latest' %}" target="_blank">상세보기</a>
+                  <a href="{% url 'info-gathering-latest' %}" target="_blank">상세보기</a>
                 </span>
               </div>
             </div>
@@ -76,20 +76,20 @@
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <div class="input-group-text">
-                  <input type="checkbox" aria-label="개인정보 제3자 제공 및 공유 안내">
+                  <input type="checkbox" id="using_credit_card" name="usinig_credit_card" aria-label="개인정보 제3자 제공 및 공유 안내" value="{{ using_credit_card.latest }}">
                 </div>
                 <span class="input-group-text">선택</span>
               </div>
               <input class="form-control" type="text" value="개인정보 제3자 제공 및 공유 안내" readonly="">
               <div class="input-group-append">
                 <span class="input-group-text">
-                  <a href="{% url 'info-protection-latest' %}" target="_blank">상세보기</a>
+                  <a href="{% url 'using-credit-card-latest' %}" target="_blank">상세보기</a>
                 </span>
               </div>
             </div>
 
             <div class="form-group">
-              <button class="btn btn-primary btn-block mt-3" type="submit" name="submit">Register</button>
+              <button class="btn btn-primary btn-block mt-3" type="submit" name="submit" id="submit" disabled>Register</button>
             </div>
           </form>
         </div>
@@ -97,4 +97,30 @@
     </div>
   </div>
 </div>
+{% endblock %}
+{% block extra_js %}
+<script>
+  function enable_button() {
+    if (! $("input:checkbox[name='terms_of_use']").is(":checked")) {
+      $('#submit').attr('disabled', true);
+      return
+    }
+    if (! $("input:checkbox[name='info_gathering']").is(":checked")) {
+      $('#submit').attr('disabled', true);
+      return
+    }
+
+    $('#submit').attr('disabled', false);
+  }
+
+  $( document ).ready(function () {
+    $("#terms_of_use").click(function () {
+      enable_button();
+    });
+    $("#info_gathering").click(function () {
+      enable_button();
+    });
+  });
+
+</script>
 {% endblock %}
