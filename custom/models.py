@@ -3,6 +3,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from organizations.models import Organization, OrganizationUser
+from typing import List
 
 
 class User(AbstractUser):
@@ -69,27 +70,11 @@ class OrganizationVendor(models.Model):
     regdate = models.DateTimeField(db_column='RegDate', verbose_name='등록일시', auto_now_add=True)  # Field name made lowercase.
 
 class Invoice(models.Model):
-    invoiceId = models.CharField(max_length=57, db_column="InvoiceId", primary_key=True)
-    invoiceMonth = models.CharField(max_length=6, db_column="InvoiceMonth")
-    invoiceDate = models.DateField(db_column="InvoiceDate")
-    tenantId = models.CharField(max_length=4, db_column="TenantId")
-    subscriptionId = models.CharField(max_length=50, db_column="SubscriptionId")
-    subscriptionName = models.CharField(max_length=4000, db_column="SubscriptionName")
-    chargeStartDate = models.DateField(db_column="ChargeStartDate")
-    chargeEndDate = models.DateField(db_column="ChargeEndDate")
-    subTotal = models.FloatField(db_column="SubTotal")
-    subTotalRrp = models.FloatField(db_column="SubTotalRrp")
-    datetimeStamp = models.DateTimeField(db_column="datetime_stamp")
-    class Meta:
-        managed = False
-        db_table = "VW_AzureRhipe_invoice"
-
-class Invoice(models.Model):
     seq = models.AutoField(db_column='Seq', primary_key=True)  # Field name made lowercase.
     invoiceMonth = models.CharField(db_column='InvoiceMonth', max_length=6)  # Field name made lowercase.
     invoiceDate = models.DateField(db_column='InvoiceDate')
     invoiceId = models.CharField(db_column='InvoiceId', unique=True, max_length=13, blank=True, null=True)  # Field name made lowercase.
-    orgId = models.IntegerField(db_column='OrgId')  # Field name made lowercase.
+    orgId = models.ForeignKey(Organization, models.DO_NOTHING, db_column='OrgId')  # Field name made lowercase.
     orgKey = models.CharField(db_column='OrgKey', max_length=7)  # Field name made lowercase.
     orgName = models.CharField(db_column='OrgName', max_length=200)
     vendorCode = models.CharField(db_column='VendorCode', max_length=7)  # Field name made lowercase.
@@ -108,30 +93,42 @@ class Invoice(models.Model):
         # unique_together = (('invoicemonth', 'orgid', 'vendorcode', 'vendorinvoiceid'),)
 
 class InvoiceOrder(models.Model):
-    orderno = models.AutoField(db_column='OrderNo', primary_key=True)  # Field name made lowercase.
-    orderdate = models.DateField(db_column='OrderDate')  # Field name made lowercase.
-    orderuserid = models.IntegerField(db_column='OrderUserId')  # Field name made lowercase.
-    orgid = models.IntegerField(db_column='OrgId')  # Field name made lowercase.
-    totalamount = models.DecimalField(db_column='TotalAmount', max_digits=19, decimal_places=4)  # Field name made lowercase.
+    orderNo = models.AutoField(db_column='OrderNo', primary_key=True)  # Field name made lowercase.
+    orderDate = models.DateField(db_column='OrderDate')  # Field name made lowercase.
+    orderUserId = models.ForeignKey(User, models.DO_NOTHING, db_column='OrderUserId')  # Field name made lowercase.
+    orgId = models.ForeignKey(Organization, models.DO_NOTHING, db_column='OrgId')  # Field name made lowercase.
+    totalAmount = models.DecimalField(db_column='TotalAmount', max_digits=19, decimal_places=4)  # Field name made lowercase.
     paid = models.DecimalField(db_column='Paid', max_digits=19, decimal_places=4)  # Field name made lowercase.
-    iscancel = models.BooleanField(db_column='IsCancel')  # Field name made lowercase.
-    regdate = models.DateTimeField(db_column='RegDate')  # Field name made lowercase.
+    isCancel = models.BooleanField(db_column='IsCancel')  # Field name made lowercase.
+    regDate = models.DateTimeField(db_column='RegDate', auto_now_add=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'InvoiceOrder'
+    
+    def createDetails(self, orderDetails: List[Invoice]):
+        for item in orderDetails:
+            InvoiceOrderDetail.objects.create(
+                orderNo = self,
+                invoiceDate = item.invoiceDate,
+                invoiceMonth = item.invoiceMonth,
+                vendorCode = item.vendorCode,
+                invoiceId = item.invoiceId,
+                amount = item.amountRrp,
+                paid = 0
+            )
 
 
 class InvoiceOrderDetail(models.Model):
     seq = models.AutoField(db_column='Seq', primary_key=True)  # Field name made lowercase.
-    orderno = models.ForeignKey(InvoiceOrder, models.DO_NOTHING, db_column='OrderNo')  # Field name made lowercase.
-    invoicedate = models.DateField(db_column='InvoiceDate')  # Field name made lowercase.
-    invoicemonth = models.CharField(db_column='InvoiceMonth', max_length=6, blank=True, null=True)  # Field name made lowercase.
-    vendorcode = models.CharField(db_column='VendorCode', max_length=7)  # Field name made lowercase.
-    invoiceid = models.CharField(db_column='InvoiceId', max_length=200)  # Field name made lowercase.
+    orderNo = models.ForeignKey(InvoiceOrder, models.DO_NOTHING, db_column='OrderNo')  # Field name made lowercase.
+    invoiceDate = models.DateField(db_column='InvoiceDate')  # Field name made lowercase.
+    invoiceMonth = models.CharField(db_column='InvoiceMonth', max_length=6, blank=True, null=True)  # Field name made lowercase.
+    vendorCode = models.CharField(db_column='VendorCode', max_length=7)  # Field name made lowercase.
+    invoiceId = models.CharField(db_column='InvoiceId', max_length=100)  # Field name made lowercase.
     amount = models.DecimalField(db_column='Amount', max_digits=19, decimal_places=4)  # Field name made lowercase.
     paid = models.DecimalField(db_column='Paid', max_digits=19, decimal_places=4)  # Field name made lowercase.
-    regdate = models.DateTimeField(db_column='RegDate')  # Field name made lowercase.
+    regdate = models.DateTimeField(db_column='RegDate', auto_now_add=True)  # Field name made lowercase.
 
     class Meta:
         managed = False

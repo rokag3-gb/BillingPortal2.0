@@ -10,7 +10,7 @@ from zeep import Client, Settings
 from django.db.models import Sum
 
 from custom.services import get_organization
-from custom.models import Invoice
+from custom.models import Invoice, InvoiceOrder
 
 
 sidebar_items = [
@@ -62,11 +62,21 @@ def payment(request: HttpRequest) -> HttpResponse:
         invoice_ids = request.POST.getlist("invoice")
         invoice_details = Invoice.objects.filter(invoiceId__in=invoice_ids)
         subtotal = invoice_details.aggregate(Sum("amountRrp"))
+        order = InvoiceOrder.objects.create(
+            orderDate = datetime.datetime.now(),
+            orderUserId = request.user,
+            orgId = org,
+            totalAmount = subtotal['amountRrp__sum'],
+            paid = 0,
+            isCancel = True,
+        )
+        order.createDetails(invoice_details)
         context = {
             'sidebar': 'payment', 
             'sidebar_items': sidebar_items,
             'invoices': invoice_details,
-            'subtotal': subtotal
+            'subtotal': subtotal,
+            'order_id': order.id
         }
         return render(request, 'portal/payment.html', context)
     else:
