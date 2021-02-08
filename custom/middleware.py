@@ -5,21 +5,6 @@ from django.urls import reverse
 from policy.models import PolicyTermsOfUse, PolicyInfoGatheringExpired
 
 
-class PolicyCheckMiddleware(object):
-    def __init__(self, get_response):
-        self.get_response = get_response
-
-    def __call__(self, request):
-        response = self.get_response(request)
-
-        # GET 요청인 경우
-        if request.method == 'GET':
-            pass
-        # ip별로 방문한 기록을 통해 방문자 통계를 구한다.
-
-        return response
-
-
 def policy_check_middleware(get_response):
     none_check_pages = (
         reverse('login'),
