@@ -1,7 +1,7 @@
-class PolicyInfoExpired(Exception):
+class PolicyTermsOfUse(Exception):
     pass
 
 
-class PolicyInfoProtectionExpired(Exception):
+class PolicyInfoGatheringExpired(Exception):
     pass
 

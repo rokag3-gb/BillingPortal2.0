@@ -155,7 +155,7 @@ POWERBI = {
     "MASTER_PASS": os.getenv("POWERBI_MASTER_PASS",""), # AUTHMODE가 MasterUser 경우만 사용
 }
 
-POLICY_INFO = {
+POLICY_TERMS_OF_USE = {
     'latest': '20210204',
     'able': [
         '20210204',

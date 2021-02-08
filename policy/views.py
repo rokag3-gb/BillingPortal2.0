@@ -4,14 +4,14 @@ from django.template import TemplateDoesNotExist
 from django.template.loader import get_template
 from django.template.response import TemplateResponse
 
-from Mate365BillingPortal.settings import POLICY_INFO, POLICY_INFO_PROTECTION
+from Mate365BillingPortal.settings import POLICY_TERMS_OF_USE, POLICY_INFO_PROTECTION
 from policy.forms import PolicyForm
 
 
 def _return_policy(request, policy_type, number=None):
     if number is None:
         if policy_type == 'info':
-            number = POLICY_INFO['latest']
+            number = POLICY_TERMS_OF_USE['latest']
         elif policy_type == 'info-protection':
             number = POLICY_INFO_PROTECTION['latest']
 
@@ -37,14 +37,14 @@ def confirm(request):
     if request.method == "POST":
         form = PolicyForm(request.POST)
         if form.is_valid():
-            user.profile.agree_info(number=form.cleaned_data['info_protection'])
-            user.profile.agree_info_protection(number=form.cleaned_data['info_protection'])
+            user.profile.agree_terms_of_use(number=form.cleaned_data['info_protection'])
+            user.profile.agree_info_gathering(number=form.cleaned_data['info_protection'])
             return redirect('dashboard')
     else:
         form = PolicyForm()
 
     context = {
-        'info': POLICY_INFO,
+        'info': POLICY_TERMS_OF_USE,
         'info_protection': POLICY_INFO_PROTECTION,
         'form': form,
     }

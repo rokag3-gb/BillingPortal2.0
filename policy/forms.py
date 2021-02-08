@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from Mate365BillingPortal.settings import POLICY_INFO, POLICY_INFO_PROTECTION
+from Mate365BillingPortal.settings import POLICY_TERMS_OF_USE, POLICY_INFO_PROTECTION
 
 
 class PolicyForm(forms.Form):
@@ -11,7 +11,7 @@ class PolicyForm(forms.Form):
 
     def clean_info(self):
         info = self.cleaned_data['info']
-        if info != POLICY_INFO['latest']:
+        if info != POLICY_TERMS_OF_USE['latest']:
             raise ValidationError('잘못된 이용약관 요청 입니다.', code='invalid info')
 
         return info

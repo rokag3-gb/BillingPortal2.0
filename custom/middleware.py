@@ -2,7 +2,7 @@ from django.contrib.auth.middleware import get_user
 from django.shortcuts import redirect
 from django.urls import reverse
 
-from policy.models import PolicyInfoExpired, PolicyInfoProtectionExpired
+from policy.models import PolicyTermsOfUse, PolicyInfoGatheringExpired
 
 
 class PolicyCheckMiddleware(object):
@@ -41,7 +41,7 @@ def policy_check_middleware(get_response):
             if user.all_policy_checked is None:
                 user.check_all_policy()
 
-        except (PolicyInfoExpired, PolicyInfoProtectionExpired) as e:
+        except (PolicyTermsOfUse, PolicyInfoGatheringExpired) as e:
             return redirect('confirm')
 
         if user.all_policy_checked:

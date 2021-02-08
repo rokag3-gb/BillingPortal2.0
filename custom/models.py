@@ -5,8 +5,8 @@ from django.dispatch import receiver
 from django.utils import timezone
 from organizations.models import Organization, OrganizationUser
 
-from Mate365BillingPortal.settings import POLICY_INFO, POLICY_INFO_PROTECTION, POLICY_USING_CREDIT_CARD
-from policy.models import PolicyInfoExpired, PolicyInfoProtectionExpired
+from Mate365BillingPortal.settings import POLICY_TERMS_OF_USE, POLICY_INFO_PROTECTION, POLICY_USING_CREDIT_CARD
+from policy.models import PolicyTermsOfUse, PolicyInfoGatheringExpired
 
 
 class User(AbstractUser):
@@ -19,11 +19,11 @@ class User(AbstractUser):
             self.all_policy_checked = True
             return True
 
-        if self.profile.info not in POLICY_INFO['able']:
-            raise PolicyInfoExpired
+        if self.profile.terms_of_use not in POLICY_TERMS_OF_USE['able']:
+            raise PolicyTermsOfUse
 
-        if self.profile.info_protection not in POLICY_INFO_PROTECTION['able']:
-            raise PolicyInfoProtectionExpired
+        if self.profile.info_gathering not in POLICY_INFO_PROTECTION['able']:
+            raise PolicyInfoGatheringExpired
 
         self.all_policy_checked = True
         return True
@@ -33,33 +33,35 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='profile', primary_key=True, on_delete=models.CASCADE)
     phone = models.CharField(max_length=16, blank=True)
     location = models.CharField(max_length=64, blank=True)
-    info = models.CharField('동의한 이용약관', max_length=16, null=True, default=None, blank=True)
-    info_updated_at = models.DateTimeField('이용약관 동의 시간', null=True, default=None, blank=True)
-    info_protection = models.CharField('동의한 개인정보보호', max_length=16, null=True, default=None, blank=True)
-    info_protection_updated_at = models.DateTimeField('개인정보보호 동의 시간', null=True, default=None, blank=True)
+    terms_of_use = models.CharField('동의한 이용약관', max_length=16, null=True, default=None, blank=True)
+    terms_of_use_updated_at = models.DateTimeField('이용약관 동의 시간', null=True, default=None, blank=True)
+    info_gathering = models.CharField('동의한 개인정보보호', max_length=16, null=True, default=None, blank=True)
+    info_gathering_updated_at = models.DateTimeField('개인정보보호 동의 시간', null=True, default=None, blank=True)
+    using_credit_card = models.CharField('동의한 신용카드결제 허용', max_length=16, null=True, default=None, blank=True)
+    using_credit_card_updated_at = models.DateTimeField('신용카드결제 허용 동의 시간', null=True, default=None, blank=True)
 
-    def agree_info(self, number):
-        if POLICY_INFO['latest'] != number:
-            raise ValueError('유효하지 않은 동의 약관 입니다.')
+    def agree_terms_of_use(self, number):
+        if POLICY_TERMS_OF_USE['latest'] != number:
+            raise ValueError('유효하지 않은 약관 동의 입니다.')
 
-        self.info = number
-        self.info_updated_at = timezone.now()
+        self.terms_of_use = number
+        self.terms_of_use_updated_at = timezone.now()
         self.save()
 
-    def agree_info_protection(self, number):
+    def agree_info_gathering(self, number):
         if POLICY_INFO_PROTECTION['latest'] != number:
-            raise ValueError('유효하지 않은 동의 약관 입니다.')
+            raise ValueError('유효하지 않은 약관 동의 입니다.')
 
-        self.info_protection = number
-        self.info_protection_updated_at = timezone.now()
+        self.info_gathering = number
+        self.info_gathering_updated_at = timezone.now()
         self.save()
 
     def agree_using_credit_card(self, number):
         if POLICY_USING_CREDIT_CARD['latest'] != number:
-            raise ValueError('유효하지 않은 동의 약관 입니다.')
+            raise ValueError('유효하지 않은 약관 동의 입니다.')
 
-        self.info_protection = number
-        self.info_protection_updated_at = timezone.now()
+        self.using_credit_card = number
+        self.using_credit_card_updated_at = timezone.now()
         self.save()
 
 
