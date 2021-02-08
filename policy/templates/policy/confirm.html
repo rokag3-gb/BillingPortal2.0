@@ -3,7 +3,7 @@
 {% block contents %}
 <div class="container" data-layout="container">
   <div class="row flex-center min-vh-100 py-6">
-    <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4">
+    <div class="col-md-8">
       <a class="d-flex flex-center mb-4" href="{% url 'index' %}">
         <img src="{% static 'img/logos/cloudmate_logo-h40.png' %}" alt="" />
       </a>
@@ -21,39 +21,73 @@
             </div>
             {% endif %}
             {% csrf_token %}
+
+            {% if form.info.errors %}
+            <div class="alert alert-danger" role="alert">
+              {{ form.info.errors }}
+            </div>
+            {% endif %}
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <input type="checkbox" aria-label="서비스 이용 약관 동의">
+                </div>
+                <span class="input-group-text">필수</span>
+              </div>
+              <input class="form-control" type="text" value="서비스 이용 약관 동의" readonly="">
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <a href="{% url 'info-latest' %}" target="_blank">상세보기</a>
+                </span>
+              </div>
+            </div>
+
+            {% if form.info_protection.errors %}
+            <div class="alert alert-danger" role="alert">
+              {{ form.info_protection.errors }}
+            </div>
+            {% endif %}
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <input type="checkbox" aria-label="개인정보 수집 및 이용 동의">
+                </div>
+                <span class="input-group-text">필수</span>
+              </div>
+              <input class="form-control" type="text" value="개인정보 수집 및 이용에 대한 안내" readonly="">
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <a href="{% url 'info-protection-latest' %}" target="_blank">상세보기</a>
+                </span>
+              </div>
+            </div>
+
             <div class="form-group">
-              <label for="readonly">
-                <a href="{% url 'info-latest' %}" target="_blank">이용약관 확인</a>
-              </label>
-              {% if form.info.errors %}
-              <div class="alert alert-danger" role="alert">
-                {{ form.info.errors }}
-              </div>
-              {% endif %}
-              <input class="form-control" id="info" name="info" type="text" value="{{ info.latest }}" readonly="">
+              <textarea class="form-control" id="exampleFormControlTextarea1" rows="2.5" readonly="" style="resize: none;">
+개인정보 제3자 제공에 대해 동의하지 않을 권리가 있으며,
+미동의 시 결제 서비스 이용이 제한 됩니다.</textarea>
             </div>
-            <div class="form-group">
-              <label for="readonly">
-                <a href="{% url 'info-protection-latest' %}" target="_blank">개인정보처리방침 확인</a>
-              </label>
-              {% if form.info_protection.errors %}
-              <div class="alert alert-danger" role="alert">
-                {{ form.info_protection.errors }}
-              </div>
-              {% endif %}
-              <input class="form-control" id="info-protection" name="info_protection" type="text" value="{{ info_protection.latest }}" readonly="">
+
+            {% if form.info_protection.errors %}
+            <div class="alert alert-danger" role="alert">
+              {{ form.info_protection.errors }}
             </div>
-            <div class="custom-control custom-checkbox">
-              {% if form.checked.errors %}
-              <div class="alert alert-danger" role="alert">
-                {{ form.checked.errors }}
+            {% endif %}
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <input type="checkbox" aria-label="개인정보 제3자 제공 및 공유 안내">
+                </div>
+                <span class="input-group-text">선택</span>
               </div>
-              {% endif %}
-              <input class="custom-control-input" type="checkbox" id="basic-register-checkbox" name="checked"/>
-              <label class="custom-control-label" for="basic-register-checkbox">
-                위의 내용을 모두 읽어보았습니다.
-              </label>
+              <input class="form-control" type="text" value="개인정보 제3자 제공 및 공유 안내" readonly="">
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <a href="{% url 'info-protection-latest' %}" target="_blank">상세보기</a>
+                </span>
+              </div>
             </div>
+
             <div class="form-group">
               <button class="btn btn-primary btn-block mt-3" type="submit" name="submit">Register</button>
             </div>
