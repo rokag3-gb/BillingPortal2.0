@@ -13,22 +13,32 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='userprofile',
-            name='info',
+            name='terms_of_use',
             field=models.CharField(blank=True, default=None, max_length=16, null=True, verbose_name='동의한 이용약관'),
         ),
         migrations.AddField(
             model_name='userprofile',
-            name='info_protection',
+            name='info_gathering',
             field=models.CharField(blank=True, default=None, max_length=16, null=True, verbose_name='동의한 개인정보보호'),
         ),
         migrations.AddField(
             model_name='userprofile',
-            name='info_protection_updated_at',
+            name='using_credit_card',
+            field=models.CharField(blank=True, default=None, max_length=16, null=True, verbose_name='동의한 신용카드결제 허용'),
+        ),
+        migrations.AddField(
+            model_name='userprofile',
+            name='info_gathering_updated_at',
             field=models.DateTimeField(blank=True, default=None, null=True, verbose_name='개인정보보호 동의 시간'),
         ),
         migrations.AddField(
             model_name='userprofile',
-            name='info_updated_at',
+            name='terms_of_use_updated_at',
             field=models.DateTimeField(blank=True, default=None, null=True, verbose_name='이용약관 동의 시간'),
+        ),
+        migrations.AddField(
+            model_name='userprofile',
+            name='using_credit_card_updated_at',
+            field=models.DateTimeField(blank=True, default=None, null=True, verbose_name='신용카드결제 허용 동의 시간'),
         ),
     ]
