@@ -4,16 +4,25 @@ from django.template import TemplateDoesNotExist
 from django.template.loader import get_template
 from django.template.response import TemplateResponse
 
-from Mate365BillingPortal.settings import POLICY_TERMS_OF_USE, POLICY_INFO_PROTECTION
+from Mate365BillingPortal.settings import POLICY_TERMS_OF_USE, POLICY_INFO_PROTECTION, POLICY_USING_CREDIT_CARD
 from policy.forms import PolicyForm
+
+TYPE_TERMS_OF_USE = 'terms-of-use'
+TYPE_INFO_GATHERING = 'info-gathering'
+TYPE_INFO_USING_CREDIT_CARD = 'using-credit-card'
+POLICIES = {
+    TYPE_TERMS_OF_USE: POLICY_TERMS_OF_USE,
+    TYPE_INFO_GATHERING: POLICY_INFO_PROTECTION,
+    TYPE_INFO_USING_CREDIT_CARD: POLICY_USING_CREDIT_CARD,
+}
 
 
 def _return_policy(request, policy_type, number=None):
+    if policy_type not in POLICIES:
+        Http404('관련 약관이 존재하지 않습니다.')
+
     if number is None:
-        if policy_type == 'info':
-            number = POLICY_TERMS_OF_USE['latest']
-        elif policy_type == 'info-protection':
-            number = POLICY_INFO_PROTECTION['latest']
+        number = POLICIES[policy_type]['latest']
 
     try:
         template = get_template(f"policy/{policy_type}-{number}.html")
@@ -23,12 +32,16 @@ def _return_policy(request, policy_type, number=None):
     return TemplateResponse(request, template)
 
 
-def info(request, info_number=None):
-    return _return_policy(request=request, policy_type='info', number=info_number)
+def terms_of_use(request, number=None):
+    return _return_policy(request=request, policy_type=TYPE_TERMS_OF_USE, number=number)
 
 
-def info_protection(request, info_protection_number=None):
-    return _return_policy(request=request, policy_type='info-protection', number=info_protection_number)
+def info_gathering(request, number=None):
+    return _return_policy(request=request, policy_type=TYPE_INFO_GATHERING, number=number)
+
+
+def using_credit_card(request, number=None):
+    return _return_policy(request=request, policy_type=TYPE_INFO_USING_CREDIT_CARD, number=number)
 
 
 def confirm(request):
