@@ -10,7 +10,7 @@ trigger:
 
 variables:
   # Agent VM image name
-  vmImageName: 'ubuntu-18.04'
+  vmImageName: 'ubuntu-20.04'
   # Python version: 3.8
   pythonVersion: '3.8'
   # Project root folder. Point to the folder containing manage.py file.
@@ -24,27 +24,13 @@ variables:
     azWebAppName: 'mate365billingpreview'
 
 stages:
-- stage: Build
-  displayName: Build stage
+- stage: Package
+  displayName: Package stage
   jobs:
-  - job: BuildJob
+  - job: PackageJob
     pool:
       vmImage: $(vmImageName)
     steps:
-    - task: UsePythonVersion@0
-      inputs:
-        versionSpec: '$(pythonVersion)'
-      displayName: 'Use Python $(pythonVersion)'
-    
-    # - script: |
-    #     python -m venv antenv
-    #     source antenv/bin/activate
-    #     python -m pip install --upgrade pip
-    #     pip install setup wheel
-    #     pip install -r requirements.txt
-    #     python manage.py collectstatic --noinput
-    #   workingDirectory: $(projectRoot)
-    #   displayName: "Install requirements"
 
     - task: ArchiveFiles@2
       displayName: 'Archive files'
