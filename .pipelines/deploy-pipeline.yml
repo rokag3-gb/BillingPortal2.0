@@ -10,7 +10,7 @@ trigger:
 
 variables:
   # Agent VM image name
-  vmImageName: 'ubuntu-latest'
+  vmImageName: 'ubuntu-18.04'
   # Python version: 3.8
   pythonVersion: '3.8'
   # Project root folder. Point to the folder containing manage.py file.
