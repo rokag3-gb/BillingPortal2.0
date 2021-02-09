@@ -23,8 +23,8 @@ from portal.views import payment, dashboard, index, preference, profile, message
 
 
 urlpatterns = [
-    path('billingadmin/login/', LoginView.as_view(template_name="registration/login.html", ), name='login'),
-    path('billingadmin/', admin.site.urls),
+    path('hq/login/', LoginView.as_view(template_name="registration/login.html", ), name='login'),
+    path('hq/', admin.site.urls),
 
     path('auth/login/', CustomLoginView.as_view(), name='login'),
     path('auth/', include('django.contrib.auth.urls')),
