@@ -4,13 +4,11 @@ from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from django.urls import reverse
 from organizations.models import Organization
 
-from custom.services import set_organization, get_organization
 from Mate365BillingPortal import settings
+from custom.services import set_organization, get_organization
 
 
 def list_org(request):
-    # TODO: org가 1개인 경우 자동 org 선택은 services.py 로 변경하는게 좋을 듯
-    # TODO: 1개의 org 만 있을 때 바로 넘어가는 것이 적절한가?
     org_list = request.user.organizations_organization.all()
 
     if len(org_list) == 1:

@@ -1,5 +1,6 @@
 from django.contrib import admin
 from organizations.models import Organization
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from custom.models import UserProfile, OrganizationProfile, User, OrganizationVendor
 
@@ -12,7 +13,7 @@ class UserProfileInline(admin.StackedInline):
     # fk_name = 'user'
 
 
-class UserProfileAdmin(admin.ModelAdmin):
+class UserProfileAdmin(BaseUserAdmin):
     inlines = (UserProfileInline, )
 
 

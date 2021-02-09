@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'portal.apps.PortalConfig',
     'custom',
+    'policy',
     'django.contrib.humanize'
 ]
 
@@ -48,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'custom.middleware.policy_check_middleware',
 ]
 
 ROOT_URLCONF = 'Mate365BillingPortal.urls'
@@ -151,4 +153,25 @@ POWERBI = {
     "AUTHORITY": 'https://login.microsoftonline.com/organizations',
     "MASTER_USER": os.getenv("POWERBI_MASTER_USER",""), # AUTHMODE가 MasterUser 경우만 사용
     "MASTER_PASS": os.getenv("POWERBI_MASTER_PASS",""), # AUTHMODE가 MasterUser 경우만 사용
+}
+
+POLICY_TERMS_OF_USE = {
+    'latest': '20210204',
+    'able': [
+        '20210204',
+    ]
+}
+
+POLICY_INFO_PROTECTION = {
+    'latest': '20210204',
+    'able': [
+        '20210204',
+    ]
+}
+
+POLICY_USING_CREDIT_CARD = {
+    'latest': '20210204',
+    'able': [
+        '20210204',
+    ]
 }
