@@ -26,9 +26,7 @@
                   <tr>
                     <th class="align-middle white-space-nowrap">
                       <div class="custom-control custom-checkbox">
-                        <input class="custom-control-input checkbox-bulk-select" id="checkbox-bulk-select" type="checkbox"
-                          data-checkbox-body="#bulk-select-body" data-checkbox-actions="#bulk-select-actions"
-                          data-checkbox-replaced-element="#bulk-select-replace-element">
+                        <input class="custom-control-input checkbox-bulk-select" id="checkbox-bulk-select" type="checkbox" data-checkbox-body="#bulk-select-body" data-checkbox-actions="#bulk-select-actions" data-checkbox-replaced-element="#bulk-select-replace-element">
                         <label class="custom-control-label" for="checkbox-bulk-select"></label>
                       </div>
                     </th>
@@ -41,22 +39,19 @@
                   <tr>
                     <td class="align-middle white-space-nowrap">
                       <div class="custom-control custom-checkbox">
-                        <input class="custom-control-input checkbox-bulk-select-target" type="checkbox" id="terms_of_use"
-                          name="terms_of_use" value="{{ terms_of_use.latest }}">
+                        <input class="custom-control-input checkbox-bulk-select-target" type="checkbox" id="terms_of_use" name="terms_of_use" value="{{ terms_of_use.latest }}">
                         <label class="custom-control-label" for="terms_of_use"></label>
                       </div>
                     </td>
                     <th class="align-middle">필수</th>
-                    <td class="align-middle">
-                      서비스 이용 약관 동의
-                    </td>
+                    <td class="align-middle">서비스 이용 약관 동의</td>
                     <td class="align-middle"><a href="{% url 'terms-of-use-latest' %}" target="_blank">상세보기</a></td>
                   </tr>
                   {% if form.info.errors %}
                   <tr>
                     <td colspan="4">
                       <div class="alert alert-danger" role="alert">
-                        {{ form.info.errors }}
+                        {{ form.terms_of_use.errors }}
                       </div>
                     </td>
                   </tr>
@@ -70,12 +65,10 @@
                       </div>
                     </td>
                     <th class="align-middle">필수</th>
-                    <td class="align-middle">
-                      개인정보 수집 및 이용 동의
-                    </td>
+                    <td class="align-middle">개인정보 수집 및 이용 동의</td>
                     <td class="align-middle"><a href="{% url 'info-gathering-latest' %}" target="_blank">상세보기</a></td>
                   </tr>
-                  {% if form.info_protection.errors %}
+                  {% if form.info_gathering.errors %}
                   <tr>
                     <td colspan="4">
                       <div class="alert alert-danger" role="alert">
@@ -87,9 +80,9 @@
                   <tr>
                     <td class="align-middle white-space-nowrap">
                       <div class="custom-control custom-checkbox">
-                        <input class="custom-control-input checkbox-bulk-select-target" type="checkbox" id="usinig_credit_card"
-                          name="usinig_credit_card" value="{{ usinig_credit_card.latest }}">
-                        <label class="custom-control-label" for="usinig_credit_card"></label>
+                        <input class="custom-control-input checkbox-bulk-select-target" type="checkbox" id="using_credit_card"
+                          name="using_credit_card" value="{{ using_credit_card.latest }}">
+                        <label class="custom-control-label" for="using_credit_card"></label>
                       </div>
                     </td>
                     <th class="align-middle">선택</th>
@@ -102,11 +95,11 @@
                     </td>
                     <td class="align-middle"><a href="{% url 'using-credit-card-latest' %}" target="_blank">상세보기</a></td>
                   </tr>
-                  {% if form.info_protection.errors %}
+                  {% if form.using_credit_card.errors %}
                   <tr>
                     <td colspan="4">
                       <div class="alert alert-danger" role="alert">
-                        {{ form.info_protection.errors }}
+                        {{ form.using_credit_card.errors }}
                       </div>
                     </td>
                   </tr>
