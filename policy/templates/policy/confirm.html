@@ -120,16 +120,18 @@
 {% block extra_js %}
 <script>
   function enable_button() {
+    let submitButton = $('#submit')
+
     if (! $("input:checkbox[name='terms_of_use']").is(":checked")) {
-      $('#submit').attr('disabled', true);
+      submitButton.attr('disabled', true);
       return
     }
     if (! $("input:checkbox[name='info_gathering']").is(":checked")) {
-      $('#submit').attr('disabled', true);
+      submitButton.attr('disabled', true);
       return
     }
 
-    $('#submit').attr('disabled', false);
+    submitButton.attr('disabled', false);
   }
 
   $( document ).ready(function () {
