@@ -129,3 +129,6 @@ def invoices(request: HttpRequest) -> HttpResponse:
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'portal/invoices.html', {'page_obj': page_obj})
+
+def manage_payments(request: HttpRequest) -> HttpResponse:
+    return render(request, 'portal/manage_payments.html', {'sidebar': 'dashboard', 'sidebar_items': sidebar_items })

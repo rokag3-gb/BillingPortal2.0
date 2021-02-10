@@ -1,0 +1,99 @@
+{% extends '_base.html' %}
+{% load static %}
+{% load humanize %} 
+{% block navbar %}
+{% include '_base_navbar_left.html' %}
+{% endblock %}
+{% block contents %}
+<div class="content">
+  {% block navbar-top %}{% include '_base_navbar_top.html' %}{% endblock %}
+  <div class="card">
+    <div class="card-header d-flex align-items-center justify-content-between border-top py-0">
+      <h5 class="mb-0 py-card">결제수단 관리</h5>
+    </div>
+    <div class="card-body p-5">
+      <div class="row">
+        <div class="col-sm-6 col-lg-4 mb-4">
+          <div class="card bg-light">
+            <div class="card-body">
+              <div class="card-title">새 결제수단 추가</div>
+              <p class="card-text">여기를 클릭하여 새 결제수단 추가하기.</p>
+              <p class="card-text">
+                +<br>+
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4 mb-4">
+          <div class="card text-white bg-primary">
+            <div class="card-body">
+              <div class="card-title">KB노리체크카드</div>
+              <p class="card-text">KB국민카드 ****1234</p>
+              <p class="card-text">
+                YOUNGBIN HAN<br>
+                VALID THRU 04/22
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4 mb-4">
+          <div class="card text-white bg-secondary">
+            <div class="card-body">
+              <div class="card-title">신한 카카오페이 무지체크카드</div>
+              <p class="card-text">신한카드 ****1234</p>
+              <p class="card-text">
+                YOUNGBIN HAN<br>
+                VALID THRU 05/22
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4 mb-4">
+          <div class="card text-white bg-success">
+            <div class="card-body">
+              <div class="card-title">IBK 나라사랑카드</div>
+              <p class="card-text">BC카드 ****1234</p>
+              <p class="card-text">
+                YOUNGBIN HAN<br>
+                VALID THRU 06/22
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4 mb-4">
+          <div class="card text-white bg-info">
+            <div class="card-body">
+              <div class="card-title">법인카드</div>
+              <p class="card-text">현대카드 ****1234</p>
+              <p class="card-text">
+                CLOUDMATE CORP<br>
+                VALID THRU 06/25
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer border-top">
+      <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" onclick="to_page(1)">&laquo;처음</a></li>
+        <li class="page-item"><a class="page-link" onclick="to_page({{ page_obj.previous_page_number }})">이전</a></li>
+        {% endif %}
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" onclick="to_page({{ page_obj.next_page_number }})">다음</a></li>
+        <li class="page-item"><a class="page-link" onclick="to_page({{ page_obj.paginator.num_pages }})">마지막&raquo;</a></li>
+        {% endif %}
+        
+      </ul>
+    </div>
+  </div>
+  <footer>
+    {% include '_base_footer.html' %}
+  </footer>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/payment.js' %}"></script>
+{% endblock %}
