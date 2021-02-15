@@ -10,7 +10,7 @@ from zeep import Client, Settings
 from django.db.models import Sum
 
 from custom.services import get_organization
-from custom.models import Invoice, InvoiceOrder
+from custom.models import Invoice, InvoiceOrder, Billkey
 
 
 sidebar_items = [
@@ -91,7 +91,6 @@ def charge_payment(request: HttpRequest) -> HttpResponse:
         payment_backend = Client(pg_config["SOAP_URL"], settings=settings)
 
         payment_form = json.loads(request.body.decode("utf-8"))
-        print(payment_form)
         result = payment_backend.service.KICC_EasyPay_json(
             pg_config["STORE_ID"],
             "123",
@@ -131,4 +130,25 @@ def invoices(request: HttpRequest) -> HttpResponse:
     return render(request, 'portal/invoices.html', {'page_obj': page_obj})
 
 def manage_payments(request: HttpRequest) -> HttpResponse:
-    return render(request, 'portal/manage_payments.html', {'sidebar': 'dashboard', 'sidebar_items': sidebar_items })
+    if request.method == "POST":
+        print(request.POST.get('valid_until'))
+        valid_until = datetime.datetime.strptime(request.POST.get('valid_until'), "%Y-%m")
+        Billkey(
+            orgid = get_organization(request),
+            isactive = True,
+            billkey = "123123",
+            alias = request.POST.get("card_alias"),
+            auth1 =  datetime.date.fromisoformat(request.POST.get('owner_birthday')).strftime("%y%m%d"),
+            cardno =  request.POST.get("card_number"),
+            auth2 =  request.POST.get("card_password"),
+            expiremm = valid_until.strftime("%m"),
+            expireyy =  valid_until.strftime("%y"),
+            reguserid = request.user
+        ).save()
+    # elif request.method == "DELETE":
+    #     pass
+    billkeys = Billkey.objects.filter(orgid = get_organization(request))
+    return render(request, 'portal/manage_payments.html',
+        {'sidebar': 'dashboard',
+        'sidebar_items': sidebar_items,
+        'payments': billkeys})

@@ -24,54 +24,20 @@
             </div>
           </div>
         </div>
+        {% for payment in payments %}
         <div class="col-sm-6 col-lg-4 mb-4">
           <div class="card text-white bg-primary">
             <div class="card-body">
-              <div class="card-title">KB노리체크카드</div>
-              <p class="card-text">KB국민카드 ****1234</p>
+              <div class="card-title">{{payment.alias}}</div>
+              <p class="card-text">{{payment.cardno}}</p>
               <p class="card-text">
-                YOUNGBIN HAN<br>
-                VALID THRU 04/22
+                {{payment.reguserid.get_full_name}} _<br>
+                VALID THRU {{payment.expiremm}}/{{payment.expireyy}}
               </p>
             </div>
           </div>
         </div>
-        <div class="col-sm-6 col-lg-4 mb-4">
-          <div class="card text-white bg-secondary">
-            <div class="card-body">
-              <div class="card-title">신한 카카오페이 무지체크카드</div>
-              <p class="card-text">신한카드 ****1234</p>
-              <p class="card-text">
-                YOUNGBIN HAN<br>
-                VALID THRU 05/22
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-lg-4 mb-4">
-          <div class="card text-white bg-success">
-            <div class="card-body">
-              <div class="card-title">IBK 나라사랑카드</div>
-              <p class="card-text">BC카드 ****1234</p>
-              <p class="card-text">
-                YOUNGBIN HAN<br>
-                VALID THRU 06/22
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-lg-4 mb-4">
-          <div class="card text-white bg-info">
-            <div class="card-body">
-              <div class="card-title">법인카드</div>
-              <p class="card-text">현대카드 ****1234</p>
-              <p class="card-text">
-                CLOUDMATE CORP<br>
-                VALID THRU 06/25
-              </p>
-            </div>
-          </div>
-        </div>
+        {% endfor %}
       </div>
     </div>
     <div class="card-footer border-top">
@@ -99,58 +65,63 @@
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">새 결제수단 추가</h5>
         </div>
+        <form method="POST">
         <div class="modal-body" id="payment-progress" style="text-align: center;">
-          <form>
+          
             {% csrf_token %}
+            <div class="form-floating mb-3">
+              <input type="tel" class="form-control" name="card_alias" required maxlength="16" />
+              <label for="card_alias">카드 별칭</label>
+            </div>
             <div class="row g-2 mb-3">
               <div class="col-md">
-                <input type="name" value="{{ user.get_full_name }}" class="form-control" id="card_owner" required />
+                <input type="name" value="{{ user.get_full_name }}" class="form-control" name="card_owner" required />
                 <label for="card_owner">카드 소유자 성명</label>
               </div>
               <div class="col-md">
-                <input type="date" class="form-control" id="owner_birthday" required />
+                <input type="date" class="form-control" name="owner_birthday" required />
                 <label for="owner_birthday">생년월일</label>
               </div>
             </div>
             <div class="row g-2 mb-3">
               <div class="col-md">
-                <input type="email" value="{{ user.email }}" class="form-control" id="owner_email" required />
+                <input type="email" value="{{ user.email }}" class="form-control" name="owner_email" required />
                 <label for="owner_email">이메일</label>
               </div>
               <div class="col-md">
-                <input type="tel" class="form-control" id="phone_number" required />
+                <input type="tel" class="form-control" name="phone_number" required />
                 <label for="phone_number">휴대전화</label>
               </div>
             </div>
             <div class="form-floating mb-3">
-              <input type="tel" class="form-control" id="card_number" required maxlength="16" />
+              <input type="tel" class="form-control" name="card_number" required maxlength="16" />
               <label for="card_number">카드번호</label>
             </div>
             <div class="row g-2 mb-3">
               <div class="col-md">
                 <div class="form-floating">
-                  <input type="month" class="form-control" id="valid_until" required />
+                  <input type="month" class="form-control" name="valid_until" required />
                   <label for="valid_until">카드 유효기간 (년/월) YYMM</label>
                 </div>
               </div>
               <div class="col-md">
                 <div class="form-floating">
-                  <input type="password" class="form-control" id="card_password" maxlength="2" required />
+                  <input type="password" class="form-control" name="card_password" maxlength="2" required />
                   <label for="card_password">카드 암호 앞 2자리 **</label>
                 </div>
               </div>
             </div>
-          </form>
+          
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">취소</button>
-          <button class="btn btn-primary btn-sm" type="button">등록</button>
+          <button class="btn btn-primary btn-sm" type="submit">등록</button>
         </div>
+        </form>
       </div>
     </div>
   </div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/payment.js' %}"></script>
 {% endblock %}
