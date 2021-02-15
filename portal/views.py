@@ -131,27 +131,24 @@ def invoices(request: HttpRequest) -> HttpResponse:
 
 def manage_payments(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
-        billkey_form = json.loads(request.body.decode("utf-8"))
-        valid_until = datetime.datetime.strptime(billkey_form['valid_until'], "%Y-%m")
+        print(request.POST.get('valid_until'))
+        valid_until = datetime.datetime.strptime(request.POST.get('valid_until'), "%Y-%m")
         Billkey(
             orgid = get_organization(request),
             isactive = True,
             billkey = "123123",
-            alias = billkey_form["card_alias"],
-            auth1 =  datetime.date.fromisoformat(billkey_form['owner_birthday']).strftime("%y%m%d"),
-            cardno =  billkey_form["card_number"],
-            auth2 =  billkey_form["card_password"],
+            alias = request.POST.get("card_alias"),
+            auth1 =  datetime.date.fromisoformat(request.POST.get('owner_birthday')).strftime("%y%m%d"),
+            cardno =  request.POST.get("card_number"),
+            auth2 =  request.POST.get("card_password"),
             expiremm = valid_until.strftime("%m"),
             expireyy =  valid_until.strftime("%y"),
             reguserid = request.user
         ).save()
-        return JsonResponse({"result":"ok"})
     # elif request.method == "DELETE":
     #     pass
-    else:
-        billkeys = Billkey.objects.filter(orgid = get_organization(request))
-        return render(request, 'portal/manage_payments.html',
-            {
-                'sidebar': 'dashboard',
-                'sidebar_items': sidebar_items,
-                'payments': billkeys })
+    billkeys = Billkey.objects.filter(orgid = get_organization(request))
+    return render(request, 'portal/manage_payments.html',
+        {'sidebar': 'dashboard',
+        'sidebar_items': sidebar_items,
+        'payments': billkeys})
