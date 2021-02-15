@@ -24,54 +24,20 @@
             </div>
           </div>
         </div>
+        {% for payment in payments %}
         <div class="col-sm-6 col-lg-4 mb-4">
           <div class="card text-white bg-primary">
             <div class="card-body">
-              <div class="card-title">KB노리체크카드</div>
-              <p class="card-text">KB국민카드 ****1234</p>
+              <div class="card-title">{{payment.alias}}</div>
+              <p class="card-text">{{payment.cardno}}</p>
               <p class="card-text">
-                YOUNGBIN HAN<br>
-                VALID THRU 04/22
+                {{payment.reguserid.get_full_name}} _<br>
+                VALID THRU {{payment.expiremm}}/{{payment.expireyy}}
               </p>
             </div>
           </div>
         </div>
-        <div class="col-sm-6 col-lg-4 mb-4">
-          <div class="card text-white bg-secondary">
-            <div class="card-body">
-              <div class="card-title">신한 카카오페이 무지체크카드</div>
-              <p class="card-text">신한카드 ****1234</p>
-              <p class="card-text">
-                YOUNGBIN HAN<br>
-                VALID THRU 05/22
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-lg-4 mb-4">
-          <div class="card text-white bg-success">
-            <div class="card-body">
-              <div class="card-title">IBK 나라사랑카드</div>
-              <p class="card-text">BC카드 ****1234</p>
-              <p class="card-text">
-                YOUNGBIN HAN<br>
-                VALID THRU 06/22
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-lg-4 mb-4">
-          <div class="card text-white bg-info">
-            <div class="card-body">
-              <div class="card-title">법인카드</div>
-              <p class="card-text">현대카드 ****1234</p>
-              <p class="card-text">
-                CLOUDMATE CORP<br>
-                VALID THRU 06/25
-              </p>
-            </div>
-          </div>
-        </div>
+        {% endfor %}
       </div>
     </div>
     <div class="card-footer border-top">
