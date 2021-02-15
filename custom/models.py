@@ -189,3 +189,21 @@ class InvoiceOrderDetail(models.Model):
     class Meta:
         managed = False
         db_table = 'InvoiceOrderDetail'
+
+class Billkey(models.Model):
+    seq = models.AutoField(db_column='Seq', primary_key=True)  # Field name made lowercase.
+    orgid = models.IntegerField(db_column='OrgId')  # Field name made lowercase.
+    isactive = models.BooleanField(db_column='IsActive')  # Field name made lowercase.
+    billkey = models.CharField(db_column='Billkey', max_length=500)  # Field name made lowercase.
+    alias = models.CharField(db_column='Alias', max_length=100)  # Field name made lowercase.
+    auth1 = models.CharField(db_column='Auth1', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    cardno = models.CharField(db_column='CardNo', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    auth2 = models.CharField(db_column='Auth2', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    expiremm = models.CharField(db_column='ExpireMM', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    expireyy = models.CharField(db_column='ExpireYY', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    reguserid = models.IntegerField(db_column='RegUserId')  # Field name made lowercase.
+    regdate = models.DateTimeField(db_column='RegDate')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'Billkey'
