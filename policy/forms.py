@@ -7,7 +7,7 @@ from Mate365BillingPortal.settings import POLICY_TERMS_OF_USE, POLICY_INFO_PROTE
 class PolicyForm(forms.Form):
     terms_of_use = forms.CharField(max_length=16, required=True)
     info_gathering = forms.CharField(max_length=16, required=True)
-    using_credit_card = forms.CharField(max_length=16)
+    using_credit_card = forms.CharField(max_length=16, required=False)
 
     def clean_terms_of_use(self):
         terms_of_use = self.cleaned_data['terms_of_use']
@@ -25,6 +25,11 @@ class PolicyForm(forms.Form):
 
     def clean_using_credit_card(self):
         using_credit_card = self.cleaned_data['using_credit_card']
+
+        # INFO: BooleanField 를 CharField 로 강제로 쓰면서 처리할 부분
+        if using_credit_card == '':
+            return None
+
         if using_credit_card != POLICY_USING_CREDIT_CARD['latest']:
             raise ValidationError('잘못된 신용카드 처리 허용 요청 입니다.', code='invalid credit card')
 
