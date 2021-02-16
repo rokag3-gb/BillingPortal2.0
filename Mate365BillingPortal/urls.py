@@ -21,6 +21,9 @@ from django.urls import path, include
 from custom.views import CustomLoginView
 from portal.views import payment, dashboard, index, preference, profile, messages, invoices, charge_payment, manage_payments
 
+admin.site.site_header = "MateCost BackOffice"
+admin.site.site_title = "MateCost BackOffice UI"
+admin.site.index_title = "MateCost BackOffice 접속을 환영합니다"
 
 urlpatterns = [
     path('hq/login/', LoginView.as_view(template_name="registration/login.html", ), name='login'),
