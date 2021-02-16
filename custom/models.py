@@ -137,8 +137,9 @@ class Invoice(models.Model):
     vendorInvoiceId = models.CharField(db_column='VendorInvoiceId', max_length=100)  # Field name made lowercase.
     chargeStartDate = models.DateField(db_column='ChargeStartDate')  # Field name made lowercase.
     chargeEndDate = models.DateField(db_column='ChargeEndDate')  # Field name made lowercase.
-    amount = models.DecimalField(db_column='Amount', max_digits=19, decimal_places=4)  # Field name made lowercase.
-    amountRrp = models.DecimalField(db_column='AmountRrp', max_digits=19, decimal_places=4)  # Field name made lowercase.
+    partnerAmount = models.DecimalField(max_digits=19, decimal_places=4)
+    rrpAmount = models.DecimalField(max_digits=19, decimal_places=4)
+    ourAmount = models.DecimalField(max_digits=19, decimal_places=4)
     regId = models.IntegerField(db_column='RegId')  # Field name made lowercase.
     regDate = models.DateTimeField(db_column='RegDate')  # Field name made lowercase.
 
@@ -169,7 +170,7 @@ class InvoiceOrder(models.Model):
                 invoiceMonth = item.invoiceMonth,
                 vendorCode = item.vendorCode,
                 invoiceId = item.invoiceId,
-                amount = item.amountRrp,
+                amount = item.rrpAmount,
                 paid = 0
             )
             detail.save()
