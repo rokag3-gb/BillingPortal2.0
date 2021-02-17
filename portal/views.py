@@ -130,25 +130,39 @@ def invoices(request: HttpRequest) -> HttpResponse:
     return render(request, 'portal/invoices.html', {'page_obj': page_obj})
 
 def manage_payments(request: HttpRequest) -> HttpResponse:
+    card_error = None
+    card_message = None
     if request.method == "POST":
-        print(request.POST.get('valid_until'))
-        valid_until = datetime.datetime.strptime(request.POST.get('valid_until'), "%Y-%m")
-        Billkey(
-            orgid = get_organization(request),
-            isactive = True,
-            billkey = "123123",
-            alias = request.POST.get("card_alias"),
-            auth1 =  datetime.date.fromisoformat(request.POST.get('owner_birthday')).strftime("%y%m%d"),
-            cardno =  request.POST.get("card_number"),
-            auth2 =  request.POST.get("card_password"),
-            expiremm = valid_until.strftime("%m"),
-            expireyy =  valid_until.strftime("%y"),
-            reguserid = request.user
-        ).save()
-    # elif request.method == "DELETE":
-    #     pass
+        if request.POST.get("action", "") == "delete":
+            try:
+                payment = Billkey.objects.get(seq=int(request.POST.get("id")))
+                if payment.orgid == request.user.org_last_selected:
+                    payment.delete()
+                    card_message = "카드 삭제가 완료되었습니다."
+                else:
+                    card_error = "해당 카드가 존재하지 않습니다."
+            except:
+                card_error = "해당 카드가 존재하지 않습니다."
+        else:
+            print(request.POST.get('valid_until'))
+            valid_until = datetime.datetime.strptime(request.POST.get('valid_until'), "%Y-%m")
+            Billkey(
+                orgid = get_organization(request),
+                isactive = True,
+                billkey = "123123",
+                alias = request.POST.get("card_alias"),
+                auth1 =  datetime.date.fromisoformat(request.POST.get('owner_birthday')).strftime("%y%m%d"),
+                cardno =  request.POST.get("card_number"),
+                auth2 =  request.POST.get("card_password"),
+                expiremm = valid_until.strftime("%m"),
+                expireyy =  valid_until.strftime("%y"),
+                reguserid = request.user
+            ).save()
+            card_message = "카드가 등록되었습니다."        
     billkeys = Billkey.objects.filter(orgid = get_organization(request))
     return render(request, 'portal/manage_payments.html',
         {'sidebar': 'dashboard',
         'sidebar_items': sidebar_items,
-        'payments': billkeys})
+        'payments': billkeys,
+        'card_error': card_error,
+        'card_message': card_message})

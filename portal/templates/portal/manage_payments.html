@@ -11,16 +11,29 @@
     <div class="card-header d-flex align-items-center justify-content-between border-top py-0">
       <h5 class="mb-0 py-card">결제수단 관리</h5>
     </div>
-    <div class="card-body p-5">
+    <div class="card-body p-4">
+      {% if card_error %}
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{card_error}}
+        <button class="close" type="button" data-dismiss="alert" aria-label="Close"><span class="font-weight-light" aria-hidden="true">×</span></button>
+      </div>
+      {% endif %}
+      {% if card_message %}
+      <div class="alert alert-primary alert-dismissible fade show" role="alert">
+         {{card_message}}
+        <button class="close" type="button" data-dismiss="alert" aria-label="Close"><span class="font-weight-light" aria-hidden="true">×</span></button>
+      </div>
+      {% endif %}
       <div class="row">
         <div class="col-sm-6 col-lg-4 mb-4">
-          <div class="card bg-light" data-toggle="modal" data-target="#newPaymentModal">
+          <div class="card bg-light">
             <div class="card-body">
               <div class="card-title">새 결제수단 추가</div>
-              <p class="card-text">여기를 클릭하여 새 결제수단 추가하기.</p>
+              <p class="card-text">새 결제수단을 추가하려면 아래 버튼 클릭.</p>
               <p class="card-text">
                 +<br>+
               </p>
+              <a class="btn btn-primary btn-sm" href="#!"  data-toggle="modal" data-target="#newPaymentModal">결제수단 추가</a>
             </div>
           </div>
         </div>
@@ -34,6 +47,13 @@
                 {{payment.reguserid.get_full_name}} _<br>
                 VALID THRU {{payment.expiremm}}/{{payment.expireyy}}
               </p>
+              <form method="POST">
+                {% csrf_token %}
+                <a class="btn btn-primary btn-sm" href="#!">수정</a>
+                <input name="action" value="delete" hidden/>
+                <input name="id" value="{{payment.seq}}" hidden/>
+                <button class="btn btn-primary btn-sm" type="submit">삭제</button>
+              </form>
             </div>
           </div>
         </div>
