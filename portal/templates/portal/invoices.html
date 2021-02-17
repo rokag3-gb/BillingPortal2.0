@@ -49,10 +49,13 @@
                 </div>
               </th>
               <th class="align-middle">청구서ID</th>
-              <th class="align-middle">청구 날짜</th>
+              <th class="align-middle">청구 월</th>
+              <th class="align-middle">청구서 발급일</th>
               <th class="align-middle">서비스 공급자</th>
-              <th class="align-middle">이용 기간</th>
+              <th class="align-middle">사용 시작일</th>
+              <th class="align-middle">사용 종료일</th>
               <th class="align-middle white-space-nowrap pr-3">청구금액</th>
+              <th class="align-middle white-space-nowrap pr-3">청구서 상세</th>
             </tr>
           </thead>
           <tbody id="bulk-select-body">
@@ -68,10 +71,17 @@
                     </div>
                   </td>
                   <th class="align-middle">{{ invoice.invoiceId }}</th>
+                  <td class="align-middle">{{ invoice.invoiceMonth }}</td>
                   <td class="align-middle">{{ invoice.invoiceDate }}</td>
                   <td class="align-middle">{{ invoice.vendorName }}</td>
-                  <td class="align-middle">{{ invoice.chargeStartDate }}<br/>{{ invoice.chargeEndDate }}</td>
+                  <td class="align-middle">{{ invoice.chargeStartDate }}</td>
+                  <td class="align-middle">{{ invoice.chargeEndDate }}</td>
                   <td class="align-middle white-space-nowrap text-right pr-3">{{ invoice.rrpAmount | floatformat:"0" | intcomma }}원</td>
+                  <td class="align-middle">
+                    <button class="btn btn-falcon-default btn-sm ml-2" type="button">
+                      <span class="fas fa-ellipsis-h" data-fa-transform="shrink-3 down-2"></span>
+                    </button>
+                  </td>
                 </tr>
             {% endfor %}
           </form>
