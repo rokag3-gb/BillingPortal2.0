@@ -59,11 +59,12 @@
     </li>
   </ul>
   <ul class="navbar-nav navbar-nav-icons ml-auto flex-row align-items-center">
-    <li class="nav-item d-none d-md-block">
-      <span>{{ request.user }}</span> / <span>{{ request.user.org_last_selected }}</span>
-    </li>
-    <li class="nav-item dropdown dropdown-on-hover"><a class="nav-link pr-0" id="navbarDropdownUser" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <span class="far fa-user-circle fs-4" data-fa-transform="shrink-7"></span>
+    <li class="nav-item dropdown dropdown-on-hover">
+      <a class="nav-link pr-0" id="navbarDropdownUser" 
+        href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+        style="display: flex; justify-content: center; align-items: center">
+        <span style="">{{ request.user }} / {{ request.user.org_last_selected }}</span>
+        <span class="far fa-user-circle fs-4" data-fa-transform="shrink-7"></span>
       </a>
       <div class="dropdown-menu dropdown-menu-right py-0" aria-labelledby="navbarDropdownUser">
         <div class="bg-white rounded-soft py-2">
