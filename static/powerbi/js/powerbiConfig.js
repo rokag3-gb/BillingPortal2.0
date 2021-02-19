@@ -5,6 +5,9 @@ window.onload = function () {
     let reportContainer = document.getElementById("pbi-report-container");
     let errorContainer = document.getElementById("pbi-error-container");
 
+    // Initialize iframe for embedding report
+    powerbi.bootstrap(reportContainer, { type: "report", embedUrl: 'https://app.powerbi.com/reportEmbed' });
+
     const hiddenBasicFilter = {
         $schema: "http://powerbi.com/product/schema#basic",
         target: {
@@ -20,14 +23,10 @@ window.onload = function () {
         }
     };
 
-    // Initialize iframe for embedding report
-    powerbi.bootstrap(reportContainer, { type: "report", embedUrl: 'https://app.powerbi.com/reportEmbed' });
-
     var models = window["powerbi-client"].models;
     var reportLoadConfig = {
         type: "report",
         tokenType: models.TokenType.Embed,
-
         // Enable this setting to remove gray shoulders from embedded report
         settings: {
             background: models.BackgroundType.Transparent,
@@ -63,7 +62,6 @@ window.onload = function () {
         },
         filters: [hiddenBasicFilter]
     };
-
 
     fetch("/powerbi/token")
         .then(function (response) {
@@ -126,7 +124,7 @@ window.onload = function () {
                     })
                     .then(function (json) {
                         report.setAccessToken(json.accessToken)
-                            .then(function(){
+                            .then(function () {
                                 console.log("Token refreshed")
                             })
                     })
