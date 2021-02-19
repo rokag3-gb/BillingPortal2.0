@@ -22,22 +22,22 @@
                 <div class="text-400 font-weight-normal fs--2">{{ item.chargeStartDate }} ~ {{ item.chargeEndDate }}
                 </div>
               </th>
-              <th class="pr-0 text-right pt-0">{{ item.amountRrp | floatformat:"0"| intcomma }}원</th>
+              <th class="pr-0 text-right pt-0">{{ item.rrpAmount | floatformat:"0"| intcomma }}원</th>
             </tr>
             {% endfor %}
             <tr class="border-bottom">
               <th class="pl-0">소계</th>
-              <th class="pr-0 text-right">{{ subtotal.amountRrp__sum | floatformat:"0"| intcomma }}원</th>
+              <th class="pr-0 text-right">{{ subtotal.rrpAmount__sum | floatformat:"0"| intcomma }}원</th>
             </tr>
             <tr>
               <th class="pl-0 pb-0">합계</th>
-              <th class="pr-0 text-right pb-0">{{ subtotal.amountRrp__sum | floatformat:"0"| intcomma }}원</th>
+              <th class="pr-0 text-right pb-0">{{ subtotal.rrpAmount__sum | floatformat:"0"| intcomma }}원</th>
             </tr>
           </table>
         </div>
         <div class="card-footer d-flex justify-content-between bg-100">
           <div class="font-weight-semi-bold">총 결제금액</div>
-          <div class="font-weight-bold">{{ subtotal.amountRrp__sum | floatformat:"0"| intcomma }}원</div>
+          <div class="font-weight-bold">{{ subtotal.rrpAmount__sum | floatformat:"0"| intcomma }}원</div>
         </div>
       </div>
     </div>
@@ -63,8 +63,8 @@
                   <label for="card_owner">카드 소유자 성명</label>
                 </div>
                 <div class="col-md">
-                  <input type="date" class="form-control" id="owner_birthday" required />
-                  <label for="owner_birthday">생년월일</label>
+                  <input type="tel" class="form-control" id="owner_birthday" required />
+                  <label for="owner_birthday">생년월일(6자리) 또는 사업자번호(10자리)</label>
                 </div>
               </div>
               <div class="row g-2 mb-3">

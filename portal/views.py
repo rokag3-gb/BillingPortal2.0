@@ -61,12 +61,12 @@ def payment(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         invoice_ids = request.POST.getlist("invoice")
         invoice_details = Invoice.objects.filter(invoiceId__in=invoice_ids)
-        subtotal = invoice_details.aggregate(Sum("amountRrp"))
+        subtotal = invoice_details.aggregate(Sum("rrpAmount"))
         order = InvoiceOrder(
             orderDate = datetime.datetime.now(),
             orderUserId = request.user,
             orgId = org,
-            totalAmount = subtotal['amountRrp__sum'],
+            totalAmount = subtotal['rrpAmount__sum'],
             paid = 0,
             isCancel = True,
         )
