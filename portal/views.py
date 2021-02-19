@@ -61,12 +61,12 @@ def payment(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         invoice_ids = request.POST.getlist("invoice")
         invoice_details = Invoice.objects.filter(invoiceId__in=invoice_ids)
-        subtotal = invoice_details.aggregate(Sum("amountRrp"))
+        subtotal = invoice_details.aggregate(Sum("rrpAmount"))
         order = InvoiceOrder(
             orderDate = datetime.datetime.now(),
             orderUserId = request.user,
             orgId = org,
-            totalAmount = subtotal['amountRrp__sum'],
+            totalAmount = subtotal['rrpAmount__sum'],
             paid = 0,
             isCancel = True,
         )
@@ -89,8 +89,8 @@ def charge_payment(request: HttpRequest) -> HttpResponse:
         pg_config = getattr(conf, "PG_BACKEND", {})
         settings = Settings(raw_response=False)
         payment_backend = Client(pg_config["SOAP_URL"], settings=settings)
-
         payment_form = json.loads(request.body.decode("utf-8"))
+
         result = payment_backend.service.KICC_EasyPay_json(
             pg_config["STORE_ID"],
             "123",
@@ -103,7 +103,7 @@ def charge_payment(request: HttpRequest) -> HttpResponse:
             datetime.datetime.strptime(payment_form['valid_until'], "%Y-%m").strftime("%y%m"),
             "0",
             payment_form['card_password'],
-            datetime.date.fromisoformat(payment_form['owner_birthday']).strftime("%y%m%d")
+            payment_form['owner_proof']
         )
         # print("Statue code: ", result.status_code)
         pgresult = json.loads(result)
