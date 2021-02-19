@@ -4,3 +4,7 @@ div#user-tools{
 div#user-tools > a:nth-child(1) {
     font-weight: bold;
 }
+
+#pbi-report-container iframe {
+    border: none;
+}
