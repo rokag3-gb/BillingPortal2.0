@@ -108,7 +108,7 @@
             <div
               class="col-md-5 col-xl-12 col-xxl-5 pl-lg-4 pl-xl-2 pl-xxl-5 text-center text-md-left text-xl-center text-xxl-left">
               <hr class="border-dashed d-block d-md-none d-xl-block d-xxl-none my-4">
-              <div class="fs-2 font-weight-semi-bold">결제금액: <span class="text-primary">{{ subtotal.subTotalRrp__sum | floatformat:"0"| intcomma }}원</span></div>
+              <div class="fs-2 font-weight-semi-bold">결제금액: <span class="text-primary">{{ subtotal.rrpAmount__sum | floatformat:"0"| intcomma }}원</span></div>
               <button class="btn btn-success mt-3 px-5" type="submit" onclick="submitPayment()">청구서 일괄 결제</button>
             </div>
           </div>
