@@ -17,7 +17,7 @@ function submitPayment() {
     },
     body: JSON.stringify({
       card_owner: document.getElementById("card_owner").value,
-      owner_birthday: document.getElementById("owner_birthday").value,
+      owner_proof: document.getElementById("owner_proof").value,
       owner_email: document.getElementById("owner_email").value,
       phone_number: document.getElementById("phone_number").value,
       card_number: document.getElementById("card_number").value,
@@ -48,7 +48,7 @@ function submitPayment() {
 
 function resetPaymentDialog() {
   // document.getElementById("card_owner").value = "";
-  // document.getElementById("owner_birthday").value = "";
+  // document.getElementById("owner_proof").value = "";
   // document.getElementById("owner_email").value = "";
   // document.getElementById("phone_number").value = "";
   // document.getElementById("card_number").value = "";
