@@ -42,9 +42,15 @@
     <!-- ===============================================-->
     <!--    Main Content-->
     <!-- ===============================================-->
-    <main class="main" id="top">
-      {% block contents %}{% endblock %}
+     <main class="main" id="top" style="display: flex; flex-direction: column">
+      <div style="flex: 1;">
+        {% block contents %}{% endblock %}
+      </div>
+      <div>
+        {% include '_base_auth_footer.html' %}
+      </div>
     </main>
+   
 
     <!-- ===============================================-->
     <!--    End of Main Content-->
