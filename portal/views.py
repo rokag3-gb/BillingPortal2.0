@@ -94,7 +94,10 @@ def charge_payment(request: HttpRequest) -> HttpResponse:
         settings = Settings(raw_response=False)
         payment_backend = Client(pg_config["SOAP_URL"], settings=settings)
         payment_form = json.loads(request.body.decode("utf-8"))
-
+        try:
+            order_item = InvoiceOrder.objects.get(orderNo=payment_form["order_no"], orgId=get_organization(request))
+        except InvoiceOrder.DoesNotExist:
+            return JsonResponse({'응답메시지':'존재하지 않는 인보이스 주문 항목입니다.'}, status=400)
         result = payment_backend.service.KICC_EasyPay_json(
             pg_config["STORE_ID"],
             "123",
@@ -102,7 +105,7 @@ def charge_payment(request: HttpRequest) -> HttpResponse:
             payment_form['card_owner'],
             payment_form['owner_email'],
             payment_form['phone_number'],
-            100,
+            order_item.totalAmount,
             payment_form['card_number'],
             datetime.datetime.strptime(payment_form['valid_until'], "%Y-%m").strftime("%y%m"),
             "0",

@@ -16,6 +16,7 @@ function submitPayment() {
       "X-CSRFToken": csrftoken,
     },
     body: JSON.stringify({
+      order_no: new URL(window.location).searchParams.get('id'),
       card_owner: document.getElementById("card_owner").value,
       owner_proof: document.getElementById("owner_proof").value,
       owner_email: document.getElementById("owner_email").value,
