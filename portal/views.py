@@ -115,7 +115,7 @@ def charge_payment(request: HttpRequest) -> HttpResponse:
 def invoices(request: HttpRequest) -> HttpResponse:
     date_start = request.GET.get('date_start', default=None)
     date_end = request.GET.get('date_end', default=None)
-    result = Invoice.objects.all()
+    result = Invoice.objects.filter(orgId=get_organization(request))
     if date_start:
         date_start = datetime.datetime.strptime(date_start, "%Y-%m")
         result = result.filter(invoiceDate__gte=date_start)
