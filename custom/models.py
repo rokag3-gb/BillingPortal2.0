@@ -174,8 +174,8 @@ class InvoiceOrder(models.Model):
                 paid = 0
             )
             detail.save()
-
-
+    def getOrderDetails(self):
+        return InvoiceOrderDetail.objects.filter(orderNo=self.orderNo)
 class InvoiceOrderDetail(models.Model):
     seq = models.AutoField(db_column='Seq', primary_key=True)  # Field name made lowercase.
     orderNo = models.ForeignKey(InvoiceOrder, models.DO_NOTHING, db_column='OrderNo')  # Field name made lowercase.

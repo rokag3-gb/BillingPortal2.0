@@ -10,7 +10,7 @@ from zeep import Client, Settings
 from django.db.models import Sum
 
 from custom.services import get_organization
-from custom.models import Invoice, InvoiceOrder, Billkey
+from custom.models import Invoice, InvoiceOrder, InvoiceOrderDetail, Billkey
 
 
 sidebar_items = [
@@ -57,7 +57,18 @@ def payment(request: HttpRequest) -> HttpResponse:
     org = get_organization(request=request)
     if org is None:
         return redirect('/dashboard')
-
+    if request.method == "GET" and (request.GET.get("id") != "" or request.GET.get("id") is not None):
+        order_id = request.GET.get("id")
+        order_item = InvoiceOrder.objects.get(orderNo=order_id)
+        order_details = order_item.getOrderDetails()
+        context = {
+            'sidebar': 'payment', 
+            'sidebar_items': sidebar_items,
+            'invoices': order_details,
+            'subtotal': order_item.totalAmount,
+            'order_id': order_item.orderNo
+        }
+        return render(request, 'portal/payment.html', context)
     if request.method == "POST":
         invoice_ids = request.POST.getlist("invoice")
         invoice_details = Invoice.objects.filter(invoiceId__in=invoice_ids)
@@ -72,14 +83,7 @@ def payment(request: HttpRequest) -> HttpResponse:
         )
         order.save()
         order.createDetails(invoice_details)
-        context = {
-            'sidebar': 'payment', 
-            'sidebar_items': sidebar_items,
-            'invoices': invoice_details,
-            'subtotal': subtotal,
-            'order_id': order.orderNo
-        }
-        return render(request, 'portal/payment.html', context)
+        return redirect('/payment?id={}'.format(order.orderNo))
     else:
         return redirect('/invoices')
 
