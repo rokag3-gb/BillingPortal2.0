@@ -42,9 +42,9 @@
             <li class="nav-item">
               <a class="nav-link" href="{% url 'invoices' %}?date_start={% last_month %}&date_end={% now 'Y-m' %}">청구서 관리</a>
             </li>
-            <li class="nav-item">
+            {% comment %} <li class="nav-item">
               <a class="nav-link" href="{% url 'manage_payments' %}">결제수단 관리</a>
-            </li>
+            </li> {% endcomment %}
           </ul>
         </li>
       </ul>
