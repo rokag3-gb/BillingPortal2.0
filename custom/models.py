@@ -209,3 +209,35 @@ class Billkey(models.Model):
     class Meta:
         managed = False
         db_table = 'Billkey'
+
+# 결제 완료 후 사용된 결제수단 데이터
+class Payment(models.Model):
+    paymentno = models.AutoField(db_column='PaymentNo', primary_key=True)  # Field name made lowercase.
+    paydate = models.DateTimeField(db_column='PayDate')  # Field name made lowercase.
+    payamount = models.DecimalField(db_column='PayAmount', max_digits=19, decimal_places=4)  # Field name made lowercase.
+    orderno = models.ForeignKey(InvoiceOrder, models.DO_NOTHING, db_column='OrderNo')  # Field name made lowercase.
+    productname = models.CharField(db_column='ProductName', max_length=200)  # Field name made lowercase.
+    mid = models.CharField(db_column='Mid', max_length=50)  # Field name made lowercase.
+    billkey = models.CharField(db_column='Billkey', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    cardholder = models.CharField(db_column='CardHolder', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    auth1 = models.CharField(db_column='Auth1', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    cardno = models.CharField(db_column='CardNo', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    cardissuer = models.CharField(db_column='CardIssuer', max_length=30, blank=True, null=True)  # Field name made lowercase.
+    cardacquired = models.CharField(db_column='CardAcquired', max_length=30, blank=True, null=True)  # Field name made lowercase.
+    auth2 = models.CharField(db_column='Auth2', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    expiremmyy = models.CharField(db_column='ExpireMMYY', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    install = models.CharField(db_column='Install', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    tid = models.CharField(db_column='Tid', max_length=50)  # Field name made lowercase.
+    apprno = models.CharField(db_column='ApprNo', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    email = models.CharField(db_column='Email', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    cellphone = models.CharField(db_column='Cellphone', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    iscancel = models.BooleanField(db_column='IsCancel')  # Field name made lowercase.
+    canceldate = models.DateTimeField(db_column='CancelDate', blank=True, null=True)  # Field name made lowercase.
+    cancelamount = models.DecimalField(db_column='CancelAmount', max_digits=19, decimal_places=4, blank=True, null=True)  # Field name made lowercase.
+    canceltid = models.CharField(db_column='CancelTid', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    cancelreason = models.CharField(db_column='CancelReason', max_length=1000, blank=True, null=True)  # Field name made lowercase.
+    regdate = models.DateTimeField(db_column='RegDate')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'Payment'
