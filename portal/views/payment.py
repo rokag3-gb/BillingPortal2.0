@@ -65,7 +65,7 @@ def charge_payment(request: HttpRequest) -> HttpResponse:
         try:
             order_item = InvoiceOrder.objects.get(orderNo=payment_form["order_no"], orgId=get_organization(request))
         except InvoiceOrder.DoesNotExist:
-            return JsonResponse({'응답메시지':'존재하지 않는 인보이스 주문 항목입니다.'}, status=400)
+            return JsonResponse({'errorMsg':'존재하지 않는 인보이스 주문 항목입니다.'}, status=400)
         valid_until = datetime.datetime.strptime(payment_form['valid_until'], "%Y-%m")
         result = payment_backend.service.KICC_EasyPay_json(
             pg_config["STORE_ID"],
@@ -117,9 +117,10 @@ def charge_payment(request: HttpRequest) -> HttpResponse:
                     payment.save()
                     return JsonResponse(pgresult)
             except IntegrityError as error:
-                print("Transaction error: "+error)
+                print("Transaction error: ")
+                print(error)
                 # 결제 취소 호출
-                cancel_result = payment_backend.service.KICC_EasyPay_json(
+                cancel_result = payment_backend.service.KICC_EasyPay_Cancel_json(
                     pg_config["STORE_ID"],
                     "40",
                     pgresult["PG거래번호"],
@@ -129,6 +130,6 @@ def charge_payment(request: HttpRequest) -> HttpResponse:
                     "Payment data persist error",
                 )
                 pg_cancel = json.loads(cancel_result)
-                return JsonResponse(pg_cancel, status=500)
+                return JsonResponse({"errorMsg":"결제 완료 처리 중 오류가 발생하여, 결제가 취소되었습니다."}, status=500)
         else:
-            return JsonResponse(pgresult, status=400)
+            return JsonResponse({"errorMsg":pgresult['응답메시지']}, status=400)

@@ -37,11 +37,13 @@ function submitPayment() {
       } else if (response.status >= 400 && response.status < 500) {
         response.json().then(function(json){
           paymentErrorContainer.hidden = false;
-          paymentError.innerText = `결제 중 오류가 발생했습니다. 입력하신 정보를 다시 확인하세요: ${json['응답메시지']}`;
+          paymentError.innerText = `결제 진행 중 오류가 발생했습니다. 입력하신 정보를 다시 확인하세요: ${json.errorMsg}`;
         })
       } else if (response.status >= 500 && response.status < 600) {
-        paymentErrorContainer.hidden = false;
-        paymentError.innerText = "결제 처리 중 서버 내부 오류가 발생했습니다.";
+        response.json().then(function(json){
+          paymentErrorContainer.hidden = false;
+          paymentError.innerText = `결제 처리 중 서버 내부 오류가 발생했습니다: ${json.errorMsg}`;      
+        })
       }
     })
     .catch(function (error) {
@@ -52,13 +54,6 @@ function submitPayment() {
 }
 
 function resetPaymentDialog() {
-  // document.getElementById("card_owner").value = "";
-  // document.getElementById("owner_proof").value = "";
-  // document.getElementById("owner_email").value = "";
-  // document.getElementById("phone_number").value = "";
-  // document.getElementById("card_number").value = "";
-  // document.getElementById("valid_until").value = "";
-  // document.getElementById("card_password").value = "";
   const paymentForm = document.getElementById("payment-form");
   const paymentProgress = document.getElementById("payment-progress");
   const paymentSuccess = document.getElementById("payment-success");
