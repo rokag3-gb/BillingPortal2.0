@@ -70,7 +70,7 @@ def charge_payment(request: HttpRequest) -> HttpResponse:
         result = payment_backend.service.KICC_EasyPay_json(
             pg_config["STORE_ID"],
             str(order_item.orderNo),
-            "Cloud Computing Service Usage Fee",
+            "Cloud Service Usage Fee",
             payment_form['card_owner'],
             payment_form['owner_email'],
             payment_form['phone_number'],
@@ -98,7 +98,7 @@ def charge_payment(request: HttpRequest) -> HttpResponse:
                             .replace(tzinfo=timezone.get_current_timezone()),
                         payamount = int(pgresult['총결제금액']),
                         orderno = order_item, 
-                        productname = "Cloud Computing Service Usage Fee",
+                        productname = "Cloud Service Usage Fee",
                         mid = pg_config["STORE_ID"],
                         cardholder = payment_form['card_owner'],
                         auth1 = payment_form['owner_proof'],
