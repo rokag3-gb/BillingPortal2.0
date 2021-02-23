@@ -119,6 +119,16 @@ def charge_payment(request: HttpRequest) -> HttpResponse:
             except IntegrityError as error:
                 print("Transaction error: "+error)
                 # 결제 취소 호출
-                return JsonResponse(pgresult, status=500)
+                cancel_result = payment_backend.service.KICC_EasyPay_json(
+                    pg_config["STORE_ID"],
+                    "40",
+                    pgresult["PG거래번호"],
+                    str(order_item.orderNo),
+                    pgresult["총결제금액"],
+                    request.user.username,
+                    "Payment data persist error",
+                )
+                pg_cancel = json.loads(cancel_result)
+                return JsonResponse(pg_cancel, status=500)
         else:
             return JsonResponse(pgresult, status=400)
