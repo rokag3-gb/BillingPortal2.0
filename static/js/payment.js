@@ -6,6 +6,7 @@ function submitPayment() {
   const paymentErrorContainer = document.getElementById(
     "payment-error-container"
   );
+  const billDoc = document.getElementById("billdoc");
   const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
   paymentErrorContainer.hidden = true;
   fetch("charge/", {
@@ -30,6 +31,9 @@ function submitPayment() {
       paymentProgress.hidden = true;
       if (response.ok) {
         paymentSuccess.hidden = false;
+        response.json().then(function(json){
+          billDoc.href = `https://office.easypay.co.kr/receipt/ReceiptBranch.jsp?controlNo=${json['PG거래번호']}&payment=01`
+        })
       } else if (response.status >= 400 && response.status < 500) {
         response.json().then(function(json){
           paymentErrorContainer.hidden = false;
