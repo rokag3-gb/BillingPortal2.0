@@ -1,16 +1,13 @@
 import datetime
-import json
 
 from django.core.paginator import Paginator
-from django.conf import settings as conf
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpRequest, JsonResponse
+from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, redirect
-from zeep import Client, Settings
-from django.db.models import Sum
 
 from custom.services import get_organization
-from custom.models import Invoice, InvoiceOrder, InvoiceOrderDetail, Billkey
+from custom.models import Invoice, Billkey
+
 
 
 sidebar_items = [
@@ -52,72 +49,6 @@ def invoices(request: HttpRequest) -> HttpResponse:
             'sidebar_items': sidebar_items,
         }
     return render(request, 'portal/invoices.html', context)
-
-def payment(request: HttpRequest) -> HttpResponse:
-    org = get_organization(request=request)
-    if org is None:
-        return redirect('/dashboard')
-    if request.method == "GET" and (request.GET.get("id") != "" or request.GET.get("id") is not None):
-        order_id = request.GET.get("id")
-        order_item = InvoiceOrder.objects.get(orderNo=order_id)
-        order_details = order_item.getOrderDetails()
-        context = {
-            'sidebar': 'payment', 
-            'sidebar_items': sidebar_items,
-            'invoices': order_details,
-            'subtotal': order_item.totalAmount,
-            'order_id': order_item.orderNo
-        }
-        return render(request, 'portal/payment.html', context)
-    if request.method == "POST":
-        invoice_ids = request.POST.getlist("invoice")
-        invoice_details = Invoice.objects.filter(invoiceId__in=invoice_ids)
-        subtotal = invoice_details.aggregate(Sum("rrpAmount"))
-        order = InvoiceOrder(
-            orderDate = datetime.datetime.now(),
-            orderUserId = request.user,
-            orgId = org,
-            totalAmount = subtotal['rrpAmount__sum'],
-            paid = 0,
-            isCancel = True,
-        )
-        order.save()
-        order.createDetails(invoice_details)
-        return redirect('/payment?id={}'.format(order.orderNo))
-    else:
-        return redirect('/invoices')
-
-def charge_payment(request: HttpRequest) -> HttpResponse:
-    if request.method == "POST":
-        # PG 인증서버 통신용 SOAP 클라이언트
-        pg_config = getattr(conf, "PG_BACKEND", {})
-        settings = Settings(raw_response=False)
-        payment_backend = Client(pg_config["SOAP_URL"], settings=settings)
-        payment_form = json.loads(request.body.decode("utf-8"))
-        try:
-            order_item = InvoiceOrder.objects.get(orderNo=payment_form["order_no"], orgId=get_organization(request))
-        except InvoiceOrder.DoesNotExist:
-            return JsonResponse({'응답메시지':'존재하지 않는 인보이스 주문 항목입니다.'}, status=400)
-        result = payment_backend.service.KICC_EasyPay_json(
-            pg_config["STORE_ID"],
-            "123",
-            "클라우드사용비용",
-            payment_form['card_owner'],
-            payment_form['owner_email'],
-            payment_form['phone_number'],
-            order_item.totalAmount,
-            payment_form['card_number'],
-            datetime.datetime.strptime(payment_form['valid_until'], "%Y-%m").strftime("%y%m"),
-            "0",
-            payment_form['card_password'],
-            payment_form['owner_proof']
-        )
-        # print("Statue code: ", result.status_code)
-        pgresult = json.loads(result)
-        if(pgresult['응답코드']=='0000'):
-            return JsonResponse(pgresult)
-        else:
-            return JsonResponse(pgresult, status=400)
 
 def invoices(request: HttpRequest) -> HttpResponse:
     date_start = request.GET.get('date_start', default=None)

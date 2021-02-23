@@ -236,7 +236,7 @@ class Payment(models.Model):
     cancelamount = models.DecimalField(db_column='CancelAmount', max_digits=19, decimal_places=4, blank=True, null=True)  # Field name made lowercase.
     canceltid = models.CharField(db_column='CancelTid', max_length=50, blank=True, null=True)  # Field name made lowercase.
     cancelreason = models.CharField(db_column='CancelReason', max_length=1000, blank=True, null=True)  # Field name made lowercase.
-    regdate = models.DateTimeField(db_column='RegDate')  # Field name made lowercase.
+    regdate = models.DateTimeField(db_column='RegDate', auto_now_add=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
