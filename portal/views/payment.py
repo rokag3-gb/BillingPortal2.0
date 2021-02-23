@@ -1,7 +1,7 @@
 import datetime
 import json
 
-from django.core.paginator import Paginator
+from django.utils import timezone
 from django.conf import settings as conf
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpRequest, JsonResponse
@@ -69,12 +69,13 @@ def charge_payment(request: HttpRequest) -> HttpResponse:
         valid_until = datetime.datetime.strptime(payment_form['valid_until'], "%Y-%m")
         result = payment_backend.service.KICC_EasyPay_json(
             pg_config["STORE_ID"],
-            order_item.orderNo,
-            "클라우드사용비용",
+            str(order_item.orderNo),
+            "Cloud Computing Service Usage Fee",
             payment_form['card_owner'],
             payment_form['owner_email'],
             payment_form['phone_number'],
-            order_item.totalAmount,
+            # int(order_item.totalAmount),
+            10,
             payment_form['card_number'],
             valid_until.strftime("%y%m"),
             "0",
@@ -86,11 +87,18 @@ def charge_payment(request: HttpRequest) -> HttpResponse:
         if(pgresult['응답코드']=='0000'):
             try:
                 with transaction.atomic():
-                    Payment(
-                        paydate = pgresult['승인일시'],
-                        payamount = pgresult['총결제금액'],
+                    order_item.paid = pgresult['총결제금액']
+                    order_item.save()
+                    order_details = order_item.getOrderDetails()
+                    for detail in order_details:
+                        detail.paid = detail.amount
+                        detail.save()
+                    payment = Payment(
+                        paydate = datetime.datetime.strptime(pgresult['승인일시'], "%Y%m%d%H%M%S")
+                            .replace(tzinfo=timezone.get_current_timezone()),
+                        payamount = int(pgresult['총결제금액']),
                         orderno = order_item, 
-                        productname = pgresult['클라우드사용비용'],
+                        productname = "Cloud Computing Service Usage Fee",
                         mid = pgresult['상점ID'],
                         cardholder = payment_form['card_owner'],
                         auth1 = payment_form['owner_proof'],
@@ -105,15 +113,12 @@ def charge_payment(request: HttpRequest) -> HttpResponse:
                         email = payment_form['owner_email'],
                         cellphone = payment_form['phone_number'],
                         iscancel = False
-                    ).save()
-                    order_item.paid = pgresult['총결제금액']
-                    order_item.save()
-                    for detail in order_item.getOrderDetails():
-                        detail.paid = detail.amount
-                        detail.save()
-            except IntegrityError:
+                    )
+                    payment.save()
+                    return JsonResponse(pgresult)
+            except IntegrityError as error:
+                print("Transaction error: "+error)
                 # 결제 취소 호출
-                pass
-            return JsonResponse(pgresult)
+                return JsonResponse(pgresult, status=500)
         else:
             return JsonResponse(pgresult, status=400)
