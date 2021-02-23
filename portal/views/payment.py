@@ -99,7 +99,7 @@ def charge_payment(request: HttpRequest) -> HttpResponse:
                         payamount = int(pgresult['총결제금액']),
                         orderno = order_item, 
                         productname = "Cloud Computing Service Usage Fee",
-                        mid = pgresult['상점ID'],
+                        mid = pg_config["STORE_ID"],
                         cardholder = payment_form['card_owner'],
                         auth1 = payment_form['owner_proof'],
                         cardno = pgresult['카드번호'],
