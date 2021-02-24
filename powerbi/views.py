@@ -18,6 +18,8 @@ def token(request: HttpRequest) -> HttpResponse:
     else:
         report_id = NavMenu.objects.filter(menu_id=mid)[0].report_id
 
+    # TODO: report id가 없을때??
+
     try:
         embed_info = PbiEmbedService().get_embed_params_for_single_report(powerbi_config['WORKSPACE_ID'], report_id)
         return JsonResponse(embed_info)
