@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 BRANDING = {
     "NAME": "mateBilling",
-    "LOGO_PATH": ""
+    "LOGO_PATH": "img/logos/mate_billing_logo.png"
 }
 
 INSTALLED_APPS = [

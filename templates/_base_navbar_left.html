@@ -10,7 +10,8 @@
     </div>
     <a class="navbar-brand" href="{% url 'index' %}">
       <div class="d-flex align-items-center py-3">
-        <img src="{% static 'img/logos/cloudmate_logo-h40.png' %}" style="height: 40px;"/>
+        <img class="mr-2" src="{% static BRANDING_LOGO_PATH %}" alt="" width="40" />
+        <span class="text-sans-serif" style="font-size: 1.3rem">{{ BRANDING_WEBSITE_NAME }}</span>
       </div>
     </a>
   </div>
