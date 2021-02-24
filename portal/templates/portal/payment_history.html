@@ -40,14 +40,6 @@
         <table class="table table-sm table-dashboard fs--1 mb-0">
           <thead class="bg-200 text-black">
             <tr>
-              <th class="align-middle white-space-nowrap">
-                <div class="custom-control custom-checkbox">
-                  <input class="custom-control-input checkbox-bulk-select" id="checkbox-bulk-select" type="checkbox"
-                    data-checkbox-body="#bulk-select-body" data-checkbox-actions="#bulk-select-actions"
-                    data-checkbox-replaced-element="#bulk-select-replace-element">
-                  <label class="custom-control-label" for="checkbox-bulk-select"></label>
-                </div>
-              </th>
               <th class="align-middle">결제 ID</th>
               <th class="align-middle">결제 일시</th>
               <th class="align-middle">주문 번호</th>
@@ -64,7 +56,7 @@
                 <tr>
                   <th class="align-middle">{{ payment.paymentno }}</th>
                   <th class="align-middle">{{ payment.paydate }}</th>
-                  <th class="align-middle">{{ payment.orderno }}</th>
+                  <th class="align-middle">{{ payment.orderno.orderNo }}</th>
                   <th class="align-middle">{{ payment.payamount }}</th>
                   <th class="align-middle">{{ payment.cardholder }}</th>
                   <th class="align-middle">{{ payment.cardissuer }}</th>
