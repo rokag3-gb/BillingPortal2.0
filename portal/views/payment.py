@@ -39,19 +39,22 @@ def payment(request: HttpRequest) -> HttpResponse:
         return render(request, 'portal/payment.html', context)
     if request.method == "POST":
         invoice_ids = request.POST.getlist("invoice")
-        invoice_details = Invoice.objects.filter(invoiceId__in=invoice_ids)
-        subtotal = invoice_details.aggregate(Sum("rrpAmount"))
-        order = InvoiceOrder(
-            orderDate = datetime.datetime.now(),
-            orderUserId = request.user,
-            orgId = org,
-            totalAmount = subtotal['rrpAmount__sum'],
-            paid = 0,
-            isCancel = True,
-        )
-        order.save()
-        order.createDetails(invoice_details)
-        return redirect('/payment?id={}'.format(order.orderNo))
+        invoice_details = Invoice.objects.filter(invoiceId__in=invoice_ids, paid=0)
+        if len(invoice_details) <= 0:
+            return redirect('/invoices?error=alreadypaid')
+        else:
+            subtotal = invoice_details.aggregate(Sum("rrpAmount"))
+            order = InvoiceOrder(
+                orderDate = datetime.datetime.now(),
+                orderUserId = request.user,
+                orgId = org,
+                totalAmount = subtotal['rrpAmount__sum'],
+                paid = 0,
+                isCancel = True,
+            )
+            order.save()
+            order.createDetails(invoice_details)
+            return redirect('/payment?id={}'.format(order.orderNo))
     else:
         return redirect('/invoices')
 
