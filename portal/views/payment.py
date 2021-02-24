@@ -13,12 +13,7 @@ from custom.services import get_organization
 from custom.models import Invoice, InvoiceOrder, Payment
 from django.db import transaction, IntegrityError
 from portal.services import get_sidebar_menu
-
-# sidebar_items = [
-#     {'name':'대시보드','path':"dashboard"},
-#     {'name':'지불관리','path':"payment"},
-#     # {'name':'메시지','path':"messages"}
-# ]
+from django.core.paginator import Paginator
 
 # 결제 화면용 InvoiceOrder, InvoiceOrderDetail 생성 및, 실제 결제화면 보여주는 함수
 def payment(request: HttpRequest) -> HttpResponse:
@@ -137,3 +132,25 @@ def charge_payment(request: HttpRequest) -> HttpResponse:
                 return JsonResponse({"errorMsg":"결제 완료 처리 중 오류가 발생하여, 결제가 취소되었습니다."}, status=500)
         else:
             return JsonResponse({"errorMsg":pgresult['응답메시지']}, status=400)
+
+def payment_history(request: HttpRequest) -> HttpResponse:
+    date_start = request.GET.get('date_start', default=None)
+    date_end = request.GET.get('date_end', default=None)
+    result = Payment.objects.filter(orderno__orgId=get_organization(request))
+    if date_start:
+        date_start = datetime.datetime.strptime(date_start, "%Y-%m")
+        result = result.filter(paydate__gte=date_start)
+    if date_end:
+        date_end = datetime.datetime.strptime(date_end, "%Y-%m")
+        date_end = date_end.replace(month=date_end.month+1) - datetime.timedelta(days=1)
+        result = result.filter(paydate__lte=date_end)
+    result = result.order_by("-paydate")
+    paginator = Paginator(result, 20) # Show 25 contacts per page.
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {
+            'sidebar': 'payment_history', 
+            'sidebar_items': get_sidebar_menu(),
+            'page_obj': page_obj
+        }
+    return render(request, 'portal/payment_history.html', context)
