@@ -19,11 +19,13 @@ from django.contrib.auth.views import LoginView
 from django.urls import path, include
 
 from custom.views import CustomLoginView
-from portal.views import payment, dashboard, index, preference, profile, messages, invoices, charge_payment, manage_payments
+from portal.views import payment, dashboard, index, preference, profile, messages, invoices, charge_payment
+from django.conf import settings # import the settings file
 
-admin.site.site_header = "MateCost BackOffice"
-admin.site.site_title = "MateCost BackOffice UI"
-admin.site.index_title = "MateCost BackOffice 접속을 환영합니다"
+branding = getattr(settings, "BRANDING", {})
+admin.site.site_header = "{} BackOffice".format(branding["NAME"])
+admin.site.site_title = "{} BackOffice UI".format(branding["NAME"])
+admin.site.index_title = "{} BackOffice 접속을 환영합니다".format(branding["NAME"])
 
 urlpatterns = [
     path('hq/login/', LoginView.as_view(template_name="registration/login.html", ), name='login'),

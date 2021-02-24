@@ -4,12 +4,14 @@
   <div class="d-flex align-items-center">
     <div class="toggle-icon-wrapper">
 
-      <button class="btn navbar-toggler-humburger-icon navbar-vertical-toggle" data-toggle="tooltip" data-placement="left" title="Toggle Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
+      <button class="btn navbar-toggler-humburger-icon navbar-vertical-toggle" data-toggle="tooltip" data-placement="left" title="Toggle Navigation">
+      <span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
 
     </div>
     <a class="navbar-brand" href="{% url 'index' %}">
       <div class="d-flex align-items-center py-3">
-        <img src="{% static 'img/logos/cloudmate_logo-h40.png' %}" style="height: 40px;"/>
+        <img class="mr-2" src="{% static BRANDING_LOGO_PATH %}" alt="" width="40" />
+        <span class="text-sans-serif" style="font-size: 1.3rem">{{ BRANDING_WEBSITE_NAME }}</span>
       </div>
     </a>
   </div>
@@ -21,17 +23,18 @@
           <a class="nav-link dropdown-indicator" href="#" data-toggle="collapse" role="button"
              aria-expanded="false" aria-controls="home">
             <div class="d-flex align-items-center">
-              <span class="nav-link-icon"><span class="fas fa-chart-pie"></span></span>
-              <span class="nav-link-text">{{ navs.0 }}</span>
+              <span class="nav-link-icon"><span class="fas {{ navs.0.icon_tag }}"></span></span>
+              <span class="nav-link-text">{{ navs.0.menu_name }}</span>
             </div>
           </a>
           {% for sub_menu in navs.1 %}
-          <ul class="nav collapse show" id={{ navs.0 }} data-parent="#navbarVerticalCollapse">
-          <li class="nav-item active"><a class="nav-link" href="{% url 'dashboard' %}">{{sub_menu}}</a></li>
+          <ul class="nav collapse show" id={{ navs.0.menu_name }} data-parent="#navbarVerticalCollapse">
+          <li class="nav-item active"><a class="nav-link {%if not sub_menu.is_enable %} disabled{% endif %}" href="{% url sub_menu.url %}?id={{sub_menu.menu_id}}">{{sub_menu.menu_name}}</a></li>
           </ul>
           {% endfor %}
         </li>
         {% endfor %}
+
       </ul>
 
       <div class="settings px-3 px-xl-0">
