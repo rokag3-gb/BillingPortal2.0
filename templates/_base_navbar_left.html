@@ -16,43 +16,30 @@
   <div class="collapse navbar-collapse" id="navbarVerticalCollapse">
     <div class="navbar-vertical-content perfect-scrollbar scrollbar">
       <ul class="navbar-nav flex-column">
-        <li class="nav-item"><a class="nav-link dropdown-indicator" href="#home" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="home">
-            <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-chart-pie"></span></span><span class="nav-link-text">Home</span>
+        {% for navs in sidebar_items %}
+        <li class="nav-item">
+          <a class="nav-link dropdown-indicator" href="#" data-toggle="collapse" role="button"
+             aria-expanded="false" aria-controls="home">
+            <div class="d-flex align-items-center">
+              <span class="nav-link-icon"><span class="fas fa-chart-pie"></span></span>
+              <span class="nav-link-text">{{ navs.0 }}</span>
             </div>
           </a>
-          <ul class="nav collapse show" id="home" data-parent="#navbarVerticalCollapse">
-            <li class="nav-item active"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
-            </li>
-            {% for vendor in request.user.org_last_selected.vendors %}
-            <li class="nav-item active"><a class="nav-link" href="{% url 'dashboard' %}">{{vendor.get_vendorcode_display}}</a>
-            </li>
-            {% endfor %}
+          {% for sub_menu in navs.1 %}
+          <ul class="nav collapse show" id={{ navs.0 }} data-parent="#navbarVerticalCollapse">
+          <li class="nav-item active"><a class="nav-link" href="{% url 'dashboard' %}">{{sub_menu}}</a></li>
           </ul>
+          {% endfor %}
         </li>
+        {% endfor %}
       </ul>
-      <div class="navbar-vertical-divider">
-        <hr class="navbar-vertical-hr my-2" />
-      </div>
-      <ul class="navbar-nav flex-column">
-        <li class="nav-item"><a class="nav-link dropdown-indicator" href="#e-commerce" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="e-commerce">
-            <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-cart-plus"></span></span><span class="nav-link-text">Usage Report</span>
-            </div>
-          </a>
-          <ul class="nav collapse show" id="e-commerce" data-parent="#navbarVerticalCollapse">
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'invoices' %}?date_start={% last_month %}&date_end={% now 'Y-m' %}">청구서 관리</a>
-            </li>
-            {% comment %} <li class="nav-item">
-              <a class="nav-link" href="{% url 'manage_payments' %}">결제수단 관리</a>
-            </li> {% endcomment %}
-          </ul>
-        </li>
-      </ul>
+
       <div class="settings px-3 px-xl-0">
         <div class="navbar-vertical-divider px-0">
           <hr class="navbar-vertical-hr my-3" />
-        </div><a class="btn btn-sm btn-block btn-purchase mb-3" href="https://themes.getbootstrap.com/product/falcon-admin-dashboard-webapp-template/">
-          문의하기</a>
+        </div>
+        {% comment %}<a class="btn btn-sm btn-block btn-purchase mb-3" href="https://themes.getbootstrap.com/product/falcon-admin-dashboard-webapp-template/">
+          문의하기</a> {% endcomment %}
       </div>
     </div>
   </div>

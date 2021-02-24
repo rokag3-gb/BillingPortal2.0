@@ -12,12 +12,13 @@ from django.db.models import Sum
 from custom.services import get_organization
 from custom.models import Invoice, InvoiceOrder, Payment
 from django.db import transaction, IntegrityError
+from portal.services import get_sidebar_menu
 
-sidebar_items = [
-    {'name':'대시보드','path':"dashboard"},
-    {'name':'지불관리','path':"payment"},
-    # {'name':'메시지','path':"messages"}
-]
+# sidebar_items = [
+#     {'name':'대시보드','path':"dashboard"},
+#     {'name':'지불관리','path':"payment"},
+#     # {'name':'메시지','path':"messages"}
+# ]
 
 # 결제 화면용 InvoiceOrder, InvoiceOrderDetail 생성 및, 실제 결제화면 보여주는 함수
 def payment(request: HttpRequest) -> HttpResponse:
@@ -30,7 +31,7 @@ def payment(request: HttpRequest) -> HttpResponse:
         order_details = order_item.getOrderDetails()
         context = {
             'sidebar': 'payment', 
-            'sidebar_items': sidebar_items,
+            'sidebar_items': get_sidebar_menu(),
             'invoices': order_details,
             'subtotal': order_item.totalAmount,
             'order_id': order_item.orderNo
