@@ -140,6 +140,7 @@ class Invoice(models.Model):
     partnerAmount = models.DecimalField(db_column='partner_amount', max_digits=19, decimal_places=4)
     rrpAmount = models.DecimalField(db_column='rrp_amount', max_digits=19, decimal_places=4)
     ourAmount = models.DecimalField(db_column='our_amount', max_digits=19, decimal_places=4)
+    paid = models.DecimalField(db_column="Paid", max_digits=19, decimal_places=4)
     regId = models.IntegerField(db_column='RegId')  # Field name made lowercase.
     regDate = models.DateTimeField(db_column='RegDate')  # Field name made lowercase.
 
