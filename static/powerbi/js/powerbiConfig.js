@@ -4,6 +4,10 @@
 window.onload = function () {
     let reportContainer = document.getElementById("pbi-report-container");
     let errorContainer = document.getElementById("pbi-error-container");
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const menuId = urlParams.get('id');
+    // console.log(urlParams.get('menu_id'));
 
     // Initialize iframe for embedding report
     powerbi.bootstrap(reportContainer, { type: "report", embedUrl: 'https://app.powerbi.com/reportEmbed' });
@@ -62,8 +66,13 @@ window.onload = function () {
         },
         filters: [hiddenBasicFilter]
     };
-
-    fetch("/powerbi/token")
+    let token_url = null;
+    if (menuId){
+        token_url = "/powerbi/token" + "?id=" + menuId
+    }else{
+        token_url = "/powerbi/token"
+    }
+    fetch(token_url)
         .then(function (response) {
             return response.json();
         })
