@@ -1,16 +1,13 @@
 import datetime
-import json
 
 from django.core.paginator import Paginator
-from django.conf import settings as conf
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpRequest, JsonResponse
+from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, redirect
-from zeep import Client, Settings
-from django.db.models import Sum
 
 from custom.services import get_organization
-from custom.models import Invoice, InvoiceOrder, InvoiceOrderDetail, Billkey
+from custom.models import Invoice, Billkey
+
 
 
 # sidebar_items = [
@@ -49,80 +46,6 @@ def profile(request: HttpRequest) -> HttpResponse:
 def messages(request: HttpRequest) -> HttpResponse:
     return render(request, 'portal/messages.html', {'sidebar': 'messages', 'sidebar_items': get_sidebar_menu()})
 
-
-def invoices(request: HttpRequest) -> HttpResponse:
-    context = {
-            'sidebar': 'payment', 
-            'sidebar_items': get_sidebar_menu(),
-        }
-    return render(request, 'portal/invoices.html', context)
-
-
-def payment(request: HttpRequest) -> HttpResponse:
-    org = get_organization(request=request)
-    if org is None:
-        return redirect('/dashboard')
-    if request.method == "GET" and (request.GET.get("id") != "" or request.GET.get("id") is not None):
-        order_id = request.GET.get("id")
-        order_item = InvoiceOrder.objects.get(orderNo=order_id)
-        order_details = order_item.getOrderDetails()
-        context = {
-            'sidebar': 'payment', 
-            'sidebar_items': get_sidebar_menu(),
-            'invoices': order_details,
-            'subtotal': order_item.totalAmount,
-            'order_id': order_item.orderNo
-        }
-        return render(request, 'portal/payment.html', context)
-    if request.method == "POST":
-        invoice_ids = request.POST.getlist("invoice")
-        invoice_details = Invoice.objects.filter(invoiceId__in=invoice_ids)
-        subtotal = invoice_details.aggregate(Sum("rrpAmount"))
-        order = InvoiceOrder(
-            orderDate = datetime.datetime.now(),
-            orderUserId = request.user,
-            orgId = org,
-            totalAmount = subtotal['rrpAmount__sum'],
-            paid = 0,
-            isCancel = True,
-        )
-        order.save()
-        order.createDetails(invoice_details)
-        return redirect('/payment?id={}'.format(order.orderNo))
-    else:
-        return redirect('/invoices')
-
-
-def charge_payment(request: HttpRequest) -> HttpResponse:
-    if request.method == "POST":
-        # PG 인증서버 통신용 SOAP 클라이언트
-        pg_config = getattr(conf, "PG_BACKEND", {})
-        settings = Settings(raw_response=False)
-        payment_backend = Client(pg_config["SOAP_URL"], settings=settings)
-        payment_form = json.loads(request.body.decode("utf-8"))
-
-        result = payment_backend.service.KICC_EasyPay_json(
-            pg_config["STORE_ID"],
-            "123",
-            "클라우드사용비용",
-            payment_form['card_owner'],
-            payment_form['owner_email'],
-            payment_form['phone_number'],
-            100,
-            payment_form['card_number'],
-            datetime.datetime.strptime(payment_form['valid_until'], "%Y-%m").strftime("%y%m"),
-            "0",
-            payment_form['card_password'],
-            payment_form['owner_proof']
-        )
-        # print("Statue code: ", result.status_code)
-        pgresult = json.loads(result)
-        if(pgresult['응답코드']=='0000'):
-            return JsonResponse(pgresult)
-        else:
-            return JsonResponse(pgresult, status=400)
-
-
 def invoices(request: HttpRequest) -> HttpResponse:
     date_start = request.GET.get('date_start', default=None)
     date_end = request.GET.get('date_end', default=None)
@@ -138,7 +61,12 @@ def invoices(request: HttpRequest) -> HttpResponse:
     paginator = Paginator(result, 20) # Show 25 contacts per page.
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'portal/invoices.html', {'page_obj': page_obj})
+    context = {
+            'sidebar': 'payment', 
+            'sidebar_items': get_sidebar_menu(),
+            'page_obj': page_obj
+        }
+    return render(request, 'portal/invoices.html', context)
 
 
 def manage_payments(request: HttpRequest) -> HttpResponse:

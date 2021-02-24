@@ -175,7 +175,7 @@ class InvoiceOrder(models.Model):
             )
             detail.save()
     def getOrderDetails(self):
-        return InvoiceOrderDetail.objects.filter(orderNo=self.orderNo)
+        return InvoiceOrderDetail.objects.filter(orderNo=self)
 class InvoiceOrderDetail(models.Model):
     seq = models.AutoField(db_column='Seq', primary_key=True)  # Field name made lowercase.
     orderNo = models.ForeignKey(InvoiceOrder, models.DO_NOTHING, db_column='OrderNo')  # Field name made lowercase.
@@ -236,7 +236,7 @@ class Payment(models.Model):
     cancelamount = models.DecimalField(db_column='CancelAmount', max_digits=19, decimal_places=4, blank=True, null=True)  # Field name made lowercase.
     canceltid = models.CharField(db_column='CancelTid', max_length=50, blank=True, null=True)  # Field name made lowercase.
     cancelreason = models.CharField(db_column='CancelReason', max_length=1000, blank=True, null=True)  # Field name made lowercase.
-    regdate = models.DateTimeField(db_column='RegDate')  # Field name made lowercase.
+    regdate = models.DateTimeField(db_column='RegDate', auto_now_add=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
