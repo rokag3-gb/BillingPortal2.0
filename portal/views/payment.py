@@ -14,6 +14,8 @@ from custom.models import Invoice, InvoiceOrder, Payment
 from django.db import transaction, IntegrityError
 from portal.services import get_sidebar_menu
 from django.core.paginator import Paginator
+from django.views.decorators.clickjacking import xframe_options_sameorigin
+
 
 # 결제 화면용 InvoiceOrder, InvoiceOrderDetail 생성 및, 실제 결제화면 보여주는 함수
 def payment(request: HttpRequest) -> HttpResponse:
@@ -154,3 +156,7 @@ def payment_history(request: HttpRequest) -> HttpResponse:
             'page_obj': page_obj
         }
     return render(request, 'portal/payment_history.html', context)
+
+@xframe_options_sameorigin
+def payment_details(request: HttpRequest) -> HttpResponse:
+    return render(request, 'portal/payment_details.html')
