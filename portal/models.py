@@ -16,3 +16,5 @@ class NavMenu(models.Model):
 
     class Meta:
         db_table = 'NavMenu'
+
+
