@@ -61,7 +61,12 @@
                     <th class="align-middle">{{ payment.payamount | floatformat:"0" | intcomma }}원</th>
                     <th class="align-middle">{{ payment.cardholder }}</th>
                     <th class="align-middle">{{ payment.cardissuer }}</th>
-                    <th class="align-middle">{{ payment.tid }}</th>
+                    <th class="align-middle">
+                      <a class="btn btn-falcon-default btn-sm" type="button" target="_blank"
+                        href="https://office.easypay.co.kr/receipt/ReceiptBranch.jsp?controlNo={{payment.tid}}&payment=01">
+                        <span>{{ payment.tid }} <small>영수증 보기</small></span>
+                      </a>
+                    </th>
                     <th class="align-middle">{{ payment.apprno }}</th>
                     <th class="align-middle">{{ payment.regdate }}</th>
                   </tr>
