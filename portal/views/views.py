@@ -26,21 +26,30 @@ def preference(request: HttpRequest) -> HttpResponse:
 
 def dashboard(request: HttpRequest) -> HttpResponse:
     org = get_organization(request=request)
-
+    context = {'sidebar': 'dashboard',
+               'sidebar_items': get_sidebar_menu(),
+               'current_menu_id': int(request.GET.get('menu_id', 2))}
     if org is None:
-        return render(request, 'portal/dashboard-none-org.html', {'sidebar': 'dashboard', 'sidebar_items': get_sidebar_menu()})
+        return render(request, 'portal/dashboard-none-org.html', context)
 
-    return render(request, 'portal/dashboard.html', {'sidebar': 'dashboard', 'sidebar_items': get_sidebar_menu()})
+    return render(request, 'portal/dashboard.html', context)
 
 
 @login_required
 def profile(request: HttpRequest) -> HttpResponse:
-    return render(request, 'portal/profile.html', {'sidebar': 'profile', 'sidebar_items': get_sidebar_menu()})
+    context = {'sidebar': 'profile',
+               'sidebar_items': get_sidebar_menu(),
+               'current_menu_id': int(request.GET.get('menu_id', 0))}
+    return render(request, 'portal/profile.html', context)
 
 
 @login_required
 def messages(request: HttpRequest) -> HttpResponse:
-    return render(request, 'portal/messages.html', {'sidebar': 'messages', 'sidebar_items': get_sidebar_menu()})
+    context = {'sidebar': 'messages',
+               'sidebar_items': get_sidebar_menu(),
+               'current_menu_id': int(request.GET.get('menu_id', 0))}
+    return render(request, 'portal/messages.html', context)
+
 
 def invoices(request: HttpRequest) -> HttpResponse:
     date_start = request.GET.get('date_start', default=None)
@@ -51,17 +60,18 @@ def invoices(request: HttpRequest) -> HttpResponse:
         result = result.filter(invoiceDate__gte=date_start)
     if date_end:
         date_end = datetime.datetime.strptime(date_end, "%Y-%m")
-        date_end = date_end.replace(month=date_end.month+1) - datetime.timedelta(days=1)
+        date_end = date_end.replace(month=date_end.month + 1) - datetime.timedelta(days=1)
         result = result.filter(invoiceDate__lte=date_end)
     result = result.order_by("-invoiceDate")
-    paginator = Paginator(result, 20) # Show 25 contacts per page.
+    paginator = Paginator(result, 20)  # Show 25 contacts per page.
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {
-            'sidebar': 'payment', 
-            'sidebar_items': get_sidebar_menu(),
-            'page_obj': page_obj
-        }
+        'sidebar': 'payment',
+        'sidebar_items': get_sidebar_menu(),
+        'page_obj': page_obj,
+        'current_menu_id': int(request.GET.get('menu_id', 0))
+    }
     return render(request, 'portal/invoices.html', context)
 
 
@@ -83,25 +93,26 @@ def manage_payments(request: HttpRequest) -> HttpResponse:
             print(request.POST.get('valid_until'))
             valid_until = datetime.datetime.strptime(request.POST.get('valid_until'), "%Y-%m")
             Billkey(
-                orgid = get_organization(request),
-                isactive = True,
-                billkey = "123123",
-                alias = request.POST.get("card_alias"),
-                auth1 =  datetime.date.fromisoformat(request.POST.get('owner_birthday')).strftime("%y%m%d"),
-                cardno =  request.POST.get("card_number"),
-                auth2 =  request.POST.get("card_password"),
-                expiremm = valid_until.strftime("%m"),
-                expireyy =  valid_until.strftime("%y"),
-                reguserid = request.user
+                orgid=get_organization(request),
+                isactive=True,
+                billkey="123123",
+                alias=request.POST.get("card_alias"),
+                auth1=datetime.date.fromisoformat(request.POST.get('owner_birthday')).strftime("%y%m%d"),
+                cardno=request.POST.get("card_number"),
+                auth2=request.POST.get("card_password"),
+                expiremm=valid_until.strftime("%m"),
+                expireyy=valid_until.strftime("%y"),
+                reguserid=request.user
             ).save()
-            card_message = "카드가 등록되었습니다."        
-    billkeys = Billkey.objects.filter(orgid = get_organization(request))
+            card_message = "카드가 등록되었습니다."
+    billkeys = Billkey.objects.filter(orgid=get_organization(request))
     return render(request, 'portal/manage_payments.html',
         {'sidebar': 'dashboard',
-        'sidebar_items': get_sidebar_menu(),
-        'payments': billkeys,
-        'card_error': card_error,
-        'card_message': card_message})
+            'sidebar_items': get_sidebar_menu(),
+            'current_menu_id': int(request.GET.get('menu_id', 0)),
+            'payments': billkeys,
+            'card_error': card_error,
+            'card_message': card_message})
 
 def search_orgs(request: HttpRequest) -> HttpResponse:
     query = request.GET.get("q", None)
@@ -112,3 +123,4 @@ def search_orgs(request: HttpRequest) -> HttpResponse:
         result = result.filter(name__contains=query).values("name", "slug")
     print(list(result))
     return JsonResponse({'result':list(result)})
+                  

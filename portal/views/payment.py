@@ -154,14 +154,15 @@ def payment_history(request: HttpRequest) -> HttpResponse:
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {
-            'sidebar': 'payment_history', 
-            'sidebar_items': get_sidebar_menu(),
-            'page_obj': page_obj,
-            'current_filter': {
-                'date_start': date_start.strftime("%Y-%m"),
-                'date_end': date_end.strftime("%Y-%m")
-            }
+        'sidebar': 'payment_history',
+        'sidebar_items': get_sidebar_menu(),
+        'current_menu_id': int(request.GET.get('menu_id', 0)),
+        'page_obj': page_obj,
+        'current_filter': {
+            'date_start': date_start.strftime("%Y-%m"),
+            'date_end': date_end.strftime("%Y-%m")
         }
+    }
     return render(request, 'portal/payment_history.html', context)
 
 @xframe_options_sameorigin
