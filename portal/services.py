@@ -20,8 +20,7 @@ sub_menu_url = {'Default': 'index',
                 21: 'invoices',
                 22: 'invoices',
                 23: 'invoices',
-                24: 'payment',
-                26: 'payment'}  # menu_id, url_name
+                26: 'payment_history',}  # menu_id, url_name
 
 
 def get_sidebar_menu():
