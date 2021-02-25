@@ -146,6 +146,9 @@ def payment_history(request: HttpRequest) -> HttpResponse:
         date_end = datetime.datetime.strptime(date_end, "%Y-%m")
         date_end = date_end.replace(month=date_end.month+1) - datetime.timedelta(days=1)
         result = result.filter(paydate__lte=date_end)
+    if date_start == None and date_end == None:
+        date_end = datetime.datetime.now()
+        date_start = date_end.replace(month=date_end.month-1) - datetime.timedelta(days=1)
     result = result.order_by("-paydate")
     paginator = Paginator(result, 20) # Show 25 contacts per page.
     page_number = request.GET.get('page')
@@ -153,7 +156,11 @@ def payment_history(request: HttpRequest) -> HttpResponse:
     context = {
             'sidebar': 'payment_history', 
             'sidebar_items': get_sidebar_menu(),
-            'page_obj': page_obj
+            'page_obj': page_obj,
+            'current_filter': {
+                'date_start': date_start.strftime("%Y-%m"),
+                'date_end': date_end.strftime("%Y-%m")
+            }
         }
     return render(request, 'portal/payment_history.html', context)
 
