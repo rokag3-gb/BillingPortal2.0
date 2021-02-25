@@ -8,13 +8,6 @@ from django.shortcuts import render, redirect
 from custom.services import get_organization
 from custom.models import Invoice, Billkey
 
-
-
-# sidebar_items = [
-#     {'name': '대시보드', 'path': "dashboard"},
-#     {'name': '지불관리', 'path': "payment"},
-#     # {'name':'메시지','path':"messages"}
-# ]
 from portal.services import get_sidebar_menu
 
 

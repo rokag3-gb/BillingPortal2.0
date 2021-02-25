@@ -19,7 +19,7 @@ from django.contrib.auth.views import LoginView
 from django.urls import path, include
 
 from custom.views import CustomLoginView
-from portal.views import payment, dashboard, index, preference, profile, messages, invoices, charge_payment
+from portal.views import payment, dashboard, index, preference, profile, messages, invoices, charge_payment, payment_history, payment_details
 from django.conf import settings # import the settings file
 
 branding = getattr(settings, "BRANDING", {})
@@ -40,6 +40,8 @@ urlpatterns = [
     path('payment/', login_required(payment), name='payment'),
     path('payment/charge/', login_required(charge_payment), name='charge'),
     path('invoices/', login_required(invoices), name='invoices'),
+    path('payment_history/', login_required(payment_history), name='payment_history'),
+    path('payment_details/', login_required(payment_details), name='payment_details'),
     # path('manage_payments/', login_required(manage_payments), name="manage_payments"),
     path('dashboard/', login_required(dashboard), name='dashboard'),
     path('settings/', preference, name='settings'),
