@@ -38,7 +38,7 @@
       </div>
       <div class="card-body p-0">
         <div class="table-responsive">
-          <table class="table table-sm table-dashboard fs--1 mb-0">
+          <table class="table table-sm table-dashboard fs--1 mb-0 table-hover">
             <thead class="bg-200 text-black">
               <tr>
                 <th class="align-middle">결제 ID</th>
@@ -54,7 +54,7 @@
             </thead>
             <tbody id="bulk-select-body">
               {% for payment in page_obj %}
-                  <tr>
+                  <tr onclick="document.getElementById(`payment-details`).src = `{% url 'payment_details' %}?={{payment.orderno.orderNo}}`">
                     <th class="align-middle">{{ payment.paymentno }}</th>
                     <th class="align-middle">{{ payment.paydate }}</th>
                     <th class="align-middle">{{ payment.orderno.orderNo }}</th>
@@ -84,22 +84,26 @@
         </ul>
       </div>
     </div>
-    <iframe class="flex-grow-1" src="/payment_details" />
+    <iframe id="payment-details" class="flex-grow-1" src="" />
   </div>
 
   <footer>
     {% include '_base_footer.html' %}
   </footer>
+
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<script>
+  <script>
   function to_page(page){
     let filter = document.forms["invoice_filter"]
     filter.page.value = page;
     filter.submit();
   }
-</script>
 
+  function set_iframe(detail_url){
+    document.getElementById("payment-details").src = detail_url;
+  }
+</script>
 {% endblock %}

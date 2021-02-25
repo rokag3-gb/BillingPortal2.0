@@ -5,6 +5,7 @@ div#user-tools > a:nth-child(1) {
     font-weight: bold;
 }
 
-#pbi-report-container iframe {
+#pbi-report-container iframe,
+#payment-details {
     border: none;
 }

@@ -1,1 +1,16 @@
-<h1>test</h1>
+{% extends '_base_full.html' %}
+{% load static %}
+{% block navbar %}
+{% include '_base_navbar_left.html' %}
+{% endblock %}
+{% block contents %}
+
+<div class="col-sm-6 col-lg-4 mb-4">
+    <div class="card bg-light">
+      <div class="card-body">
+        <div class="card-title">Light card title</div>
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+      </div>
+    </div>
+  </div>
+{% endblock %}

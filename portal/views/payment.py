@@ -159,4 +159,14 @@ def payment_history(request: HttpRequest) -> HttpResponse:
 
 @xframe_options_sameorigin
 def payment_details(request: HttpRequest) -> HttpResponse:
+    orderNo = request.GET.get("id", default=None)
+    if orderNo:
+        try:
+            orderItem = InvoiceOrder.objects.get(orderNo=orderNo, orgId=get_organization(request)) 
+            return render(request, 'portal/payment_details.html', {
+                'order_summary': orderItem,
+                'order_details': orderItem.getOrderDetails()
+            })
+        except InvoiceOrder.DoesNotExist:
+            pass
     return render(request, 'portal/payment_details.html')
