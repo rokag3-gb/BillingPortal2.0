@@ -3,10 +3,13 @@ import datetime
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpRequest
+from django.http.response import JsonResponse
 from django.shortcuts import render, redirect
 
 from custom.services import get_organization
 from custom.models import Invoice, Billkey
+from organizations.models import OrganizationUser
+
 
 from portal.services import get_sidebar_menu
 
@@ -104,9 +107,20 @@ def manage_payments(request: HttpRequest) -> HttpResponse:
             card_message = "카드가 등록되었습니다."
     billkeys = Billkey.objects.filter(orgid=get_organization(request))
     return render(request, 'portal/manage_payments.html',
-                  {'sidebar': 'dashboard',
-                   'sidebar_items': get_sidebar_menu(),
-                   'current_menu_id': int(request.GET.get('menu_id', 0)),
-                   'payments': billkeys,
-                   'card_error': card_error,
-                   'card_message': card_message})
+        {'sidebar': 'dashboard',
+            'sidebar_items': get_sidebar_menu(),
+            'current_menu_id': int(request.GET.get('menu_id', 0)),
+            'payments': billkeys,
+            'card_error': card_error,
+            'card_message': card_message})
+
+def search_orgs(request: HttpRequest) -> HttpResponse:
+    query = request.GET.get("q", None)
+    result = request.user.organizations_organization
+    if query is None or query == "":
+        result = result.all().values("name", "slug")[:5]
+    else:
+        result = result.filter(name__contains=query).values("name", "slug")
+    print(list(result))
+    return JsonResponse({'result':list(result)})
+                  
