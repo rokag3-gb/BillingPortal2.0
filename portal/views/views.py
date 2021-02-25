@@ -3,10 +3,13 @@ import datetime
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpRequest
+from django.http.response import JsonResponse
 from django.shortcuts import render, redirect
 
 from custom.services import get_organization
 from custom.models import Invoice, Billkey
+from organizations.models import OrganizationUser
+
 
 from portal.services import get_sidebar_menu
 
@@ -99,3 +102,13 @@ def manage_payments(request: HttpRequest) -> HttpResponse:
         'payments': billkeys,
         'card_error': card_error,
         'card_message': card_message})
+
+def search_orgs(request: HttpRequest) -> HttpResponse:
+    query = request.GET.get("q", None)
+    result = request.user.organizations_organization
+    if query is None or query == "":
+        result = result.all().values("name", "slug")[:5]
+    else:
+        result = result.filter(name__contains=query).values("name", "slug")
+    print(list(result))
+    return JsonResponse({'result':list(result)})
