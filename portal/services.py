@@ -36,7 +36,7 @@ def get_sidebar_menu():
     navs = NavMenu.objects.all()
     parent_menu_list = navs.filter(parent_menu_id=None).order_by('menu_id')
     for parant in parent_menu_list:
-        _sub_menu = navs.filter(parent_menu_id=parant.menu_id, is_enable=True).order_by('sort_index')
+        _sub_menu = navs.filter(parent_menu_id=parant.menu_id, is_visible=True).order_by('sort_index')
         _r_parent = {'menu_name': parant.menu_name,
                      'icon_tag': parent_sidebar_id_tag[parant.menu_name] if parant.menu_name in parent_sidebar_id_tag else parent_sidebar_id_tag['Default'],
                      'is_enable': parant.is_enable
@@ -50,6 +50,7 @@ def get_sidebar_menu():
                                 })
         _nav = (_r_parent, _r_sub_menu)
         sidebar_menu.append(_nav)
+        print(_nav)
     return sidebar_menu
 
 
