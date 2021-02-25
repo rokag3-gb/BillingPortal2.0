@@ -2,7 +2,7 @@
 {% load static %}
 {% load humanize %} 
 {% block navbar %}
-{% include '_base_navbar_left.html' %}
+  {% include '_base_navbar_left.html' %}
 {% endblock %}
 {% block contents %}
 <div class="content">
@@ -41,12 +41,12 @@
           <table class="table table-sm table-dashboard fs--1 mb-0 table-hover">
             <thead class="bg-200 text-black">
               <tr>
-                <th class="align-middle">결제 ID</th>
-                <th class="align-middle">결제 일시</th>
-                <th class="align-middle">주문 번호</th>
-                <th class="align-middle">결제 금액</th>
-                <th class="align-middle">카드 명의</th>
-                <th class="align-middle">카드 발급사</th>
+                <th class="align-middle">#</th>
+                <th class="align-middle">결제일시</th>
+                <th class="align-middle">주문번호</th>
+                <th class="align-middle">결제금액</th>
+                <th class="align-middle">카드명의</th>
+                <th class="align-middle">카드발급사</th>
                 <th class="align-middle">거래번호</th>
                 <th class="align-middle">승인번호</th>
                 <th class="align-middle">기록 일시</th>
@@ -54,11 +54,11 @@
             </thead>
             <tbody id="bulk-select-body">
               {% for payment in page_obj %}
-                  <tr onclick="document.getElementById(`payment-details`).src = `{% url 'payment_details' %}?={{payment.orderno.orderNo}}`">
+                  <tr onclick="document.getElementById(`payment-details`).src = `{% url 'payment_details' %}?id={{payment.orderno.orderNo}}`">
                     <th class="align-middle">{{ payment.paymentno }}</th>
                     <th class="align-middle">{{ payment.paydate }}</th>
                     <th class="align-middle">{{ payment.orderno.orderNo }}</th>
-                    <th class="align-middle">{{ payment.payamount }}</th>
+                    <th class="align-middle">{{ payment.payamount | floatformat:"0" | intcomma }}원</th>
                     <th class="align-middle">{{ payment.cardholder }}</th>
                     <th class="align-middle">{{ payment.cardissuer }}</th>
                     <th class="align-middle">{{ payment.tid }}</th>
@@ -84,13 +84,11 @@
         </ul>
       </div>
     </div>
-    <iframe id="payment-details" class="flex-grow-1" src="" />
+    <iframe id="payment-details" class="flex-grow-1" src="{% url 'payment_details' %}" frameBorder="0"></iframe>
   </div>
-
   <footer>
     {% include '_base_footer.html' %}
   </footer>
-
 </div>
 {% endblock %}
 

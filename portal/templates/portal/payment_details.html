@@ -1,16 +1,65 @@
-{% extends '_base_full.html' %}
+{% extends '_base_iframe.html' %}
 {% load static %}
+{% load humanize %} 
 {% block navbar %}
 {% include '_base_navbar_left.html' %}
 {% endblock %}
 {% block contents %}
 
+{% if order_summary %}
 <div class="col-sm-6 col-lg-4 mb-4">
     <div class="card bg-light">
       <div class="card-body">
-        <div class="card-title">Light card title</div>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        <div class="card-title"># {{order_summary.orderNo}}</div>
+        <ul>
+          <li><b>주문 일시:</b> {{order_summary.orderDate}}</li>
+          <li><b>인보이스 수량:</b> {{details_count}}</li>
+          <li><b>청구 금액:</b> {{order_summary.totalAmount | floatformat:"0" | intcomma }}원</li>
+          <li><b>결제 금액:</b> {{order_summary.paid | floatformat:"0" | intcomma }}원</li>
+        </ul>
       </div>
     </div>
   </div>
+<div class="col-sm-6 col-lg-4 mb-4">
+    <div class="card bg-light">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">공급사<br/>인보이스 ID</th>
+                <th scope="col">청구 날짜</th>
+                <th scope="col">청구 금액<br/>결제 금액</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for item in order_details %}
+             <tr>
+                <td scope="row">
+                  {{item.vendorCode}}<br/>
+                  <small>{{item.invoiceId}}</small><br/>
+                </td>
+                <td>{{item.invoiceDate}}</td>
+                <td>
+                  {{item.amount | floatformat:"0" | intcomma }}원<small>청구</small><br/>
+                  {{item.paid | floatformat:"0" | intcomma }}원<small>결제</small>
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% else %}
+<div class="col-sm-6 col-lg-4 mb-4">
+    <div class="card bg-light">
+      <div class="card-body">
+        <div class="card-title">좌측에서 항목 선택</div>
+        <p>아직 좌측에서 항목을 선택하지 않았거나, 선택한 항목이 존재하지 않습니다. 좌측에서 조회할 항목을 선택하세요.</p>
+      </div>
+    </div>
+  </div>
+{% endif %}
 {% endblock %}

@@ -162,10 +162,12 @@ def payment_details(request: HttpRequest) -> HttpResponse:
     orderNo = request.GET.get("id", default=None)
     if orderNo:
         try:
-            orderItem = InvoiceOrder.objects.get(orderNo=orderNo, orgId=get_organization(request)) 
+            orderItem = InvoiceOrder.objects.get(orderNo=orderNo, orgId=get_organization(request))
+            details = orderItem.getOrderDetails()
             return render(request, 'portal/payment_details.html', {
                 'order_summary': orderItem,
-                'order_details': orderItem.getOrderDetails()
+                'order_details': orderItem.getOrderDetails(),
+                'details_count': details.count()
             })
         except InvoiceOrder.DoesNotExist:
             pass
