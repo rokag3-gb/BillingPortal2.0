@@ -53,20 +53,11 @@
       <a class="nav-link pr-0" id="navbarDropdownUser" 
         href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
         style="display: flex; justify-content: center; align-items: center">
-        <span style="">{{ request.user }} / {{ request.user.org_last_selected }}</span>
+        <span style="">{{ request.user }}</span>
         <span class="far fa-user-circle fs-4" data-fa-transform="shrink-7"></span>
       </a>
       <div class="dropdown-menu dropdown-menu-right py-0" aria-labelledby="navbarDropdownUser">
         <div class="bg-white rounded-soft py-2">
-          <small class="dropdown-item">조직 선택</small>
-          {% for orgitem in request.user.organizations_organization.all %}
-          {% if request.user.org_last_selected == orgitem %}
-          <a class="dropdown-item" href="{% url 'switch-to-org' organization_slug=orgitem.slug %}"><b>{{ orgitem.name }}</b> *</a>
-          {% else %}
-          <a class="dropdown-item" href="{% url 'switch-to-org' organization_slug=orgitem.slug %}">{{ orgitem.name }}</a>
-          {% endif %}
-          {% endfor %}
-          <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="{% url 'settings' %}">계정 설정</a>
           {% if user.is_staff %}
           <a class="dropdown-item" href="/hq">BackOffice 접속</a>

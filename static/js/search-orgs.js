@@ -7,9 +7,12 @@ orgSearchInput.addEventListener("keyup", (e)=>{
     }, 500)
 })
 
-document.onload = function(){
-    search_orgs("");
-}
+orgSearchInput.addEventListener("focus", (e)=>{
+    clearTimeout(timer);
+    timer = setTimeout(()=>{
+        search_orgs(e.target.value);
+    }, 500)
+});
 
 function search_orgs(keyword){
     fetch(`/search_orgs?q=${keyword}`)
