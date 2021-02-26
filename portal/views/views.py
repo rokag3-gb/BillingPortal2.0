@@ -10,10 +10,6 @@ from custom.services import get_organization
 from custom.models import Invoice, Billkey
 from organizations.models import OrganizationUser
 
-
-from portal.services import get_sidebar_menu
-
-
 def index(request: HttpRequest) -> HttpResponse:
     # return render(request, 'portal/index.html')
     return redirect('/dashboard')
@@ -26,30 +22,9 @@ def preference(request: HttpRequest) -> HttpResponse:
 
 def dashboard(request: HttpRequest) -> HttpResponse:
     org = get_organization(request=request)
-    context = {'sidebar': 'dashboard',
-               'sidebar_items': get_sidebar_menu(),
-               'current_menu_id': int(request.GET.get('menu_id', 2))}
     if org is None:
-        return render(request, 'portal/dashboard-none-org.html', context)
-
-    return render(request, 'portal/dashboard.html', context)
-
-
-@login_required
-def profile(request: HttpRequest) -> HttpResponse:
-    context = {'sidebar': 'profile',
-               'sidebar_items': get_sidebar_menu(),
-               'current_menu_id': int(request.GET.get('menu_id', 0))}
-    return render(request, 'portal/profile.html', context)
-
-
-@login_required
-def messages(request: HttpRequest) -> HttpResponse:
-    context = {'sidebar': 'messages',
-               'sidebar_items': get_sidebar_menu(),
-               'current_menu_id': int(request.GET.get('menu_id', 0))}
-    return render(request, 'portal/messages.html', context)
-
+        return render(request, 'portal/dashboard-none-org.html')
+    return render(request, 'portal/dashboard.html')
 
 def invoices(request: HttpRequest) -> HttpResponse:
     date_start = request.GET.get('date_start', default=None)
@@ -66,13 +41,7 @@ def invoices(request: HttpRequest) -> HttpResponse:
     paginator = Paginator(result, 20)  # Show 25 contacts per page.
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    context = {
-        'sidebar': 'payment',
-        'sidebar_items': get_sidebar_menu(),
-        'page_obj': page_obj,
-        'current_menu_id': int(request.GET.get('menu_id', 0))
-    }
-    return render(request, 'portal/invoices.html', context)
+    return render(request, 'portal/invoices.html', {'page_obj': page_obj})
 
 
 def manage_payments(request: HttpRequest) -> HttpResponse:
@@ -107,12 +76,9 @@ def manage_payments(request: HttpRequest) -> HttpResponse:
             card_message = "카드가 등록되었습니다."
     billkeys = Billkey.objects.filter(orgid=get_organization(request))
     return render(request, 'portal/manage_payments.html',
-        {'sidebar': 'dashboard',
-            'sidebar_items': get_sidebar_menu(),
-            'current_menu_id': int(request.GET.get('menu_id', 0)),
-            'payments': billkeys,
-            'card_error': card_error,
-            'card_message': card_message})
+        {'payments': billkeys,
+        'card_error': card_error,
+        'card_message': card_message})
 
 def search_orgs(request: HttpRequest) -> HttpResponse:
     query = request.GET.get("q", None)

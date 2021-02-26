@@ -12,7 +12,6 @@ from django.db.models import Sum
 from custom.services import get_organization
 from custom.models import Invoice, InvoiceOrder, Payment
 from django.db import transaction, IntegrityError
-from portal.services import get_sidebar_menu
 from django.core.paginator import Paginator
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 
@@ -27,8 +26,6 @@ def payment(request: HttpRequest) -> HttpResponse:
         order_item = InvoiceOrder.objects.get(orderNo=order_id)
         order_details = order_item.getOrderDetails()
         context = {
-            'sidebar': 'payment', 
-            'sidebar_items': get_sidebar_menu(),
             'invoices': order_details,
             'subtotal': order_item.totalAmount,
             'order_id': order_item.orderNo
@@ -154,9 +151,6 @@ def payment_history(request: HttpRequest) -> HttpResponse:
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {
-        'sidebar': 'payment_history',
-        'sidebar_items': get_sidebar_menu(),
-        'current_menu_id': int(request.GET.get('menu_id', 0)),
         'page_obj': page_obj,
         'current_filter': {
             'date_start': date_start.strftime("%Y-%m"),
