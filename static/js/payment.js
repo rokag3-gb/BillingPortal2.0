@@ -1,17 +1,15 @@
 function submitPayment() {
-  const paymentForm = document.getElementById("payment-form");
+  $("#paymentModal").modal('show');
   const paymentProgress = document.getElementById("payment-progress");
   const paymentSuccess = document.getElementById("payment-success");
   const paymentError = document.getElementById("payment-error");
   const paymentErrorContainer = document.getElementById(
     "payment-error-container"
   );
+  const billDoc = document.getElementById("billdoc");
   const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
-
   paymentErrorContainer.hidden = true;
-  paymentForm.hidden = true;
-  paymentProgress.hidden = false;
-  fetch("", {
+  fetch("charge/", {
     method: "POST",
     credentials: "same-origin",
     headers: {
@@ -19,8 +17,9 @@ function submitPayment() {
       "X-CSRFToken": csrftoken,
     },
     body: JSON.stringify({
+      order_no: new URL(window.location).searchParams.get('id'),
       card_owner: document.getElementById("card_owner").value,
-      owner_birthday: document.getElementById("owner_birthday").value,
+      owner_proof: document.getElementById("owner_proof").value,
       owner_email: document.getElementById("owner_email").value,
       phone_number: document.getElementById("phone_number").value,
       card_number: document.getElementById("card_number").value,
@@ -32,35 +31,29 @@ function submitPayment() {
       paymentProgress.hidden = true;
       if (response.ok) {
         paymentSuccess.hidden = false;
+        response.json().then(function(json){
+          billDoc.href = `https://office.easypay.co.kr/receipt/ReceiptBranch.jsp?controlNo=${json['PG거래번호']}&payment=01`
+        })
       } else if (response.status >= 400 && response.status < 500) {
         response.json().then(function(json){
-          paymentForm.hidden = false;
           paymentErrorContainer.hidden = false;
-          paymentError.innerText = `결제 중 오류가 발생했습니다. 입력하신 정보를 다시 확인하세요: ${json['응답메시지']}`;
+          paymentError.innerText = `결제 진행 중 오류가 발생했습니다. 입력하신 정보를 다시 확인하세요: ${json.errorMsg}`;
         })
       } else if (response.status >= 500 && response.status < 600) {
-        paymentForm.hidden = false;
-        paymentErrorContainer.hidden = false;
-        paymentError.innerText = "결제 처리 중 서버 내부 오류가 발생했습니다.";
+        response.json().then(function(json){
+          paymentErrorContainer.hidden = false;
+          paymentError.innerText = `결제 처리 중 서버 내부 오류가 발생했습니다: ${json.errorMsg}`;      
+        })
       }
     })
     .catch(function (error) {
       console.log(error);
-      paymentProgress.hidden = true;
-      paymentForm.hidden = false;
       paymentErrorContainer.hidden = false;
       paymentError.innerText = "서버와 통신 중 오류가 발생했습니다.";
     });
 }
 
 function resetPaymentDialog() {
-  document.getElementById("card_owner").value = "";
-  document.getElementById("owner_birthday").value = "";
-  document.getElementById("owner_email").value = "";
-  document.getElementById("phone_number").value = "";
-  document.getElementById("card_number").value = "";
-  document.getElementById("valid_until").value = "";
-  document.getElementById("card_password").value = "";
   const paymentForm = document.getElementById("payment-form");
   const paymentProgress = document.getElementById("payment-progress");
   const paymentSuccess = document.getElementById("payment-success");
@@ -68,9 +61,8 @@ function resetPaymentDialog() {
   const paymentErrorContainer = document.getElementById(
     "payment-error-container"
   );
-  paymentForm.hidden = false;
-  paymentProgress.hidden = true;
+  paymentProgress.hidden = false;
   paymentSuccess.hidden = true;
-  paymentError.hidden = true;
+  paymentError.innerText = "";
   paymentErrorContainer.hidden = true;
 }

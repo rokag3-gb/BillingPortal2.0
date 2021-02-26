@@ -1,0 +1,6 @@
+{% load static %}
+
+<a class="d-flex flex-center mb-4" href="{% url 'index' %}">
+    <img class="mr-2" src="{% static BRANDING_LOGO_PATH %}" alt="" width="40" />
+    <span class="text-sans-serif" style="font-weight: bold; font-size: 1.6rem">{{ BRANDING_WEBSITE_NAME }}</span>
+</a>

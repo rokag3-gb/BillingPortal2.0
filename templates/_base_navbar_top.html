@@ -1,150 +1,76 @@
 {% load static %}
 <nav class="navbar navbar-light navbar-glass navbar-top sticky-kit navbar-expand">
 
-  <button class="btn navbar-toggler-humburger-icon navbar-toggler mr-1 mr-sm-3" type="button" data-toggle="collapse" data-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
+  <button class="btn navbar-toggler-humburger-icon navbar-toggler mr-1 mr-sm-3" type="button" data-toggle="collapse" data-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle Navigation">
+  <span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
   <a class="navbar-brand mr-1 mr-sm-3" href="{% url 'index' %}">
-    <div class="d-flex align-items-center"><img class="mr-2" src="{% static 'img/illustrations/falcon.png' %}" alt="" width="40" /><span class="text-sans-serif">MateCost</span>
+    <div class="d-flex align-items-center">
+      <img class="mr-2" src="{% static BRANDING_LOGO_PATH %}" alt="" width="40" />
+      <span class="text-sans-serif">{{ BRANDING_WEBSITE_NAME }}</span>
     </div>
   </a>
   <ul class="navbar-nav align-items-center d-none d-lg-block">
     <li class="nav-item">
       <div class="search-box">
-        <form class="position-relative" data-toggle="search" data-display="static">
+        <div class="position-relative" data-toggle="search" data-display="static">
 
-          <input class="form-control search-input" type="search" placeholder="Search..." aria-label="Search" />
-          <span class="fas fa-search search-box-icon"></span>
+          <input class="form-control search-input" type="search" id="org_search_input"
+            placeholder=" {{ request.user.org_last_selected }}" aria-label="Search Organizations" />
+          <span class="fas fa-users search-box-icon"></span>
 
-        </form>
+        </div>
 
         <button class="close" type="button" data-dismiss="search"><span class="fas fa-times"></span></button>
         <div class="dropdown-menu">
           <div class="scrollbar perfect-scrollbar py-3" style="height: 24rem;">
-            <h6 class="dropdown-header px-card pt-0 pb-2">Recently Browsed</h6>
-            <a class="dropdown-item fs--1 px-card py-1 hover-primary" href="../pages/events.html">
+            <h6 class="dropdown-header px-card pt-0 pb-2">현재 조직</h6>
+            <a class="dropdown-item fs--1 px-card py-1 hover-primary"
+              href="{% url 'switch-to-org' organization_slug=request.user.org_last_selected.slug %}">
               <div class="d-flex align-items-center">
-                <span class="fas fa-circle mr-2 text-300 fs--2"></span>
+                <span class="fas fa-users mr-2 text-300 fs--2"></span>
 
-                <div class="font-weight-normal">Pages <span class="fas fa-chevron-right mx-1 text-500 fs--2" data-fa-transform="shrink-2"></span> Events</div>
-              </div>
-            </a>
-            <a class="dropdown-item fs--1 px-card py-1 hover-primary" href="../e-commerce/customers.html">
-              <div class="d-flex align-items-center">
-                <span class="fas fa-circle mr-2 text-300 fs--2"></span>
-
-                <div class="font-weight-normal">E-commerce <span class="fas fa-chevron-right mx-1 text-500 fs--2" data-fa-transform="shrink-2"></span> Customers</div>
+                <div class="font-weight-normal">{{ request.user.org_last_selected }}</div>
               </div>
             </a>
 
             <hr class="border-200" />
-            <h6 class="dropdown-header px-card pt-0 pb-2">Suggested Filter</h6>
-            <a class="dropdown-item px-card py-1 fs-0" href="../e-commerce/customers.html">
-              <div class="d-flex align-items-center"><span class="badge font-weight-medium text-decoration-none mr-2 badge-soft-warning">customers:</span>
-                <div class="flex-1 fs--1">All customers list</div>
-              </div>
-            </a>
-            <a class="dropdown-item px-card py-1 fs-0" href="../pages/events.html">
-              <div class="d-flex align-items-center"><span class="badge font-weight-medium text-decoration-none mr-2 badge-soft-success">events:</span>
-                <div class="flex-1 fs--1">Latest events in current month</div>
-              </div>
-            </a>
-            <a class="dropdown-item px-card py-1 fs-0" href="../e-commerce/product-grid.html">
-              <div class="d-flex align-items-center"><span class="badge font-weight-medium text-decoration-none mr-2 badge-soft-info">products:</span>
-                <div class="flex-1 fs--1">Most popular products</div>
-              </div>
-            </a>
-
+            <h6 class="dropdown-header px-card pt-0 pb-2">다른 조직 검색 및 선택</h6>
+            <div id="org_search_result">
+              <a class="dropdown-item fs--1 px-card py-1 hover-primary" href="../e-commerce/customers.html">
+                <div class="d-flex align-items-center">
+                  <span class="fas fa-users mr-2 text-300 fs--2"></span>
+                  <div class="font-weight-normal">{{ request.user.org_last_selected }}</div>
+                </div>
+              </a>
+            </div>
           </div>
         </div>
       </div>
     </li>
   </ul>
   <ul class="navbar-nav navbar-nav-icons ml-auto flex-row align-items-center">
-    <li class="nav-item d-none d-md-block">
-      <span>{{ request.user }}</span> / <span>{{ request.user.org_last_selected }}</span>
-    </li>
-
-    <li class="nav-item">
-      <a class="nav-link px-0 notification-indicator notification-indicator-warning notification-indicator-fill icon-indicator" href="../e-commerce/shopping-cart.html"><span class="fas fa-shopping-cart fs-4" data-fa-transform="shrink-7"></span><span class="notification-indicator-number">1</span></a>
-
-    </li>
     <li class="nav-item dropdown dropdown-on-hover">
-      <a class="nav-link notification-indicator notification-indicator-primary px-0 icon-indicator" id="navbarDropdownNotification" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fas fa-bell fs-4" data-fa-transform="shrink-6"></span></a>
-      <div class="dropdown-menu dropdown-menu-right dropdown-menu-card" aria-labelledby="navbarDropdownNotification">
-        <div class="card card-notification shadow-none" style="max-width: 20rem">
-          <div class="card-header">
-            <div class="row justify-content-between align-items-center">
-              <div class="col-auto">
-                <h6 class="card-header-title mb-0">Notifications</h6>
-              </div>
-              <div class="col-auto"><a class="card-link font-weight-normal" href="#">Mark all as read</a></div>
-            </div>
-          </div>
-          <div class="list-group list-group-flush font-weight-normal fs--1">
-            <div class="list-group-title border-bottom">NEW</div>
-            <div class="list-group-item">
-              <a class="notification notification-flush bg-200" href="#!">
-                <div class="notification-avatar">
-                  <div class="avatar avatar-2xl mr-3">
-                    <img class="rounded-circle" src="../assets/img/team/1-thumb.png" alt="" />
-
-                  </div>
-                </div>
-                <div class="notification-body">
-                  <p class="mb-1"><strong>Emma Watson</strong> replied to your comment : "Hello world 😍"</p>
-                  <span class="notification-time"><span class="mr-1" role="img" aria-label="Emoji">💬</span>Just now</span>
-
-                </div>
-              </a>
-
-            </div>
-            <div class="list-group-item">
-              <a class="notification notification-flush bg-200" href="#!">
-                <div class="notification-avatar">
-                  <div class="avatar avatar-2xl mr-3">
-                    <div class="avatar-name rounded-circle"><span>AB</span></div>
-                  </div>
-                </div>
-                <div class="notification-body">
-                  <p class="mb-1"><strong>Albert Brooks</strong> reacted to <strong>Mia Khalifa's</strong> status</p>
-                  <span class="notification-time"><span class="mr-1 fab fa-gratipay text-danger"></span>9hr</span>
-
-                </div>
-              </a>
-
-            </div>
-            <div class="list-group-title">EARLIER</div>
-            <div class="list-group-item">
-              <a class="notification notification-flush" href="#!">
-                <div class="notification-avatar">
-                  <div class="avatar avatar-2xl mr-3">
-                    <img class="rounded-circle" src="{% static 'img/icons/weather-sm.jpg' %}" alt="" />
-
-                  </div>
-                </div>
-                <div class="notification-body">
-                  <p class="mb-1">The forecast today shows a low of 20&#8451; in California. See today's weather.</p>
-                  <span class="notification-time"><span class="mr-1" role="img" aria-label="Emoji">🌤️</span>1d</span>
-
-                </div>
-              </a>
-
-            </div>
-          </div>
-          <div class="card-footer text-center border-top"><a class="card-link d-block" href="../pages/notifications.html">View all</a></div>
-        </div>
-      </div>
-
-    </li>
-    <li class="nav-item dropdown dropdown-on-hover"><a class="nav-link pr-0" id="navbarDropdownUser" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <span class="far fa-user-circle fs-4" data-fa-transform="shrink-7"></span>
+      <a class="nav-link pr-0" id="navbarDropdownUser" 
+        href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+        style="display: flex; justify-content: center; align-items: center">
+        <span style="">{{ request.user }} / {{ request.user.org_last_selected }}</span>
+        <span class="far fa-user-circle fs-4" data-fa-transform="shrink-7"></span>
       </a>
       <div class="dropdown-menu dropdown-menu-right py-0" aria-labelledby="navbarDropdownUser">
         <div class="bg-white rounded-soft py-2">
+          <small class="dropdown-item">조직 선택</small>
           {% for orgitem in request.user.organizations_organization.all %}
+          {% if request.user.org_last_selected == orgitem %}
+          <a class="dropdown-item" href="{% url 'switch-to-org' organization_slug=orgitem.slug %}"><b>{{ orgitem.name }}</b> *</a>
+          {% else %}
           <a class="dropdown-item" href="{% url 'switch-to-org' organization_slug=orgitem.slug %}">{{ orgitem.name }}</a>
+          {% endif %}
           {% endfor %}
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="{% url 'settings' %}">계정 설정</a>
+          {% if user.is_staff %}
+          <a class="dropdown-item" href="/hq">BackOffice 접속</a>
+          {% endif %}
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="{% url 'logout' %}">로그아웃</a>
         </div>

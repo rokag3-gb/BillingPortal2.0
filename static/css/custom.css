@@ -1,0 +1,29 @@
+div#user-tools{
+    font-size: 15px;
+}
+div#user-tools > a:nth-child(1) {
+    font-weight: bold;
+}
+
+#pbi-report-container iframe,
+#payment-details {
+    border: none;
+}
+
+/* noto-sans-kr-regular - latin */
+@font-face {
+    font-family: 'Noto Sans KR';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/noto-sans-kr-v13-latin-regular.eot'); /* IE9 Compat Modes */
+    src: local(''),
+         url('../fonts/noto-sans-kr-v13-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('../fonts/noto-sans-kr-v13-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+         url('../fonts/noto-sans-kr-v13-latin-regular.woff') format('woff'), /* Modern Browsers */
+         url('../fonts/noto-sans-kr-v13-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+         url('../fonts/noto-sans-kr-v13-latin-regular.svg#NotoSansKR') format('svg'); /* Legacy iOS */
+  }
+
+html {
+    font-family: "Noto Sans KR" !important;
+}

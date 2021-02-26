@@ -1,0 +1,150 @@
+{% extends '_base_auth.html' %}
+{% load static %}
+{% block contents_wide %}
+<div class="container" data-layout="container">
+  <div class="row flex-center min-vh-100 py-6">
+    <div class="col-md-8">
+      <a class="d-flex flex-center mb-4" href="{% url 'index' %}">
+        <img src="{% static 'img/logos/cloudmate_logo-h40.png' %}" alt="" />
+      </a>
+      <div class="card">
+        <div class="card-body p-4 p-sm-5">
+          <div class="row text-left justify-content-between align-items-center mb-2">
+            <div class="col-auto">
+              <h5>약관 동의</h5>
+            </div>
+          </div>
+          <form method="post" action="">
+            <div class="table-responsive">
+              {% if form.non_field_errors %}
+              <div class="alert alert-danger" role="alert">
+                약관동의처리 과정에서 오류가 발생하였습니다. 다시 시도해주세요.
+              </div>
+              {% endif %}
+              <table class="table table-sm table-dashboard fs--1 mb-0">
+                <thead class="bg-200 text-black">
+                  <tr>
+                    <th class="align-middle white-space-nowrap">
+                      <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input checkbox-bulk-select" id="checkbox-bulk-select" type="checkbox" data-checkbox-body="#bulk-select-body" data-checkbox-actions="#bulk-select-actions" data-checkbox-replaced-element="#bulk-select-replace-element">
+                        <label class="custom-control-label" for="checkbox-bulk-select"></label>
+                      </div>
+                    </th>
+                    <th class="align-middle" colspan="2">모두 동의</th>
+                    <th class="align-middle"></th>
+                  </tr>
+                </thead>
+                <tbody id="bulk-select-body">
+                  <tr>
+                    <td class="align-middle white-space-nowrap">
+                      <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input checkbox-bulk-select-target" type="checkbox" id="terms_of_use" name="terms_of_use" value="{{ terms_of_use.latest }}">
+                        <label class="custom-control-label" for="terms_of_use"></label>
+                      </div>
+                    </td>
+                    <th class="align-middle">필수</th>
+                    <td class="align-middle">서비스 이용 약관 동의</td>
+                    <td class="align-middle"><a href="{% url 'terms-of-use-latest' %}" target="_blank">상세보기</a></td>
+                  </tr>
+                  {% if form.terms_of_use.errors %}
+                  <tr>
+                    <td colspan="4">
+                      <div class="alert alert-danger" role="alert">
+                        {{ form.terms_of_use.errors }}
+                      </div>
+                    </td>
+                  </tr>
+                  {% endif %}
+                  <tr>
+                    <td class="align-middle white-space-nowrap">
+                      <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input checkbox-bulk-select-target" type="checkbox" id="info_gathering"
+                          name="info_gathering" value="{{ info_gathering.latest }}">
+                        <label class="custom-control-label" for="info_gathering"></label>
+                      </div>
+                    </td>
+                    <th class="align-middle">필수</th>
+                    <td class="align-middle">개인정보 수집 및 이용 동의</td>
+                    <td class="align-middle"><a href="{% url 'info-gathering-latest' %}" target="_blank">상세보기</a></td>
+                  </tr>
+                  {% if form.info_gathering.errors %}
+                  <tr>
+                    <td colspan="4">
+                      <div class="alert alert-danger" role="alert">
+                        {{ form.info_gathering.errors }}
+                      </div>
+                    </td>
+                  </tr>
+                  {% endif %}
+                  <tr>
+                    <td class="align-middle white-space-nowrap">
+                      <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input checkbox-bulk-select-target" type="checkbox" id="using_credit_card"
+                          name="using_credit_card" value="{{ using_credit_card.latest }}">
+                        <label class="custom-control-label" for="using_credit_card"></label>
+                      </div>
+                    </td>
+                    <th class="align-middle">선택</th>
+                    <td class="align-middle">
+                      개인정보 제3자 제공 및 공유 안내
+                      <p class="mb-0 text-500">
+                        개인정보 제3자 제공에 대해 동의하지 않을 권리가 있으며,<br/>
+                        미동의 시 결제 서비스 이용이 제한 됩니다.
+                      </p>
+                    </td>
+                    <td class="align-middle"><a href="{% url 'using-credit-card-latest' %}" target="_blank">상세보기</a></td>
+                  </tr>
+                  {% if form.using_credit_card.errors %}
+                  <tr>
+                    <td colspan="4">
+                      <div class="alert alert-danger" role="alert">
+                        {{ form.using_credit_card.errors }}
+                      </div>
+                    </td>
+                  </tr>
+                  {% endif %}
+                </tbody>
+              </table>
+            </div>
+            {% csrf_token %}
+            <div class="form-group">
+              <button class="btn btn-primary btn-block mt-3" type="submit" name="submit" id="submit" disabled>Register</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+  function enable_button() {
+    let submitButton = $('#submit')
+
+    if (! $("input:checkbox[name='terms_of_use']").is(":checked")) {
+      submitButton.attr('disabled', true);
+      return
+    }
+    if (! $("input:checkbox[name='info_gathering']").is(":checked")) {
+      submitButton.attr('disabled', true);
+      return
+    }
+
+    submitButton.attr('disabled', false);
+  }
+
+  $( document ).ready(function () {
+    $("#terms_of_use").click(function () {
+      enable_button();
+    });
+    $("#info_gathering").click(function () {
+      enable_button();
+    });
+    $("#checkbox-bulk-select").click(function () {
+      enable_button();
+    });
+  });
+
+</script>
+{% endblock %}

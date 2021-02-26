@@ -26,6 +26,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Application definition
 
+BRANDING = {
+    "NAME": "mateBilling",
+    "LOGO_PATH": "img/logos/mate_billing_logo.png"
+}
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -36,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'portal.apps.PortalConfig',
     'custom',
+    'policy',
+    'django.contrib.humanize'
 ]
 
 MIDDLEWARE = [
@@ -47,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'custom.middleware.policy_check_middleware',
 ]
 
 ROOT_URLCONF = 'Mate365BillingPortal.urls'
@@ -64,6 +72,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'custom.context_processors.branding',
+                'portal.context_processors.get_sidebar_menu'
             ],
         },
     },
@@ -150,4 +160,25 @@ POWERBI = {
     "AUTHORITY": 'https://login.microsoftonline.com/organizations',
     "MASTER_USER": os.getenv("POWERBI_MASTER_USER",""), # AUTHMODE가 MasterUser 경우만 사용
     "MASTER_PASS": os.getenv("POWERBI_MASTER_PASS",""), # AUTHMODE가 MasterUser 경우만 사용
+}
+
+POLICY_TERMS_OF_USE = {
+    'latest': '20210204',
+    'able': [
+        '20210204',
+    ]
+}
+
+POLICY_INFO_PROTECTION = {
+    'latest': '20210204',
+    'able': [
+        '20210204',
+    ]
+}
+
+POLICY_USING_CREDIT_CARD = {
+    'latest': '20210204',
+    'able': [
+        '20210204',
+    ]
 }

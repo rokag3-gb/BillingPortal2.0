@@ -1,0 +1,147 @@
+{% extends '_base.html' %}
+{% load static %}
+{% load humanize %} 
+{% block navbar %}
+{% include '_base_navbar_left.html' %}
+{% endblock %}
+{% block contents %}
+<div class="content">
+  {% block navbar-top %}{% include '_base_navbar_top.html' %}{% endblock %}
+  <div class="card">
+    <div class="card-header d-flex align-items-center justify-content-between border-top py-0">
+      <h5 class="mb-0 py-card">결제수단 관리</h5>
+    </div>
+    <div class="card-body p-4">
+      {% if card_error %}
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{card_error}}
+        <button class="close" type="button" data-dismiss="alert" aria-label="Close"><span class="font-weight-light" aria-hidden="true">×</span></button>
+      </div>
+      {% endif %}
+      {% if card_message %}
+      <div class="alert alert-primary alert-dismissible fade show" role="alert">
+         {{card_message}}
+        <button class="close" type="button" data-dismiss="alert" aria-label="Close"><span class="font-weight-light" aria-hidden="true">×</span></button>
+      </div>
+      {% endif %}
+      <div class="row">
+        <div class="col-sm-6 col-lg-4 mb-4">
+          <div class="card bg-light">
+            <div class="card-body">
+              <div class="card-title">새 결제수단 추가</div>
+              <p class="card-text">새 결제수단을 추가하려면 아래 버튼 클릭.</p>
+              <p class="card-text">
+                +<br>+
+              </p>
+              <a class="btn btn-primary btn-sm" href="#!"  data-toggle="modal" data-target="#newPaymentModal">결제수단 추가</a>
+            </div>
+          </div>
+        </div>
+        {% for payment in payments %}
+        <div class="col-sm-6 col-lg-4 mb-4">
+          <div class="card text-white bg-primary">
+            <div class="card-body">
+              <div class="card-title">{{payment.alias}}</div>
+              <p class="card-text">{{payment.cardno}}</p>
+              <p class="card-text">
+                {{payment.reguserid.get_full_name}} _<br>
+                VALID THRU {{payment.expiremm}}/{{payment.expireyy}}
+              </p>
+              <form method="POST">
+                {% csrf_token %}
+                <a class="btn btn-primary btn-sm" href="#!">수정</a>
+                <input name="action" value="delete" hidden/>
+                <input name="id" value="{{payment.seq}}" hidden/>
+                <button class="btn btn-primary btn-sm" type="submit">삭제</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="card-footer border-top">
+      <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" onclick="to_page(1)">&laquo;처음</a></li>
+        <li class="page-item"><a class="page-link" onclick="to_page({{ page_obj.previous_page_number }})">이전</a></li>
+        {% endif %}
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" onclick="to_page({{ page_obj.next_page_number }})">다음</a></li>
+        <li class="page-item"><a class="page-link" onclick="to_page({{ page_obj.paginator.num_pages }})">마지막&raquo;</a></li>
+        {% endif %}
+        
+      </ul>
+    </div>
+  </div>
+  <footer>
+    {% include '_base_footer.html' %}
+  </footer>
+</div>
+<div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" id="newPaymentModal" data-backdrop="static"
+    data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">새 결제수단 추가</h5>
+        </div>
+        <form method="POST">
+        <div class="modal-body" id="payment-progress" style="text-align: center;">
+          
+            {% csrf_token %}
+            <div class="form-floating mb-3">
+              <input type="tel" class="form-control" name="card_alias" required maxlength="16" />
+              <label for="card_alias">카드 별칭</label>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-md">
+                <input type="name" value="{{ user.get_full_name }}" class="form-control" name="card_owner" required />
+                <label for="card_owner">카드 소유자 성명</label>
+              </div>
+              <div class="col-md">
+                <input type="date" class="form-control" name="owner_birthday" required />
+                <label for="owner_birthday">생년월일</label>
+              </div>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-md">
+                <input type="email" value="{{ user.email }}" class="form-control" name="owner_email" required />
+                <label for="owner_email">이메일</label>
+              </div>
+              <div class="col-md">
+                <input type="tel" class="form-control" name="phone_number" required />
+                <label for="phone_number">휴대전화</label>
+              </div>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="tel" class="form-control" name="card_number" required maxlength="16" />
+              <label for="card_number">카드번호</label>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-md">
+                <div class="form-floating">
+                  <input type="month" class="form-control" name="valid_until" required />
+                  <label for="valid_until">카드 유효기간 (년/월) YYMM</label>
+                </div>
+              </div>
+              <div class="col-md">
+                <div class="form-floating">
+                  <input type="password" class="form-control" name="card_password" maxlength="2" required />
+                  <label for="card_password">카드 암호 앞 2자리 **</label>
+                </div>
+              </div>
+            </div>
+          
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">취소</button>
+          <button class="btn btn-primary btn-sm" type="submit">등록</button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+{% endblock %}

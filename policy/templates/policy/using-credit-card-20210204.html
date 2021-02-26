@@ -1,0 +1,65 @@
+{% extends '_base_staticpage.html' %}
+{% load static %}
+{% block contents %}
+<div class="container" data-layout="container">
+  <div class="row flex-center min-vh-100 py-6">
+    <div class="col-md-8">
+      <div class="card mb-3">
+        <div class="bg-holder d-none d-lg-block bg-card" style="background-image:url(assets/img/illustrations/corner-4.png);">
+        </div>
+        <!--/.bg-holder-->
+
+        <div class="card-body">
+          <div class="row">
+            <div class="col-lg-8">
+              <h3 class="mb-0">신용카드 이용약관 : 20210204</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-3">
+        <div class="card-header">
+          <h5 class="mb-2">2.8.0 - Red-necked</h5>
+          <p class="mb-0">02 November, 2020</p>
+        </div>
+        <div class="card-body bg-light">
+          <h6>New</h6>
+          <ul class="pl-0 bullet-inside">
+            <li>Search autocomplete dropdown</li>
+            <li>JS: <code>search.js </code></li>
+          </ul>
+          <h6>Update</h6>
+          <ul class="pl-0 bullet-inside">
+            <li>Bootstrap to <code>v4.5.3</code></li>
+            <li>SCSS: <code>_search-box.scss</code></li>
+            <li>SCSS: <code>_hover.scss</code></li>
+            <li>SCSS: <code>_icons.scss</code></li>
+            <li>SCSS: <code>_navbar.scss</code></li>
+            <li>SCSS: Move all variables from <code>_navbar-vertical.scss </code>to <code>_variables.scss</code></li>
+            <li>SCSS: Move <code>_full-calendar.scss </code>to plugins directory</li>
+            <li>SCSS: Rename <code>_fullcalendar.scss </code>to <code>_full-calendar.scss</code></li>
+            <li>SCSS: <code>_full-calendar.scss</code></li>
+            <li>JS: <code>flatpickr.js</code></li>
+            <li>JS: <code>chat.js</code></li>
+            <li>JS: <code>calendar/index.js</code></li>
+            <li>JS: <code>dropdown-on-hover.js</code></li>
+            <li>JS: Rename <code>increment.js </code>to <code>quantity.js</code></li>
+            <li>Update date picker input field placeholder.</li>
+          </ul>
+          <h6>Fix</h6>
+          <ul class="pl-0 bullet-inside">
+            <li> <strong>Today </strong>button in <code>calendar.html </code></li>
+            <li>JS files Utils import issue.</li>
+            <li>Checkout page HTML</li>
+            <li>Remove <code>tui-calendar.js</code></li>
+            <li>Add polyfil link to support Dropzone in Internet Explorer </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    {% include '_base_auth_footer.html' %}
+
+  </div>
+</div>
+{% endblock %}

@@ -1,6 +1,6 @@
 from organizations.models import Organization, OrganizationUser
 
-from custom.models import User
+from custom.models import User, OrganizationVendor
 
 SESSION_ORGANIZATION = 'S_ORG'
 
@@ -46,3 +46,8 @@ def set_organization(request, org):
     if user.org_last_selected != org:
         user.org_last_selected = org
         user.save()
+
+def vendors(self):
+    return OrganizationVendor.objects.filter(orgid=self)
+
+Organization.add_to_class("vendors", vendors)

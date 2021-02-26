@@ -4,6 +4,13 @@
 window.onload = function () {
     let reportContainer = document.getElementById("pbi-report-container");
     let errorContainer = document.getElementById("pbi-error-container");
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const menuId = urlParams.get('menu_id');
+    // console.log(urlParams.get('menu_id'));
+
+    // Initialize iframe for embedding report
+    powerbi.bootstrap(reportContainer, { type: "report", embedUrl: 'https://app.powerbi.com/reportEmbed' });
 
     const hiddenBasicFilter = {
         $schema: "http://powerbi.com/product/schema#basic",
@@ -20,14 +27,10 @@ window.onload = function () {
         }
     };
 
-    // Initialize iframe for embedding report
-    powerbi.bootstrap(reportContainer, { type: "report", embedUrl: 'https://app.powerbi.com/reportEmbed' });
-
     var models = window["powerbi-client"].models;
     var reportLoadConfig = {
         type: "report",
         tokenType: models.TokenType.Embed,
-
         // Enable this setting to remove gray shoulders from embedded report
         settings: {
             background: models.BackgroundType.Transparent,
@@ -63,9 +66,13 @@ window.onload = function () {
         },
         filters: [hiddenBasicFilter]
     };
-
-
-    fetch("/powerbi/token")
+    let token_url = null;
+    if (menuId){
+        token_url = "/powerbi/token" + "?id=" + menuId
+    }else{
+        token_url = "/powerbi/token"
+    }
+    fetch(token_url)
         .then(function (response) {
             return response.json();
         })
@@ -126,7 +133,7 @@ window.onload = function () {
                     })
                     .then(function (json) {
                         report.setAccessToken(json.accessToken)
-                            .then(function(){
+                            .then(function () {
                                 console.log("Token refreshed")
                             })
                     })

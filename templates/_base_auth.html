@@ -11,7 +11,7 @@
     <!-- ===============================================-->
     <!--    Document Title-->
     <!-- ===============================================-->
-    <title>{% block title %}{{ site.name }}{% endblock %}</title>
+    <title>{% block title %}{{ BRANDING_WEBSITE_NAME }}{% endblock %}</title>
 
 
     <!-- ===============================================-->
@@ -42,9 +42,16 @@
     <!-- ===============================================-->
     <!--    Main Content-->
     <!-- ===============================================-->
-    <main class="main" id="top">
-      {% block contents %}{% endblock %}
-    </main>
+    {% block contents_wide %}
+    <div class="container" data-layout="container">
+      <div class="row flex-center min-vh-100 d-flex flex-column">
+        <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4 py-8 flex-fill">
+          {% block contents %}{% endblock %}
+        </div>
+        {% include '_base_auth_footer.html' %}
+      </div>
+    </div>
+    {% endblock %}
 
     <!-- ===============================================-->
     <!--    End of Main Content-->
@@ -68,6 +75,9 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:100,200,300,400,500,600,700,800,900&amp;display=swap" rel="stylesheet">
     <script src="{% static 'js/theme.js' %}"></script>
 
+    {% block extra_js %}
+
+    {% endblock %}
   </body>
 
 </html>
