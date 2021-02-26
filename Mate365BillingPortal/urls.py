@@ -19,7 +19,7 @@ from django.contrib.auth.views import LoginView
 from django.urls import path, include
 
 from custom.views import CustomLoginView
-from portal.views import payment, dashboard, index, preference, profile, messages, invoices, charge_payment, \
+from portal.views import payment, dashboard, index, preference, invoices, charge_payment, \
     payment_history, payment_details, manage_payments, search_orgs
 from django.conf import settings # import the settings file
 
@@ -47,8 +47,6 @@ urlpatterns = [
     path('manage_payments/', login_required(manage_payments), name="manage_payments"),
     path('dashboard/', login_required(dashboard), name='dashboard'),
     path('settings/', preference, name='settings'),
-    path('profile/', profile, name='profile'),
-    path('messages/', messages, name='messages'),
     path('policy/', include('policy.urls')),
     path('', index, name='index'),
 ]

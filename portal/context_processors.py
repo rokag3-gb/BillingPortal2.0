@@ -24,7 +24,7 @@ sub_menu_url = {'Default': 'index',
                 24: 'manage_payments'}  # menu_id, url_name
 
 
-def get_sidebar_menu():
+def get_sidebar_menu(request):
     # TODO: 유저별로 사용 vendor같은 사용가능한 메뉴만 보이게 return.
     # TODO: 2월 마일스톤은 우선 전 메뉴 가능하도록.
     # 2 Depth
@@ -50,6 +50,8 @@ def get_sidebar_menu():
                                 })
         _nav = (_r_parent, _r_sub_menu)
         sidebar_menu.append(_nav)
-    return sidebar_menu
+    return {
+        "SIDEBAR_MENU":sidebar_menu,
+        'current_menu_id': int(request.GET.get('menu_id', 0))}
 
 
