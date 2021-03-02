@@ -34,8 +34,7 @@ def get_organization(request):
     except Organization.DoesNotExist:
         pass
 
-    if org is None:
-        org = _choice_one_org(user=request.user)
+    org = _choice_one_org(user=request.user)
     set_organization(request=request, org=org)
     return org
 
