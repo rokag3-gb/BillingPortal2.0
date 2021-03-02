@@ -21,7 +21,8 @@ def get_organization(request):
     # INFO: 만약에 없다면 다음 org 선택을 자동으로 한다.
     try:
         org = Organization.objects.get(slug=request.session[SESSION_ORGANIZATION], is_active=True)
-        org_user = OrganizationUser.objects.get(user=request.user, organization=org)
+        if not request.user.is_staff:
+            org_user = OrganizationUser.objects.get(user=request.user, organization=org)
         return org
     # INFO: 한번도 로그인 하지 않았다면
     except KeyError:
@@ -33,9 +34,9 @@ def get_organization(request):
     except Organization.DoesNotExist:
         pass
 
-    org = _choice_one_org(user=request.user)
-    if org is not None:
-        set_organization(request=request, org=org)
+    if org is None:
+        org = _choice_one_org(user=request.user)
+    set_organization(request=request, org=org)
     return org
 
 
