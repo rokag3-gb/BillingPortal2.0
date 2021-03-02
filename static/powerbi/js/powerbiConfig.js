@@ -12,20 +12,20 @@ window.onload = function () {
     // Initialize iframe for embedding report
     powerbi.bootstrap(reportContainer, { type: "report", embedUrl: 'https://app.powerbi.com/reportEmbed' });
 
-    const hiddenBasicFilter = {
-        $schema: "http://powerbi.com/product/schema#basic",
-        target: {
-            table: "T_Customer",
-            column: "CustomerName"
-        },
-        operator: "In",
-        values: ["Com2uS Corporation"], // FIXME: 변수 받아서 필터 적용할것
-        filterType: 1,
-        requireSingleSelection: true,
-        displaySettings: {
-            isHiddenInViewMode: true
-        }
-    };
+    // const hiddenBasicFilter = {
+    //     $schema: "http://powerbi.com/product/schema#basic",
+    //     target: {
+    //         table: "T_Customer",
+    //         column: "CustomerName"
+    //     },
+    //     operator: "In",
+    //     values: ["Com2uS Corporation"], // FIXME: 변수 받아서 필터 적용할것
+    //     filterType: 1,
+    //     requireSingleSelection: true,
+    //     displaySettings: {
+    //         isHiddenInViewMode: true
+    //     }
+    // };
 
     var models = window["powerbi-client"].models;
     var reportLoadConfig = {
@@ -64,7 +64,7 @@ window.onload = function () {
                 }
             }
         },
-        filters: [hiddenBasicFilter]
+        // filters: [hiddenBasicFilter]
     };
     let token_url = null;
     if (menuId){
@@ -77,14 +77,15 @@ window.onload = function () {
             return response.json();
         })
         .then(function (embedData) {
-            reportLoadConfig.accessToken = embedData.accessToken;
+            reportLoadConfig.accessToken = embedData.token.accessToken;
+            reportLoadConfig.filters = [embedData.filter];
 
             // You can embed different reports as per your need
-            reportLoadConfig.embedUrl = embedData.reportConfig[0].embedUrl;
+            reportLoadConfig.embedUrl = embedData.token.reportConfig[0].embedUrl;
 
             // Use the token expiry to regenerate Embed token for seamless end user experience
             // Refer https://aka.ms/RefreshEmbedToken
-            tokenExpiry = embedData.tokenExpiry;
+            tokenExpiry = embedData.token.tokenExpiry;
 
             // Embed Power BI report when Access token and Embed URL are available
             var report = powerbi.embed(reportContainer, reportLoadConfig);
@@ -140,6 +141,7 @@ window.onload = function () {
             }, 1000 * 60 * 60);
         })
         .catch(function (error) {
+            console.log(error);
             // Show error container
             reportContainer.hide();
             errorContainer.show();
