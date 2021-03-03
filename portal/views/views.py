@@ -7,8 +7,7 @@ from django.http.response import JsonResponse
 from django.shortcuts import render, redirect
 
 from custom.services import get_organization
-from custom.models import Invoice, Billkey
-from organizations.models import OrganizationUser
+from custom.models import Invoice, Billkey, Organization
 
 def index(request: HttpRequest) -> HttpResponse:
     # return render(request, 'portal/index.html')
@@ -82,11 +81,14 @@ def manage_payments(request: HttpRequest) -> HttpResponse:
 
 def search_orgs(request: HttpRequest) -> HttpResponse:
     query = request.GET.get("q", None)
-    result = request.user.organizations_organization
-    if query is None or query == "":
-        result = result.all().values("name", "slug")[:5]
+    if request.user.is_staff:
+        result = Organization.objects
     else:
-        result = result.filter(name__contains=query).values("name", "slug")
+        result = request.user.organizations_organization
+    if query is None or query == "":
+        result = result.filter(is_active=True).values("name", "slug")[:8]
+    else:
+        result = result.filter(name__contains=query, is_active=True).values("name", "slug")
     print(list(result))
     return JsonResponse({'result':list(result)})
                   

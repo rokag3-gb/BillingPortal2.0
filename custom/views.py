@@ -23,9 +23,9 @@ def list_org(request):
 
 def switch_to_org(request, organization_slug):
     user = request.user
-    org = get_object_or_404(Organization, slug=organization_slug)
+    org = get_object_or_404(Organization, slug=organization_slug, is_active=True)
 
-    if not org.is_member(user=user):
+    if not org.is_member(user=user) and not user.is_staff:
         raise Http404('org 가 없거나, 권한이 없습니다.')
 
     set_organization(request=request, org=org)
