@@ -109,10 +109,15 @@ class OrgUser(OrganizationUser):
         proxy = True
 
 class OrganizationVendor(models.Model):
-    class VendorCode(models.IntegerChoices):
-       AWS = 1, "Amazon Web Services"
-       AZURE = 2, "Microsoft Azure"
-       GCP = 3, "Google Cloud Platform"
+    class VendorCode(models.TextChoices):
+        ALI = "VEN-ALI", "Alibaba Cloud"
+        AWS = "VEN-AWS", "Amazon Web Services"
+        AZP = "VEN-AZP", "Microsoft Azure(Rhipe)"
+        AZR = "VEN-AZR", "Microsoft Azure"
+        DDG = "VEN-DDG", "Datadog"
+        GCP = "VEN-GCP", "Google Cloud Platform"
+        NAP = "VEN-NAP", "NetApp"
+        NCP = "VEN-NCP", "Naver Cloud Platform"
     class Meta:
         managed = False
         db_table = 'Organization_Vendor'
