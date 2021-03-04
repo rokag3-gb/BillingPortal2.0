@@ -29,7 +29,7 @@
           </a>
           {% for sub_menu in navs.1 %}
           <ul class="nav collapse show" id={{ navs.0.caption }} data-parent="#navbarVerticalCollapse">
-          <li class="nav-item {% if current_menu_id == sub_menu.menu_id %}active{% endif %}"><a class="nav-link {%if not sub_menu.is_enable %} disabled{% endif %}" href="{% url sub_menu.url %}?menu_id={{sub_menu.menu_id}}">{{sub_menu.caption}}</a></li>
+          <li class="nav-item {% if current_menu_id == sub_menu.menu_id %}active{% endif %}"><a class="nav-link {%if not sub_menu.is_enable %}nav-link-disable disabled{% endif %}" href="{% url sub_menu.url %}?menu_id={{sub_menu.menu_id}}">{{sub_menu.caption}}</a></li>
           </ul>
           {% endfor %}
         </li>
