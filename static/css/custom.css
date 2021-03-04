@@ -27,3 +27,7 @@ div#user-tools > a:nth-child(1) {
 html {
     font-family: "Noto Sans KR" !important;
 }
+
+.navbar-vertical .navbar-nav .nav-item .nav-link.nav-link-disable {
+    color: #b6c1d2 !important;
+}
