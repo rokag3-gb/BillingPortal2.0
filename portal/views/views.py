@@ -39,6 +39,8 @@ def invoices(request: HttpRequest) -> HttpResponse:
     if date_start == None and date_end == None:
         date_end = datetime.datetime.now()
         date_start = date_end.replace(month=date_end.month-1) - datetime.timedelta(days=1)
+        result = result.filter(invoiceDate__gte=date_start)
+        result = result.filter(invoiceDate__lte=date_end)
     result = result.order_by("-invoiceDate")
     paginator = Paginator(result, 20)  # Show 25 contacts per page.
     page_number = request.GET.get('page')
