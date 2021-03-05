@@ -1,6 +1,6 @@
 from portal.models import NavMenu
 
-parent_sidebar_id_tag = {'Home': 'fa-chart-pie',
+parent_sidebar_id_tag = {'Home': 'fas fa-home',
                          'Usage Reports': 'fa-align-left',
                          'Invoices': 'fa-envelope-open',
                          'Default': 'fa-copy'}
