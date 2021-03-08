@@ -38,7 +38,7 @@ class User(AbstractUser):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='profile', primary_key=True, on_delete=models.CASCADE)
-    phone = models.CharField(max_length=16, blank=True)
+    phone = models.CharField(max_length=30, blank=True)
     location = models.CharField(max_length=64, blank=True)
     terms_of_use = models.CharField('동의한 이용약관', max_length=16, null=True, default=None, blank=True)
     terms_of_use_updated_at = models.DateTimeField('이용약관 동의 시간', null=True, default=None, blank=True)
