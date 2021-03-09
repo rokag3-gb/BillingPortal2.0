@@ -44,7 +44,7 @@ urlpatterns = [
     path('payment_history/', login_required(payment_history), name='payment_history'),
     path('payment_details/', login_required(payment_details), name='payment_details'),
     path('search_orgs/', login_required(search_orgs), name='search_orgs'),
-    path('manage_payments/', login_required(manage_payments), name="manage_payments"),
+    # path('manage_payments/', login_required(manage_payments), name="manage_payments"),
     path('dashboard/', login_required(dashboard), name='dashboard'),
     path('settings/', preference, name='settings'),
     path('policy/', include('policy.urls')),
