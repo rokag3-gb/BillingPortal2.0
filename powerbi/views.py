@@ -41,4 +41,4 @@ def token(request: HttpRequest) -> HttpResponse:
             }
         })
     except Exception as ex:
-        return JsonResponse({'errorMsg': str(ex)}, status_code=500)
+        return JsonResponse({'errorMsg': str(ex)}, status=500)
