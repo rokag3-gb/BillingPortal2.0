@@ -145,7 +145,7 @@ STATICFILES_DIRS = [
 ]
 
 PG_BACKEND = {
-    "SOAP_URL": os.getenv("PG_SOAP_URL"),
+    "PG_API_URL": os.getenv("PG_API_URL"),
     "STORE_ID": os.getenv("PG_STORE_ID")
 }
 

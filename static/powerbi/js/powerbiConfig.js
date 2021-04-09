@@ -138,7 +138,7 @@ window.onload = function () {
                                 console.log("Token refreshed")
                             })
                     })
-            }, 1000 * 60 * 60);
+            }, 1000 * 60 * 50);
         })
         .catch(function (error) {
             console.log(error);
