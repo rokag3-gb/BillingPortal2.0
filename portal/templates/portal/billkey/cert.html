@@ -81,6 +81,7 @@
             <h2>신규 결제수단 등록</h2>
             <p><b>대상 조직</b> {{ request.user.org_last_selected }}</p>
             <p>결제 수단 등록 화면이 곧 자동으로 열립니다. 열리지 않으면 버튼을 눌러 열러주세요.</p>
+            <p>등록 절차가 완료되면 자동으로 결제수단 관리 화면으로 이동됩니다.</p>
             <p>결제 수단 등록 대상 조직을 변경하려면, 먼저 등록 절차를 취소하고 조직을 변경하세요.</p>
             <a class="btn btn-block mt-3" href="../" type="submit" name="submit">등록 취소(이전 화면으로)</a>
             <button class="btn btn-primary btn-block mt-3" onclick="setup()" type="submit" name="submit">결제 수단 등록 화면 열기</button>
