@@ -30,9 +30,6 @@
             <div class="card-body">
               <div class="card-title">새 결제수단 추가</div>
               <p class="card-text">새 결제수단을 추가하려면 아래 버튼 클릭.</p>
-              <p class="card-text">
-                +<br>+
-              </p>
               <a class="btn btn-primary btn-sm" href="new">결제수단 추가</a>
             </div>
           </div>
@@ -44,7 +41,7 @@
               <div class="card-title">{{payment.alias}}</div>
               <p class="card-text">{{payment.cardno}}</p>
               <p class="card-text">
-                {{payment.reguserid.get_full_name}} _<br>
+                {{payment.reguserid.get_full_name}} 님이 등록<br>
                 VALID THRU {{payment.expiremm}}/{{payment.expireyy}}
               </p>
               <form method="POST">
