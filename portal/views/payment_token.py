@@ -56,7 +56,8 @@ def manage_payments(request: HttpRequest) -> HttpResponse:
 @xframe_options_sameorigin
 def cert_form(request):  
     pg_config = getattr(settings, "PG_BACKEND", {})
-    return render(request, 'portal/billkey/cert.html', {"STORE_ID": pg_config["STORE_ID"]})
+    baseurl = getattr(settings, "BASE_URL", "")
+    return render(request, 'portal/billkey/cert.html', {"STORE_ID": pg_config["STORE_ID"], "BASE_URL": baseurl})
 
 @csrf_exempt
 @xframe_options_sameorigin

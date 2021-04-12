@@ -138,8 +138,8 @@
         //frm_pay.EP_user_phone2.value    = "01012345679";                           //가맹점 고객 번호2
         //frm_pay.EP_user_addr.value      = "서울시 금천구 가산동";                  //가맹점 고객 주소
         frm_pay.EP_product_type.value   = "1";                                     //상품정보구분 : 0-실물, 1-서비스
-        //frm_pay.EP_product_expr.value   = "20201231";                              //서비스기간 : YYYYMMDD
-        frm_pay.EP_return_url.value     = "http://localhost:8000/manage_payments/issue_param/callback/";      // Return 받을 URL (HTTP부터 입력)
+        frm_pay.EP_product_expr.value   = "20210412";                              //서비스기간 : YYYYMMDD
+        frm_pay.EP_return_url.value     = "{{BASE_URL}}/manage_payments/issue_param/callback/";      // Return 받을 URL (HTTP부터 입력)
 
                                         
         /*--신용카드--*/                    
@@ -155,7 +155,7 @@
         frm_pay.EP_cardnick_useyn.value = "Y";
         frm_pay.EP_batch_type.value = "1";
                                                                                                                    
-        setTimeout(function(){ issue_params(); }, 3000);
+        setTimeout(function(){ issue_params(); }, 2000);
     }
 
     /* 인증창 호출, 인증 요청 */
