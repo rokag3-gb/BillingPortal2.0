@@ -203,7 +203,7 @@
     function issue_token()
     {
         var frm_pay = document.frm_pay;
-        frm_pay.EP_ca.value      = decodeURIComponent( frm_pay.EP_user_addr.value );
+        frm_pay.EP_card_nick.value      = decodeURIComponent( frm_pay.EP_card_nick.value );
         frm_pay.target = "_self";
         frm_pay.action = "../issue_token/";
         frm_pay.submit();
