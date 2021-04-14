@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect
 from django.db.models import Sum
 
 from custom.services import get_organization
-from custom.models import Invoice, InvoiceOrder, Payment
+from custom.models import Invoice, InvoiceOrder, Payment, Billkey
 from django.db import transaction, IntegrityError
 from django.core.paginator import Paginator
 from django.views.decorators.clickjacking import xframe_options_sameorigin
@@ -25,10 +25,12 @@ def payment(request: HttpRequest) -> HttpResponse:
         order_id = request.GET.get("id")
         order_item = InvoiceOrder.objects.get(orderNo=order_id)
         order_details = order_item.getOrderDetails()
+        billkeys = Billkey.objects.filter(orgid=get_organization(request))
         context = {
             'invoices': order_details,
             'subtotal': order_item.totalAmount,
-            'order_id': order_item.orderNo
+            'order_id': order_item.orderNo,
+            'token_payments': billkeys,
         }
         return render(request, 'portal/payment.html', context)
     if request.method == "POST":
@@ -69,16 +71,16 @@ def charge_payment(request: HttpRequest) -> HttpResponse:
             "storeId": pg_config["STORE_ID"],
             "orderNumber": str(order_item.orderNo),
             "productName": "Cloud Service Usage Fee",
-            "consumerName": payment_form['card_owner'],
-            "consumerEmail": payment_form['owner_email'],
-            "consumerPhoneNumber": payment_form['phone_number'],
+            "ownerName": payment_form['card_owner'],
+            "ownerEmail": payment_form['owner_email'],
+            "ownerPhoneNumber": payment_form['phone_number'],
             "cardNumber": payment_form['card_number'],
             "cardValidThru": valid_until.strftime("%y%m"),
-            "cardInstallPeriod": "0",
+            "isNoInterestPayment": False,
             "cardPassword": payment_form['card_password'],
             "cardOwnerIdentifyCode": payment_form['owner_proof'],
-            "paymentAmount": int(order_item.totalAmount),
-        })
+            "paymentAmount": int(order_item.totalAmount)
+            })
         
         pgresult = payresult.json()
         if payresult.status_code == requests.codes.ok:
@@ -93,7 +95,7 @@ def charge_payment(request: HttpRequest) -> HttpResponse:
                     payment = Payment(
                         paydate = datetime.datetime.strptime(pgresult['approvedAt'], "%Y%m%d%H%M%S")
                             .replace(tzinfo=timezone.get_current_timezone()),
-                        payamount = int(pgresult['totalPaymentAmount']),
+                        payamount = pgresult['totalPaymentAmount'],
                         orderno = order_item, 
                         productname = "Cloud Service Usage Fee",
                         mid = pg_config["STORE_ID"],
@@ -123,8 +125,8 @@ def charge_payment(request: HttpRequest) -> HttpResponse:
                     "cancelType": 40,
                     "txNumber": pgresult['txNumber'],
                     "orderNumber": str(order_item.orderNo),
-                    "cancelAmount": int(pgresult['totalPaymentAmount']),
-                    "requesterId": request.user.username,
+                    "cancelAmount": pgresult['totalPaymentAmount'],
+                    "requesterID": request.user.username,
                     "cancelReason": "Payment data persist error",
                 })
                 return JsonResponse({"errorMsg":"결제 완료 처리 중 오류가 발생하여, 결제가 취소되었습니다."}, status=500)
