@@ -58,7 +58,7 @@ def issue_token(request):
             "encryptedRegistrationParams": request.POST.get("EP_encrypt_data")
            })
     resdata = res.json()
-    if resdata["resultCode"] == "0000":
+    if res.status_code == requests.codes.ok:
         Billkey(
                 orgid=get_organization(request),
                 isactive=True,
