@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect
 from django.db.models import Sum
 
 from custom.services import get_organization
-from custom.models import Invoice, InvoiceOrder, Payment
+from custom.models import Invoice, InvoiceOrder, Payment, Billkey
 from django.db import transaction, IntegrityError
 from django.core.paginator import Paginator
 from django.views.decorators.clickjacking import xframe_options_sameorigin
@@ -25,10 +25,12 @@ def payment(request: HttpRequest) -> HttpResponse:
         order_id = request.GET.get("id")
         order_item = InvoiceOrder.objects.get(orderNo=order_id)
         order_details = order_item.getOrderDetails()
+        billkeys = Billkey.objects.filter(orgid=get_organization(request))
         context = {
             'invoices': order_details,
             'subtotal': order_item.totalAmount,
-            'order_id': order_item.orderNo
+            'order_id': order_item.orderNo,
+            'token_payments': billkeys,
         }
         return render(request, 'portal/payment.html', context)
     if request.method == "POST":
