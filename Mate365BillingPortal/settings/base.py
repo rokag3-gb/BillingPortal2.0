@@ -17,7 +17,8 @@ from . import envtools
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-
+APP_HOST = os.getenv('CUSTOM_DOMAIN', None)
+APP_HOST = { APP_HOST is None: os.getenv("WEBSITE_HOSTNAME",""),  APP_HOST is not None: APP_HOST}.get(True, os.getenv("WEBSITE_HOSTNAME",""))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/

@@ -25,4 +25,4 @@ DATABASES = {
     }
 }
 
-BASE_URL = f'{os.getenv("BASEURL_PROTOCOL","https")}://{os.getenv("WEBSITE_HOSTNAME","")}'
+BASE_URL = f'{os.getenv("BASEURL_PROTOCOL","https")}://{APP_HOST}'
