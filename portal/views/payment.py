@@ -55,7 +55,7 @@ def payment(request: HttpRequest) -> HttpResponse:
         return redirect('/invoices')
 
 # 입력된 카드정보로 실제 결제를 진행하는 함수
-def charge_payment(request: HttpRequest) -> HttpResponse:
+def charge_oneimte_payment(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         # PG 인증서버 통신용 SOAP 클라이언트
         pg_config = getattr(conf, "PG_BACKEND", {})

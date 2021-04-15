@@ -20,9 +20,9 @@ from django.contrib.auth.views import LoginView
 from django.urls import path, include
 
 from custom.views import CustomLoginView
-from portal.views import payment, dashboard, index, preference, invoices, charge_payment, \
+from portal.views import payment, dashboard, index, preference, invoices, charge_oneimte_payment, \
     payment_history, payment_details, manage_payments, search_orgs, \
-    cert_form, issue_token, issue_param, issue_param_callback
+    cert_form, issue_token, issue_param, issue_param_callback, charge_token_payment
 from django.conf import settings # import the settings file
 
 branding = getattr(settings, "BRANDING", {})
@@ -41,7 +41,9 @@ urlpatterns = [
     path('powerbi/', include('powerbi.urls')),
 
     path('payment/', login_required(payment), name='payment'),
-    path('payment/charge/', login_required(charge_payment), name='charge'),
+    path('payment/charge/onetime', login_required(charge_oneimte_payment), name='charge_onetime'),
+    path('payment/charge/withtoken', login_required(charge_token_payment), name="charge_with_token"),
+
     path('invoices/', login_required(invoices), name='invoices'),
     path('payment_history/', login_required(payment_history), name='payment_history'),
     path('payment_details/', login_required(payment_details), name='payment_details'),

@@ -41,8 +41,8 @@
               <div class="card-title">{{payment.alias}}</div>
               <p class="card-text">{{payment.cardno}}</p>
               <p class="card-text">
-                {{payment.reguserid.get_full_name}} 님이 등록<br>
-                VALID THRU {{payment.expiremm}}/{{payment.expireyy}}
+                등록자 {{payment.reguserid.get_full_name}}<br/> 
+                등록일 {{payment.regdate}}
               </p>
               <form method="POST">
                 {% csrf_token %}
