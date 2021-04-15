@@ -73,7 +73,11 @@ def issue_token(request):
                 auth2="",
                 expiremm="",
                 expireyy="",
-                reguserid=request.user
+                reguserid=request.user,
+                issuercode=resdata["cardIssuerCode"],
+                issuername=resdata["cardIssuerName"],
+                acquirercode=resdata["cardAcquirerCode"],
+                acquirername=resdata["cardAcquirerName"]
             ).save()
         
         print(res.json())
