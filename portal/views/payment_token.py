@@ -38,8 +38,11 @@ def manage_payments(request: HttpRequest) -> HttpResponse:
 def cert_form(request):  
     pg_config = getattr(settings, "PG_BACKEND", {})
     baseurl = getattr(settings, "BASE_URL", "")
-    print(baseurl)
-    return render(request, 'portal/billkey/cert.html', {"STORE_ID": pg_config["STORE_ID"], "BASE_URL": baseurl})
+    user_profile = UserProfile.objects.get(user=request.user)
+    if user_profile.phone.strip() and user_profile.location.strip():
+        return render(request, 'portal/billkey/cert.html', {"STORE_ID": pg_config["STORE_ID"], "BASE_URL": baseurl})
+    return render(request, 'portal/billkey/token_error.html')
+    
 
 @csrf_exempt
 @xframe_options_sameorigin
@@ -93,7 +96,7 @@ def charge_token_payment(request: HttpRequest) -> HttpResponse:
 
         if not request.user.check_password(payment_form["user_password"]):
             return JsonResponse({'errorMsg':' 틀린 사용자 로그인 암호 입니다.'}, status=400)
-        user_profile = UserProfile.objects.get(user=request.user)
+
         try:
             order_item = InvoiceOrder.objects.get(orderNo=payment_form["order_no"], orgId=get_organization(request))
         except InvoiceOrder.DoesNotExist:
@@ -103,6 +106,14 @@ def charge_token_payment(request: HttpRequest) -> HttpResponse:
             billkey = Billkey.objects.get(seq=payment_form["payment_method_id"], orgid=get_organization(request), isactive=True)
         except Billkey.DoesNotExist:
             return JsonResponse({'errorMsg':'존재하지 않거나 비활성화된 결제수단 입니다.'}, status=400)
+        
+        try:
+            user_profile = UserProfile.objects.get(user=billkey.reguserid)
+            if not user_profile.phone.strip() or not user_profile.location.strip():
+                return JsonResponse({'errorMsg':'해당 결제수단을 등록한 사용자 계정에 청구지 주소와 연락처 정보가 없습니다. 주소 및 연락저 정보가 있어야 결제할 수 있습니다.'}, status=400)
+        except Billkey.DoesNotExist:
+            return JsonResponse({'errorMsg':'해당 결제수단을 등록한 사용자가 존재하지 않습니다. 결제수단을 삭제 후 다시 등록하세요.'}, status=400)
+        
 
         payresult = requests.post(pg_config["PG_API_URL"]+"/pay/withtoken", json={
             "storeId": pg_config["STORE_ID"],
