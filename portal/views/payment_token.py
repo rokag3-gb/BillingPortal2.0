@@ -86,25 +86,30 @@ def charge_token_payment(request: HttpRequest) -> HttpResponse:
         # PG 인증서버 통신용 SOAP 클라이언트
         pg_config = getattr(settings, "PG_BACKEND", {})
         payment_form = json.loads(request.body.decode("utf-8"))
-        valid_until = datetime.datetime.strptime(payment_form['valid_until'], "%Y-%m")
+
+        if not request.user.check_password(payment_form["user_password"]):
+            return JsonResponse({'errorMsg':' 틀린 사용자 로그인 암호 입니다.'}, status=400)
 
         try:
             order_item = InvoiceOrder.objects.get(orderNo=payment_form["order_no"], orgId=get_organization(request))
         except InvoiceOrder.DoesNotExist:
             return JsonResponse({'errorMsg':'존재하지 않는 인보이스 주문 항목입니다.'}, status=400)
 
-        payresult = requests.post(pg_config["PG_API_URL"]+"/pay/onetime", json={
+        try:
+            billkey = Billkey.objects.get(seq=payment_form["payment_method_id"], orgid=get_organization(request), isactive=True)
+        except Billkey.DoesNotExist:
+            return JsonResponse({'errorMsg':'존재하지 않거나 비활성화된 결제수단 입니다.'}, status=400)
+
+        payresult = requests.post(pg_config["PG_API_URL"]+"/pay/withtoken", json={
             "storeId": pg_config["STORE_ID"],
             "orderNumber": str(order_item.orderNo),
             "productName": "Cloud Service Usage Fee",
-            "ownerName": payment_form['card_owner'],
-            "ownerEmail": payment_form['owner_email'],
-            "ownerPhoneNumber": payment_form['phone_number'],
-            "cardNumber": payment_form['card_number'],
-            "cardValidThru": valid_until.strftime("%y%m"),
+            "ownerID": billkey.reguserid.get_username(),
+            "ownerName": billkey.reguserid.get_full_name(),
+            "ownerEmail": billkey.reguserid.email,
+            "ownerPhoneNumber": "01095878376",
             "isNoInterestPayment": False,
-            "cardPassword": payment_form['card_password'],
-            "cardOwnerIdentifyCode": payment_form['owner_proof'],
+            "paymentToken": billkey.billkey,
             "paymentAmount": int(order_item.totalAmount)
             })
         
@@ -125,18 +130,15 @@ def charge_token_payment(request: HttpRequest) -> HttpResponse:
                         orderno = order_item, 
                         productname = "Cloud Service Usage Fee",
                         mid = pg_config["STORE_ID"],
-                        cardholder = payment_form['card_owner'],
-                        auth1 = payment_form['owner_proof'],
-                        cardno = pgresult['cardNumber'],
+                        cardholder = billkey.reguserid.get_full_name(),
+                        billkey = billkey.billkey,
                         cardissuer = pgresult['cardIssuerName'],
                         cardacquired = pgresult['cardAcquirerName'],
-                        auth2 = payment_form['card_password'],
-                        expiremmyy = valid_until.strftime("%m%y"),
                         install = pgresult['cardInstallPeriod'],
                         tid = pgresult['txNumber'],
                         apprno = pgresult['approvalNumber'],
-                        email = payment_form['owner_email'],
-                        cellphone = payment_form['phone_number'],
+                        email = billkey.reguserid.email,
+                        cellphone = "01012345678",
                         iscancel = False
                     )
                     payment.save()
@@ -146,15 +148,14 @@ def charge_token_payment(request: HttpRequest) -> HttpResponse:
                 print(error)
                 # 결제 취소 호출
 
-                cancelresult = requests.put(pg_config["PG_API_URL"]+"/pay/onetime", json={
-                   "storeId": pg_config["STORE_ID"],
+                cancelresult = requests.put(pg_config["PG_API_URL"]+"/pay/withtoken", json={
+                    "storeId": pg_config["STORE_ID"],
                     "cancelType": 40,
                     "txNumber": pgresult['txNumber'],
                     "orderNumber": str(order_item.orderNo),
-                    "cancelAmount": pgresult['totalPaymentAmount'],
                     "requesterID": request.user.username,
                     "cancelReason": "Payment data persist error",
-                })
+                    })
                 return JsonResponse({"errorMsg":"결제 완료 처리 중 오류가 발생하여, 결제가 취소되었습니다."}, status=500)
         else:
-            return JsonResponse({"errorMsg":pgresult['resultMessage']}, status=payresult.status_code)
+            return JsonResponse({"errorMsg":"{}({})".format(pgresult['resultMessage'], pgresult['resultCode'])}, status=payresult.status_code)

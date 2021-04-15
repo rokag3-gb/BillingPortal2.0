@@ -51,7 +51,7 @@ function submitPayment() {
       if (response.ok) {
         paymentSuccess.hidden = false;
         response.json().then(function(json){
-          billDoc.href = `https://office.easypay.co.kr/receipt/ReceiptBranch.jsp?controlNo=${json['PG거래번호']}&payment=01`
+          billDoc.href = `https://office.easypay.co.kr/receipt/ReceiptBranch.jsp?controlNo=${json['txNumber']}&payment=01`
         })
       } else if (response.status >= 400 && response.status < 500) {
         response.json().then(function(json){
