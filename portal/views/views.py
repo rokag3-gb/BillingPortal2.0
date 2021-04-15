@@ -7,7 +7,7 @@ from django.http.response import JsonResponse
 from django.shortcuts import render, redirect
 
 from custom.services import get_organization
-from custom.models import Invoice, Billkey, Organization
+from custom.models import Invoice, UserProfile, Organization
 
 def index(request: HttpRequest) -> HttpResponse:
     # return render(request, 'portal/index.html')
@@ -16,7 +16,17 @@ def index(request: HttpRequest) -> HttpResponse:
 
 @login_required
 def preference(request: HttpRequest) -> HttpResponse:
-    return render(request, 'portal/settings/index.html')
+    user_profile = UserProfile.objects.get(user=request.user)
+    context = {"user_profile":user_profile}
+    if request.method == "POST":
+        if request.user.check_password(request.POST.get("user_confirm_password", "")):
+            user_profile.phone = request.POST.get("user_billing_phone", "")
+            user_profile.location = request.POST.get("user_billing_addr", "")
+            user_profile.save()
+            context["result"] = "수정된 개인정보가 저장되었습니다."
+        else:
+            context["error"] = "로그인 암호가 틀려서 수정된 개인정보가 저장되지 않았습니다."
+    return render(request, 'portal/settings/index.html', context)
 
 
 def dashboard(request: HttpRequest) -> HttpResponse:

@@ -16,6 +16,37 @@
         <h2>{{ user.get_full_name }}</h2>
             <p><b>{{ user.get_username }}</b> {{ user.email }}</p>
             <a type="button" class="btn btn-light" href="{% url 'password_change' %}">비밀번호 변경</a>
+        
+        <h5 class="my-4">개인정보 확인 및 수정</h5>
+        {% if error %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          {{error}}
+          <button class="close" type="button" data-dismiss="alert" aria-label="Close"><span class="font-weight-light" aria-hidden="true">×</span></button>
+        </div>
+        {% endif %}
+        {% if result %}
+        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+          {{result}}
+          <button class="close" type="button" data-dismiss="alert" aria-label="Close"><span class="font-weight-light" aria-hidden="true">×</span></button>
+        </div>
+        {% endif %}
+        <form method="post">
+          {% csrf_token %}
+          <div class="form-floating">
+            <input type="number" class="form-control" id="user_billing_phone" name="user_billing_phone" value="{{user_profile.phone}}"/>
+            <label for="user_billing_phone">연락처(휴대전화 번호)</label>
+          </div>
+          <div class="form-floating">
+            <input type="text" class="form-control" id="user_billing_addr" name="user_billing_addr" value="{{user_profile.location}}"/>
+            <label for="user_billing_addr">결제 청구지 주소</label>
+          </div>
+          <div class="form-floating">
+            <input type="password" class="form-control" id="user_confirm_password" name="user_confirm_password" required />
+            <label for="user_confirm_password">mateBilling 로그인 암호(개인정보 수정하려면 입력)</label>
+          </div>
+          <button type="submit" class="btn btn-light">개인정보 저장</button>
+        </form>
+        
       </div>
     </div>
 

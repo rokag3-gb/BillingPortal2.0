@@ -11,7 +11,7 @@ from django.db import transaction, IntegrityError
 from custom.services import get_organization
 import requests
 from django.views.decorators.clickjacking import xframe_options_sameorigin
-from custom.models import Billkey, InvoiceOrder, Payment
+from custom.models import Billkey, InvoiceOrder, Payment, UserProfile
 
 def manage_payments(request: HttpRequest) -> HttpResponse:
     card_error = None
@@ -89,7 +89,7 @@ def charge_token_payment(request: HttpRequest) -> HttpResponse:
 
         if not request.user.check_password(payment_form["user_password"]):
             return JsonResponse({'errorMsg':' 틀린 사용자 로그인 암호 입니다.'}, status=400)
-
+        user_profile = UserProfile.objects.get(user=request.user)
         try:
             order_item = InvoiceOrder.objects.get(orderNo=payment_form["order_no"], orgId=get_organization(request))
         except InvoiceOrder.DoesNotExist:
@@ -107,7 +107,7 @@ def charge_token_payment(request: HttpRequest) -> HttpResponse:
             "ownerID": billkey.reguserid.get_username(),
             "ownerName": billkey.reguserid.get_full_name(),
             "ownerEmail": billkey.reguserid.email,
-            "ownerPhoneNumber": "01095878376",
+            "ownerPhoneNumber": user_profile.phone,
             "isNoInterestPayment": False,
             "paymentToken": billkey.billkey,
             "paymentAmount": int(order_item.totalAmount)
@@ -138,7 +138,7 @@ def charge_token_payment(request: HttpRequest) -> HttpResponse:
                         tid = pgresult['txNumber'],
                         apprno = pgresult['approvalNumber'],
                         email = billkey.reguserid.email,
-                        cellphone = "01012345678",
+                        cellphone = user_profile.phone,
                         iscancel = False
                     )
                     payment.save()
