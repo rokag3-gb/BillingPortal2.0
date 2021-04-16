@@ -5,16 +5,16 @@
   <span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
   <a class="navbar-brand mr-1 mr-sm-3" href="{% url 'index' %}">
     <div class="d-flex align-items-center">
-      <img class="mr-2" src="{% static BRANDING_LOGO_PATH %}" alt="" width="100" />
+      <img class="mr-2 d-none d-sm-block" src="{% static BRANDING_LOGO_PATH %}" alt="" width="100" />
       {% comment %} <span class="text-sans-serif">{{ BRANDING_WEBSITE_NAME }}</span> {% endcomment %}
     </div>
   </a>
-  <ul class="navbar-nav align-items-center d-none d-lg-block">
+  <ul class="navbar-nav align-items-center d-lg-block" style="max-width: 80%">
     <li class="nav-item">
       <div class="search-box">
         <div class="position-relative" data-toggle="search" data-display="static">
 
-          <input class="form-control search-input" type="search" id="org_search_input"
+          <input class="form-control search-input" type="search" id="org_search_input" style="max-width: 80%"
             placeholder=" {{ request.user.org_last_selected }}" aria-label="Search Organizations" />
           <span class="fas fa-users search-box-icon"></span>
 
@@ -53,7 +53,7 @@
       <a class="nav-link pr-0" id="navbarDropdownUser" 
         href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
         style="display: flex; justify-content: center; align-items: center">
-        <span style="">{{ request.user }}</span>
+        <span class="d-none d-sm-block">{{ request.user }}</span>
         <span class="far fa-user-circle fs-4" data-fa-transform="shrink-7"></span>
       </a>
       <div class="dropdown-menu dropdown-menu-right py-0" aria-labelledby="navbarDropdownUser">
