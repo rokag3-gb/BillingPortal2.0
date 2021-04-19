@@ -88,7 +88,6 @@ class OrganizationProfile(models.Model):
     company_registration_number = models.CharField('사업자번호', max_length=16, blank=True)
     location = models.CharField(max_length=64, blank=True)
 
-
 @receiver(post_save, sender=Organization)
 def create_organization_profile(sender, instance, created, **kwargs):
     if created:
@@ -211,6 +210,10 @@ class Billkey(models.Model):
     expireyy = models.CharField(db_column='ExpireYY', max_length=10, blank=True, null=True)  # Field name made lowercase.
     reguserid = models.ForeignKey(User, db_column='RegUserId', on_delete=models.DO_NOTHING)  # Field name made lowercase.
     regdate = models.DateTimeField(db_column='RegDate', auto_now_add=True)  # Field name made lowercase.
+    issuercode = models.CharField(db_column='IssuerCode', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    issuername = models.CharField(db_column='IssuerName', max_length=30, blank=True, null=True)  # Field name made lowercase.
+    acquirercode = models.CharField(db_column='AcquirerCode', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    acquirername = models.CharField(db_column='AcquirerName', max_length=30, blank=True, null=True)  
 
     class Meta:
         managed = False

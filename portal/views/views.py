@@ -7,7 +7,7 @@ from django.http.response import JsonResponse
 from django.shortcuts import render, redirect
 
 from custom.services import get_organization
-from custom.models import Invoice, Billkey, Organization
+from custom.models import Invoice, UserProfile, Organization
 
 def index(request: HttpRequest) -> HttpResponse:
     # return render(request, 'portal/index.html')
@@ -16,7 +16,17 @@ def index(request: HttpRequest) -> HttpResponse:
 
 @login_required
 def preference(request: HttpRequest) -> HttpResponse:
-    return render(request, 'portal/settings/index.html')
+    user_profile = UserProfile.objects.get(user=request.user)
+    context = {"user_profile":user_profile}
+    if request.method == "POST":
+        if request.user.check_password(request.POST.get("user_confirm_password", "")):
+            user_profile.phone = request.POST.get("user_billing_phone", "")
+            user_profile.location = request.POST.get("user_billing_addr", "")
+            user_profile.save()
+            context["result"] = "수정된 개인정보가 저장되었습니다."
+        else:
+            context["error"] = "로그인 암호가 틀려서 수정된 개인정보가 저장되지 않았습니다."
+    return render(request, 'portal/settings/index.html', context)
 
 
 def dashboard(request: HttpRequest) -> HttpResponse:
@@ -55,42 +65,6 @@ def invoices(request: HttpRequest) -> HttpResponse:
     }
     return render(request, 'portal/invoices.html', context)
 
-
-def manage_payments(request: HttpRequest) -> HttpResponse:
-    card_error = None
-    card_message = None
-    if request.method == "POST":
-        if request.POST.get("action", "") == "delete":
-            try:
-                payment = Billkey.objects.get(seq=int(request.POST.get("id")))
-                if payment.orgid == request.user.org_last_selected:
-                    payment.delete()
-                    card_message = "카드 삭제가 완료되었습니다."
-                else:
-                    card_error = "해당 카드가 존재하지 않습니다."
-            except:
-                card_error = "해당 카드가 존재하지 않습니다."
-        else:
-            print(request.POST.get('valid_until'))
-            valid_until = datetime.datetime.strptime(request.POST.get('valid_until'), "%Y-%m")
-            Billkey(
-                orgid=get_organization(request),
-                isactive=True,
-                billkey="123123",
-                alias=request.POST.get("card_alias"),
-                auth1=datetime.date.fromisoformat(request.POST.get('owner_birthday')).strftime("%y%m%d"),
-                cardno=request.POST.get("card_number"),
-                auth2=request.POST.get("card_password"),
-                expiremm=valid_until.strftime("%m"),
-                expireyy=valid_until.strftime("%y"),
-                reguserid=request.user
-            ).save()
-            card_message = "카드가 등록되었습니다."
-    billkeys = Billkey.objects.filter(orgid=get_organization(request))
-    return render(request, 'portal/manage_payments.html',
-        {'payments': billkeys,
-        'card_error': card_error,
-        'card_message': card_message})
 
 def search_orgs(request: HttpRequest) -> HttpResponse:
     query = request.GET.get("q", None)

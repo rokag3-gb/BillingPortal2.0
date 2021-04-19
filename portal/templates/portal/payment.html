@@ -48,10 +48,9 @@
         </div>
         <div class="card-body">
           <div class="custom-control custom-radio">
-            <input class="custom-control-input radio-collapse" type="radio" name="payment-method" id="credit-card"
-              checked="checked" />
-            <label class="custom-control-label" for="credit-card"><span
-                class="d-flex align-items-center mb-2 fs-1">신용카드/직불카드</span>
+            <input class="custom-control-input" type="radio" name="payment-method" id="pay_onetime" value="pay_onetime"/>
+            <label class="custom-control-label" for="pay_onetime">
+              <span class="d-flex align-items-center mb-2 fs-1">신용카드/직불카드 정보 입력하여 결제</span>
             </label>
           </div>
           <div>
@@ -97,12 +96,34 @@
               </div>
             </form>
           </div>
-          {% comment %} <div class="custom-control custom-radio">
-            <input class="custom-control-input" type="radio" name="payment-method" id="paypal" disabled />
-            <label class="custom-control-label" for="credit-card"><span class="d-flex align-items-center mb-2 fs-1">미리
-                등록한 결제수단</span>
-            </label>
-          </div> {% endcomment %}
+          <span class="d-flex align-items-center mb-2 fs-1">사전에 등록한 카드로 결제</span>
+            {% for payment in token_payments %}
+            <div class="col-sm-6 col-lg-4 mb-4">
+              <div class="card text-white bg-primary">
+                <div class="card-body">
+                
+                  <div class="card-title">
+                    <div class="custom-control custom-radio">
+                      <input class="custom-control-input" type="radio" name="payment-method" id="{{payment.seq}}" value="{{payment.seq}}"/>
+                      <label class="custom-control-label" for="{{payment.seq}}">
+                        <span class="d-flex align-items-center mb-2 fs-1">{{payment.alias}}</span>
+                      </label>
+                    </div>
+                    
+                  </div>
+                  <p class="card-text">{{payment.cardno}}</p>
+                  <p class="card-text">
+                    {{payment.issuername}}<br/>
+                    {{payment.reguserid.get_full_name}} 님이 {{payment.regdate}} 에 등록
+                  </p>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+            <div class="form-floating">
+              <input type="password" class="form-control" id="user_confirm_password" required />
+              <label for="user_confirm_password">mateBilling 로그인 암호(사전 등록된 카드로 결제시에만 입력)</label>
+            </div>
           <hr class="border-dashed my-5">
           <div class="row">
             <div

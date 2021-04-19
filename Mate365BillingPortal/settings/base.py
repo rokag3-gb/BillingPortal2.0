@@ -17,7 +17,7 @@ from . import envtools
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-
+APP_HOST = os.getenv('CUSTOM_DOMAIN', os.getenv("WEBSITE_HOSTNAME","localhost:8000"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -145,7 +145,7 @@ STATICFILES_DIRS = [
 ]
 
 PG_BACKEND = {
-    "SOAP_URL": os.getenv("PG_SOAP_URL"),
+    "PG_API_URL": os.getenv("PG_API_URL"),
     "STORE_ID": os.getenv("PG_STORE_ID")
 }
 

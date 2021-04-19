@@ -13,14 +13,16 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from portal.views.payment_token import cert_form
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.urls import path, include
 
 from custom.views import CustomLoginView
-from portal.views import payment, dashboard, index, preference, invoices, charge_payment, \
-    payment_history, payment_details, manage_payments, search_orgs
+from portal.views import payment, dashboard, index, preference, invoices, charge_oneimte_payment, \
+    payment_history, payment_details, manage_payments, search_orgs, \
+    cert_form, issue_token, issue_param, issue_param_callback, charge_token_payment
 from django.conf import settings # import the settings file
 
 branding = getattr(settings, "BRANDING", {})
@@ -39,12 +41,21 @@ urlpatterns = [
     path('powerbi/', include('powerbi.urls')),
 
     path('payment/', login_required(payment), name='payment'),
-    path('payment/charge/', login_required(charge_payment), name='charge'),
+    path('payment/charge/onetime', login_required(charge_oneimte_payment), name='charge_onetime'),
+    path('payment/charge/withtoken', login_required(charge_token_payment), name="charge_with_token"),
+
     path('invoices/', login_required(invoices), name='invoices'),
     path('payment_history/', login_required(payment_history), name='payment_history'),
     path('payment_details/', login_required(payment_details), name='payment_details'),
     path('search_orgs/', login_required(search_orgs), name='search_orgs'),
-    # path('manage_payments/', login_required(manage_payments), name="manage_payments"),
+
+    path('manage_payments/', login_required(manage_payments), name="manage_payments"),
+    path('manage_payments/new/', login_required(cert_form), name="new_payment"),
+    path('manage_payments/issue_param/', login_required(issue_param), name="issue_param"),
+    path('manage_payments/issue_param/callback/', issue_param_callback, name="issue_param_callback"),
+
+    path('manage_payments/issue_token/', login_required(issue_token), name="issue_token"),
+
     path('dashboard/', login_required(dashboard), name='dashboard'),
     path('settings/', preference, name='settings'),
     path('policy/', include('policy.urls')),
