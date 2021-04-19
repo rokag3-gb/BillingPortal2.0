@@ -25,7 +25,7 @@ class PbiEmbedService:
         api_response = requests.get(report_url, headers=self.get_request_header())
 
         if api_response.status_code != 200:
-            raise RequestAborted(api_response.status_code, description=f'Error while retrieving Embed URL\n{api_response.reason}:\t{api_response.text}\nRequestId:\t{api_response.headers.get("RequestId")}')
+            raise RequestAborted(f'Error while retrieving Embed URL\n{api_response.reason}:\t{api_response.text}\nRequestId:\t{api_response.headers.get("RequestId")}')
 
         api_response = json.loads(api_response.text)
         report = ReportConfig(api_response['id'], api_response['name'], api_response['embedUrl'])
@@ -63,7 +63,7 @@ class PbiEmbedService:
             api_response = requests.get(report_url, headers=self.get_request_header())
 
             if api_response.status_code != 200:
-                raise RequestAborted(api_response.status_code, description=f'Error while retrieving Embed URL\n{api_response.reason}:\t{api_response.text}\nRequestId:\t{api_response.headers.get("RequestId")}')
+                raise RequestAborted(f'Error while retrieving Embed URL\n{api_response.reason}:\t{api_response.text}\nRequestId:\t{api_response.headers.get("RequestId")}')
 
             api_response = json.loads(api_response.text)
             report_config = ReportConfig(api_response['id'], api_response['name'], api_response['embedUrl'])
@@ -105,7 +105,7 @@ class PbiEmbedService:
         api_response = requests.post(embed_token_api, data=json.dumps(request_body.__dict__), headers=self.get_request_header())
 
         if api_response.status_code != 200:
-            raise RequestAborted(api_response.status_code, description=f'Error while retrieving Embed token\n{api_response.reason}:\t{api_response.text}\nRequestId:\t{api_response.headers.get("RequestId")}')
+            raise RequestAborted(f'Error while retrieving Embed token\n{api_response.reason}:\t{api_response.text}\nRequestId:\t{api_response.headers.get("RequestId")}')
 
         api_response = json.loads(api_response.text)
         embed_token = EmbedToken(api_response['tokenId'], api_response['token'], api_response['expiration'])
@@ -141,7 +141,7 @@ class PbiEmbedService:
         api_response = requests.post(embed_token_api, data=json.dumps(request_body.__dict__), headers=self.get_request_header())
 
         if api_response.status_code != 200:
-            raise RequestAborted(api_response.status_code, description=f'Error while retrieving Embed token\n{api_response.reason}:\t{api_response.text}\nRequestId:\t{api_response.headers.get("RequestId")}')
+            raise RequestAborted(f'Error while retrieving Embed token\n{api_response.reason}:\t{api_response.text}\nRequestId:\t{api_response.headers.get("RequestId")}')
         
         api_response = json.loads(api_response.text)
         embed_token = EmbedToken(api_response['tokenId'], api_response['token'], api_response['expiration'])
@@ -178,7 +178,7 @@ class PbiEmbedService:
         api_response = requests.post(embed_token_api, data=json.dumps(request_body.__dict__), headers=self.get_request_header())
 
         if api_response.status_code != 200:
-            raise RequestAborted(api_response.status_code, description=f'Error while retrieving Embed token\n{api_response.reason}:\t{api_response.text}\nRequestId:\t{api_response.headers.get("RequestId")}')
+            raise RequestAborted(f'Error while retrieving Embed token\n{api_response.reason}:\t{api_response.text}\nRequestId:\t{api_response.headers.get("RequestId")}')
 
         api_response = json.loads(api_response.text)
         embed_token = EmbedToken(api_response['tokenId'], api_response['token'], api_response['expiration'])
