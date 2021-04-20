@@ -86,7 +86,9 @@ def issue_token(request):
         print(res.json())
         return redirect("manage_payments")
     else:
-        return render(request, 'portal/billkey/token_error.html', {"ERROR_CODE": resdata["resultCode"]})
+        return render(request, 'portal/billkey/token_error.html', {
+                "ERROR_CODE": resdata["resultCode"],
+                "ERROR_MSG": resdata["resultMessage"]})
 
 def charge_token_payment(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
