@@ -12,6 +12,7 @@
       <p>신규 결제수단 등록 중 오류가 발생했습니다.</p>
       <p>결제수단 정보를 잘못 입력하신 것일 수 있습니다. 오탈자가 없는지, 결제수단 암호가 틀린것은 아닌지, 만료되어 더이상 유효하지 않은 결제수단은 아닌지 확인해 보세요.</p>
       <p><b>오류 코드</b> {{ ERROR_CODE }}</p>
+      <p><b>오류 메시지</b> {{ ERROR_MSG }}</p>
       <a class="btn btn-block mt-3" href="../" type="submit" name="submit">등록 취소(이전 화면으로)</a>
       <a class="btn btn-primary btn-block mt-3"  href="../new" type="submit" name="submit">다시 시도</a>
     {% elif request.path == new_payment %}
