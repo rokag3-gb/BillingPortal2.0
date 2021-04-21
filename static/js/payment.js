@@ -4,6 +4,7 @@ function submitPayment() {
   const paymentProgress = document.getElementById("payment-progress");
   const paymentSuccess = document.getElementById("payment-success");
   const paymentError = document.getElementById("payment-error");
+  const paymentErrorDetails = document.getElementById("payment-error-details");
   const paymentErrorContainer = document.getElementById(
     "payment-error-container"
   );
@@ -56,12 +57,14 @@ function submitPayment() {
       } else if (response.status >= 400 && response.status < 500) {
         response.json().then(function(json){
           paymentErrorContainer.hidden = false;
-          paymentError.innerText = `결제 진행 중 오류가 발생했습니다. 입력하신 정보를 다시 확인하세요: ${json.errorMsg}`;
+          paymentError.innerText = `결제 진행 중 오류가 발생했습니다. 입력하신 정보를 다시 확인하세요`;
+          paymentErrorDetails.innerText = json.errorMsg;
         })
       } else if (response.status >= 500 && response.status < 600) {
         response.json().then(function(json){
           paymentErrorContainer.hidden = false;
-          paymentError.innerText = `결제 처리 중 서버 내부 오류가 발생했습니다: ${json.errorMsg}`;      
+          paymentError.innerText = `결제 처리 중 오류가 발생했습니다`;   
+          paymentErrorDetails.innerText = json.errorMsg;   
         })
       }
     })
