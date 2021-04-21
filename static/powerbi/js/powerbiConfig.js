@@ -11,10 +11,11 @@ window.onload = function () {
     // console.log(urlParams.get('menu_id'));
 
     // Initialize iframe for embedding report
-    powerbi.bootstrap(reportContainer, { type: "report", embedUrl: 'https://app.powerbi.com/reportEmbed' });
+    
 
     var reportLoadConfig = {
         type: "report",
+        embedUrl: 'https://app.powerbi.com/reportEmbed',
         tokenType: models.TokenType.Embed,
         // Enable this setting to remove gray shoulders from embedded report
         settings: {
@@ -52,6 +53,7 @@ window.onload = function () {
         },
         // filters: [hiddenBasicFilter]
     };
+    powerbi.bootstrap(reportContainer, reportLoadConfig);
     let token_url = null;
     if (menuId){
         token_url = "/powerbi/token" + "?id=" + menuId
@@ -136,8 +138,8 @@ window.onload = function () {
                 report.updateSettings(newSettings)
                 .then(async result => {
                     let pages = await report.getPages();
-                    let layoutResult = pages[0].hasLayout(newLayout);
-                    console.log("Layout updated"+layoutResult);
+                    let layoutResult = await pages[0].hasLayout(newLayout);
+                    console.log("Layout updated: "+layoutResult);
                 })
                 .catch(error => { 
                     console.log(error)
