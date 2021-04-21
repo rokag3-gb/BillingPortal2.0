@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-
+// Desktop >= 990px
+var models = window["powerbi-client"].models;
 window.onload = function () {
     let reportContainer = document.getElementById("pbi-report-container");
     let errorContainer = document.getElementById("pbi-error-container");
@@ -12,27 +13,12 @@ window.onload = function () {
     // Initialize iframe for embedding report
     powerbi.bootstrap(reportContainer, { type: "report", embedUrl: 'https://app.powerbi.com/reportEmbed' });
 
-    // const hiddenBasicFilter = {
-    //     $schema: "http://powerbi.com/product/schema#basic",
-    //     target: {
-    //         table: "T_Customer",
-    //         column: "CustomerName"
-    //     },
-    //     operator: "In",
-    //     values: ["Com2uS Corporation"], // FIXME: 변수 받아서 필터 적용할것
-    //     filterType: 1,
-    //     requireSingleSelection: true,
-    //     displaySettings: {
-    //         isHiddenInViewMode: true
-    //     }
-    // };
-
-    var models = window["powerbi-client"].models;
     var reportLoadConfig = {
         type: "report",
         tokenType: models.TokenType.Embed,
         // Enable this setting to remove gray shoulders from embedded report
         settings: {
+            layoutType: models.LayoutType.MobilePortrait,
             background: models.BackgroundType.Transparent,
             bars: {
                 actionBar: {
@@ -112,8 +98,6 @@ window.onload = function () {
                 return;
             });
 
-
-
             // report.setFilters([hiddenBasicFilter])
             //     .catch(errors => {
             //         // Handle error
@@ -139,6 +123,27 @@ window.onload = function () {
                             })
                     })
             }, 1000 * 60 * 50);
+
+            // Convert to mobile or desktop layout with media query event
+            const mediaQueryList = window.matchMedia("(min-width: 992px)");
+            let newLayout = mediaQueryList.matches? models.LayoutType.MobileLandscape : models.LayoutType.MobilePortrait
+            const newSettings = { layoutType: newLayout };
+            report.updateSettings(newSettings)
+            mediaQueryList.addListener(function(event){
+                console.log(event.matches? "Desktop":"Mobile");
+                let newLayout = event.matches? models.LayoutType.MobileLandscape : models.LayoutType.MobilePortrait
+                const newSettings = { layoutType: newLayout };
+                report.updateSettings(newSettings)
+                .then(async result => {
+                    let pages = await report.getPages();
+                    let layoutResult = pages[0].hasLayout(newLayout);
+                    console.log("Layout updated"+layoutResult);
+                })
+                .catch(error => { 
+                    console.log(error)
+                 });;
+                
+            });
         })
         .catch(function (error) {
             console.log(error);
