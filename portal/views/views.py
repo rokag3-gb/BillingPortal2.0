@@ -7,7 +7,9 @@ from django.http.response import JsonResponse
 from django.shortcuts import render, redirect
 
 from custom.services import get_organization
-from custom.models import Invoice, UserProfile, Organization
+from custom.models import Invoice, UserProfile, Organization, OrgUser
+from organizations.backends import invitation_backend
+
 
 def index(request: HttpRequest) -> HttpResponse:
     # return render(request, 'portal/index.html')
@@ -28,6 +30,17 @@ def preference(request: HttpRequest) -> HttpResponse:
             context["error"] = "로그인 암호가 틀려서 수정된 개인정보가 저장되지 않았습니다."
     return render(request, 'portal/settings/index.html', context)
 
+def orgsettings(request: HttpRequest) -> HttpResponse:
+    context = {}
+    if request.method == "POST":
+        user_email = request.POST.get("new_user_email", None)
+        if user_email is None:
+            context["error"] = "새로 초대할 사람의 이메일을 입력하세요."
+        else:
+            invitation_backend().invite_by_email(user_email, request=request)
+            context["result"] = "{}로 회원 가입 및 조직 초대 메일이 발송되었습니다.".format(user_email)
+    context["members"] = OrgUser.objects.filter(organization=get_organization(request))
+    return render(request, 'portal/settings/org.html', context)
 
 def dashboard(request: HttpRequest) -> HttpResponse:
     org = get_organization(request=request)
