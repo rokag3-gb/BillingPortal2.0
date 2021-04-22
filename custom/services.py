@@ -1,5 +1,5 @@
 from organizations.models import Organization, OrganizationUser
-
+from organizations.backends.defaults import InvitationBackend
 from custom.models import User, OrganizationVendor
 
 SESSION_ORGANIZATION = 'S_ORG'
@@ -51,3 +51,37 @@ def vendors(self):
     return OrganizationVendor.objects.filter(orgid=self)
 
 Organization.add_to_class("vendors", vendors)
+
+class OrgDirectInvitations(InvitationBackend):
+    def invite_by_email(self, email, sender=None, request=None, **kwargs):
+        if request is None:
+            return None
+        else:
+            org = get_organization(request)
+            if org is None:
+                return None
+            else:
+                try:
+                    user = self.user_model.objects.get(email=email)
+                    try:
+                        OrganizationUser.objects.get(user=user, organization=org)
+                    except OrganizationUser.DoesNotExist:
+                        org_user = OrganizationUser.objects.create(
+                            user=user,
+                            organization=org
+                        )
+                        org_user.save()
+                except self.user_model.DoesNotExist:
+                    user = self.user_model.objects.create(
+                            username=email,
+                            email=email,
+                            password=self.user_model.objects.make_random_password())
+                    user.is_active = False
+                    user.save()
+                    org_user = OrganizationUser.objects.create(
+                            user=user,
+                            organization=org
+                        )
+                    org_user.save()
+                self.send_invitation(user, sender, **kwargs)
+                return user
