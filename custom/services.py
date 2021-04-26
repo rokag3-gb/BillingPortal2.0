@@ -74,10 +74,10 @@ class RegistrationForm(UserRegistrationForm):
         return super(RegistrationForm, self).clean()
 
 class OrgDirectInvitations(InvitationBackend):
-    invitation_subject = 'portal/email/invitation_subject.txt'
-    invitation_body = 'portal/email/invitation_body.html'
-    reminder_subject = 'portal/email/reminder_subject.txt'
-    reminder_body = 'portal/email/reminder_body.html'
+    invitation_subject = 'email/invitation_subject.txt'
+    invitation_body = 'email/invitation_body.html'
+    reminder_subject = 'email/reminder_subject.txt'
+    reminder_body = 'email/reminder_body.html'
     form_class = RegistrationForm
 
     def invite_by_email(self, email, sender=None, request=None, **kwargs):
