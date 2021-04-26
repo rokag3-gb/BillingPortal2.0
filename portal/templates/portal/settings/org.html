@@ -41,6 +41,7 @@
               <th scope="col">이름</th>
               <th scope="col">이메일</th>
               <th scope="col">관리자 여부</th>
+              <th scope="col">활성화 여부</th>
             </tr>
           </thead>
           <tbody>
@@ -49,6 +50,7 @@
               <td>{{orguser.user.get_full_name}}</td>
               <td>{{orguser.user.email}}</td>
               <td>{{orguser.is_admin}}</td>
+              <td>{{orguser.user.is_active}}</td>
             </tr>
           {% endfor %}
           </tbody>
