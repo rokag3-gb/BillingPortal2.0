@@ -110,5 +110,5 @@ class OrgDirectInvitations(InvitationBackend):
                             organization=org
                         )
                     org_user.save()
-                self.send_invitation(user, sender, **kwargs)
+                self.send_invitation(user, sender, organization=org)
                 return user
