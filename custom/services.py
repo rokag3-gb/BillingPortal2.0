@@ -1,6 +1,8 @@
 from organizations.models import Organization, OrganizationUser
 from organizations.backends.defaults import InvitationBackend
 from custom.models import User, OrganizationVendor
+from organizations.backends.forms import UserRegistrationForm
+from django import forms
 
 SESSION_ORGANIZATION = 'S_ORG'
 
@@ -52,7 +54,32 @@ def vendors(self):
 
 Organization.add_to_class("vendors", vendors)
 
+class RegistrationForm(UserRegistrationForm):
+    """
+    Form class that allows a user to register after clicking through an
+    invitation.
+    """
+    first_name = forms.CharField(max_length=30)
+    last_name = forms.CharField(max_length=30)
+    email = forms.EmailField(widget=forms.TextInput(
+        attrs={'class': 'disabled', 'readonly': 'readonly'}))
+    password = forms.CharField(max_length=128, widget=forms.PasswordInput)
+    password_confirm = forms.CharField(max_length=128, widget=forms.PasswordInput)
+
+    def clean(self):
+        password = self.cleaned_data.get("password")
+        password_confirm = self.cleaned_data.get("password_confirm")
+        if password != password_confirm or not password:
+            raise forms.ValidationError("Your password entries must match")
+        return super(RegistrationForm, self).clean()
+
 class OrgDirectInvitations(InvitationBackend):
+    invitation_subject = 'portal/email/invitation_subject.txt'
+    invitation_body = 'portal/email/invitation_body.html'
+    reminder_subject = 'portal/email/reminder_subject.txt'
+    reminder_body = 'portal/email/reminder_body.html'
+    form_class = RegistrationForm
+
     def invite_by_email(self, email, sender=None, request=None, **kwargs):
         if request is None:
             return None
