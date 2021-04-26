@@ -1,0 +1,65 @@
+{% extends '_base.html' %}
+{% load static %}
+{% block navbar %}
+  {% include '_base_navbar_left.html' %}
+{% endblock %}
+{% block contents %}
+  <div class="content">
+    {% block navbar-top %}{% include '_base_navbar_top.html' %}{% endblock %}
+    <div class="card mb-3">
+      <div class="bg-holder d-none bg-card">
+      </div>
+      <!--/.bg-holder-->
+
+      <div class="card-body">
+        <h5>조직 관리</h5>
+        <h2>{{ user.org_last_selected }}</h2>
+        <p><b>조직 소유자:</b> {{ user.org_last_selected.owner.organization_user.user.get_full_name }}</p>
+        <form method="post">
+          {% if error %}
+          <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{error}}
+            <button class="close" type="button" data-dismiss="alert" aria-label="Close"><span class="font-weight-light" aria-hidden="true">×</span></button>
+          </div>
+          {% endif %}
+          {% if result %}
+          <div class="alert alert-primary alert-dismissible fade show" role="alert">
+            {{result}}
+            <button class="close" type="button" data-dismiss="alert" aria-label="Close"><span class="font-weight-light" aria-hidden="true">×</span></button>
+          </div>
+          {% endif %}
+          {% csrf_token %}
+          <div class="form-floating">
+            <input type="email" class="form-control" id="new_user_email" name="new_user_email"/>
+            <label for="new_user_email">mateBilling 신규 회원으로 가입 및 조직에 초대할 사람의 이메일 주소</label>
+          </div>
+          <button type="submit" class="btn btn-light">신규 사용자 가입 초대 메일 발송</button>
+        </form>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">이름</th>
+              <th scope="col">이메일</th>
+              <th scope="col">관리자 여부</th>
+              <th scope="col">활성화 여부</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for orguser in members %}
+          <tr>
+              <td>{{orguser.user.get_full_name}}</td>
+              <td>{{orguser.user.email}}</td>
+              <td>{{orguser.is_admin}}</td>
+              <td>{{orguser.user.is_active}}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <footer>
+      {% include '_base_footer.html' %}
+    </footer>
+  </div>
+{% endblock %}

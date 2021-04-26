@@ -18,10 +18,11 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.urls import path, include
+from organizations.backends import invitation_backend
 
 from custom.views import CustomLoginView
 from portal.views import payment, dashboard, index, preference, invoices, charge_oneimte_payment, \
-    payment_history, payment_details, manage_payments, search_orgs, \
+    payment_history, payment_details, manage_payments, search_orgs, orgsettings, \
     cert_form, issue_token, issue_param, issue_param_callback, charge_token_payment
 from django.conf import settings # import the settings file
 
@@ -56,8 +57,12 @@ urlpatterns = [
 
     path('manage_payments/issue_token/', login_required(issue_token), name="issue_token"),
 
+    path("invite/", include(invitation_backend().get_urls())),
+
     path('dashboard/', login_required(dashboard), name='dashboard'),
     path('settings/', preference, name='settings'),
+    path('settings/org/', orgsettings, name='orgsettings'),
+
     path('policy/', include('policy.urls')),
     path('', index, name='index'),
 ]
