@@ -72,6 +72,6 @@ stages:
               WebAppName: $(azWebAppName)
               packageForLinux: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
               RuntimeStack: $(runtimePlatform)
-              AppSettings: |
-                -WEBSITE_RUN_FROM_PACKAGE 1
+              enableCustomDeployment: true
+              deploymentMethod: 'runFromPackage'
               
