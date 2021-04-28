@@ -51,7 +51,7 @@ stages:
       condition: and(not(canceled()), eq(variables.DOCKER_CACHE_HIT, 'true'))
     - script: |
         mkdir -p $(Pipeline.Workspace)/docker
-        docker save -o $(Pipeline.Workspace)/docker/cache.tar cache
+        docker save $(docker images -q) -o $(Pipeline.Workspace)/docker/cache.tar
       displayName: Save Docker image
       condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_HIT, 'true')))
     - script: |
