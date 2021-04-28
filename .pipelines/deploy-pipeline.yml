@@ -12,7 +12,8 @@ variables:
   # Agent VM image name
   vmImageName: 'ubuntu-20.04'
   # Python version: 3.8
-  pythonVersion: '3.8'
+  platformName: python
+  platformVersion: '3.8'
   runtimePlatform: 'PYTHON|3.8'
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
@@ -33,7 +34,7 @@ stages:
       vmImage: $(vmImageName)
     container: mcr.microsoft.com/oryx/build:latest
     steps:
-    - script: oryx build --platform "$(runtimePlatform)" # contents of the script to run
+    - script: oryx build --platform $(platformName) --platform-version $(platformVersion) # contents of the script to run
       displayName: Build App using Oryx
     - task: ArchiveFiles@2
       displayName: 'Archive files'
@@ -61,11 +62,6 @@ stages:
       runOnce:
         deploy:
           steps:
-          
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '$(pythonVersion)'
-            displayName: 'Use Python version'
 
           - task: AzureRmWebAppDeployment@4
             displayName: 'Deploy to Web App $(environmentName)'
