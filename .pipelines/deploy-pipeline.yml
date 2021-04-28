@@ -33,7 +33,7 @@ stages:
       vmImage: $(vmImageName)
     container: mcr.microsoft.com/oryx/build:latest
     steps:
-    - script: /opt/oryx/oryx --platform "$(runtimePlatform)" # contents of the script to run
+    - script: oryx build --platform "$(runtimePlatform)" # contents of the script to run
       displayName: Build App using Oryx
     - task: ArchiveFiles@2
       displayName: 'Archive files'
