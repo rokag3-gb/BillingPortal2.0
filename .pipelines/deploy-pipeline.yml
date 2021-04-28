@@ -34,7 +34,9 @@ stages:
       vmImage: $(vmImageName)
     container: mcr.microsoft.com/oryx/build:latest
     steps:
-    - script: oryx build --platform $(platformName) --platform-version $(platformVersion) # contents of the script to run
+    - script: |
+        oryx build --platform $(platformName) --platform-version $(platformVersion)
+        python manage.py collectstatic
       displayName: Build App using Oryx
       env:
         DISABLE_COLLECTSTATIC: false
