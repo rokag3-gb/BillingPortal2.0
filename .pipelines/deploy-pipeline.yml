@@ -26,51 +26,54 @@ variables:
     azWebAppName: 'mate365billingpreview'
 
 stages:
-- stage: Package
-  displayName: Package stage
+- stage: BuildAndDeploy
+  displayName: Build and Deploy stage
   jobs:
-  - job: PackageJob
+  - job: BuildAndDeployJob
     pool:
       vmImage: $(vmImageName)
     container: mcr.microsoft.com/oryx/build:latest
     steps:
     - script: oryx build --platform $(platformName) --platform-version $(platformVersion) # contents of the script to run
       displayName: Build App using Oryx
-    - task: ArchiveFiles@2
-      displayName: 'Archive files'
+    - task: AzureRmWebAppDeployment@4
+      displayName: 'Deploy to Web App $(environmentName)'
       inputs:
-        rootFolderOrFile: '$(projectRoot)'
-        includeRootFolder: false
-        archiveType: zip
-        archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-        replaceExistingArchive: true
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'Azure_Deploy_to_MPN-Production-스폰서쉽-Gold'
+        appType: 'webAppLinux'
+        WebAppName: $(azWebAppName)
+        package: '$(projectRoot)'
+        RuntimeStack: $(runtimePlatform)
+        deploymentMethod: 'runFromPackage'
 
-    - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-      displayName: 'Upload package'
-      artifact: drop
 
-- stage: Deploy
-  displayName: 'Deploy Web App'
-  dependsOn: Package
-  condition: succeeded()
-  jobs:
-  - deployment: DeploymentJob
-    pool:
-      vmImage: $(vmImageName)
-    environment: $(environmentName)
-    strategy:
-      runOnce:
-        deploy:
-          steps:
+    # - task: ArchiveFiles@2
+    #   displayName: 'Archive files'
+    #   inputs:
+    #     rootFolderOrFile: '$(projectRoot)'
+    #     includeRootFolder: false
+    #     archiveType: zip
+    #     archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+    #     replaceExistingArchive: true
 
-          - task: AzureRmWebAppDeployment@4
-            displayName: 'Deploy to Web App $(environmentName)'
-            inputs:
-              ConnectionType: 'AzureRM'
-              azureSubscription: 'Azure_Deploy_to_MPN-Production-스폰서쉽-Gold'
-              appType: 'webAppLinux'
-              WebAppName: $(azWebAppName)
-              package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
-              RuntimeStack: $(runtimePlatform)
-              deploymentMethod: 'runFromPackage'
+    # - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+    #   displayName: 'Upload package'
+    #   artifact: drop
+
+# - stage: Deploy
+#   displayName: 'Deploy Web App'
+#   dependsOn: Package
+#   condition: succeeded()
+#   jobs:
+#   - deployment: DeploymentJob
+#     pool:
+#       vmImage: $(vmImageName)
+#     environment: $(environmentName)
+#     strategy:
+#       runOnce:
+#         deploy:
+#           steps:
+
+          
               
