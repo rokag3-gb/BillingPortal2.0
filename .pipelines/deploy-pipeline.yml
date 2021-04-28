@@ -69,7 +69,7 @@ stages:
               ConnectionType: 'AzureRM'
               azureSubscription: 'Azure_Deploy_to_MPN-Production-스폰서쉽-Gold'
               appType: 'webAppLinux'
-              appName: $(azWebAppName)
+              WebAppName: $(azWebAppName)
               package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
               RuntimeStack: $(runtimePlatform)
               deploymentMethod: 'runFromPackage'
