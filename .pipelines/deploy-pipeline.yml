@@ -40,19 +40,6 @@ stages:
     # container: mcr.microsoft.com/oryx/build:latest
     steps:
 
-    # Restore container image cache
-    - task: Cache@2
-      inputs:
-        key: 'docker | cache'
-        path: $(Pipeline.Workspace)/docker
-        cacheHitVar: DOCKER_CACHE_HIT
-      displayName: Cache Docker images
-    - script: |
-        docker load -i $(Pipeline.Workspace)/docker/cache.tar
-      displayName: Restore Docker image
-      condition: and(not(canceled()), eq(variables.DOCKER_CACHE_HIT, 'true'))
-    
-
     - script: |
         oryx build
       env:
@@ -69,14 +56,6 @@ stages:
         package: '$(projectRoot)'
         RuntimeStack: $(runtimePlatform)
         deploymentMethod: 'runFromPackage'
-    
-    # Store container image cache
-    - script: |
-        mkdir -p $(Pipeline.Workspace)/docker
-        docker save $(docker images -q) -o $(Pipeline.Workspace)/docker/cache.tar
-      displayName: Save Docker image
-      condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_HIT, 'true')))
-
 
     # - task: ArchiveFiles@2
     #   displayName: 'Archive files'
