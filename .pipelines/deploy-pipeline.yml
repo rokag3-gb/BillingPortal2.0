@@ -25,6 +25,11 @@ variables:
     environmentName: 'BillingPortal-Staging'
     azWebAppName: 'mate365billingpreview'
 
+resources:
+  containers:
+  - container: oryx
+    image: mcr.microsoft.com/oryx/build:latest
+
 stages:
 - stage: BuildAndDeploy
   displayName: Build and Deploy stage
@@ -32,13 +37,29 @@ stages:
   - job: BuildAndDeployJob
     pool:
       vmImage: $(vmImageName)
-    container: mcr.microsoft.com/oryx/build:latest
+    # container: mcr.microsoft.com/oryx/build:latest
     steps:
+    - task: Cache@2
+      inputs:
+        key: 'docker | cache'
+        path: $(Pipeline.Workspace)/docker
+        cacheHitVar: DOCKER_CACHE_HIT
+      displayName: Cache Docker images
+    - script: |
+        docker load -i $(Pipeline.Workspace)/docker/cache.tar
+      displayName: Restore Docker image
+      condition: and(not(canceled()), eq(variables.DOCKER_CACHE_HIT, 'true'))
+    - script: |
+        mkdir -p $(Pipeline.Workspace)/docker
+        docker save -o $(Pipeline.Workspace)/docker/cache.tar cache
+      displayName: Save Docker image
+      condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_HIT, 'true')))
     - script: |
         oryx build
       env:
         POST_BUILD_COMMAND: python manage.py collectstatic
       displayName: Build App using Oryx
+      target: oryx
     - task: AzureRmWebAppDeployment@4
       displayName: 'Deploy to Web App $(environmentName)'
       inputs:
