@@ -62,6 +62,7 @@ urlpatterns = [
     path('dashboard/', login_required(dashboard), name='dashboard'),
     path('settings/', preference, name='settings'),
     path('settings/org/', orgsettings, name='orgsettings'),
+    path('settings/org/', orgsettings, name='organization_list'),
 
     path('policy/', include('policy.urls')),
     path('', index, name='index'),
