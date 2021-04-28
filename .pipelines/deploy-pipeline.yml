@@ -36,6 +36,8 @@ stages:
     steps:
     - script: oryx build --platform $(platformName) --platform-version $(platformVersion) # contents of the script to run
       displayName: Build App using Oryx
+      env:
+        DISABLE_COLLECTSTATIC: false
     - task: AzureRmWebAppDeployment@4
       displayName: 'Deploy to Web App $(environmentName)'
       inputs:
