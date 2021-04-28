@@ -35,11 +35,10 @@ stages:
     container: mcr.microsoft.com/oryx/build:latest
     steps:
     - script: |
-        oryx build --platform $(platformName) --platform-version $(platformVersion)
-        python manage.py collectstatic
-      displayName: Build App using Oryx
+        oryx build
       env:
-        DISABLE_COLLECTSTATIC: false
+        POST_BUILD_COMMAND: python manage.py collectstatic
+      displayName: Build App using Oryx
     - task: AzureRmWebAppDeployment@4
       displayName: 'Deploy to Web App $(environmentName)'
       inputs:
