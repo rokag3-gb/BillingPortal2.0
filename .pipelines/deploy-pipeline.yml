@@ -17,6 +17,7 @@ variables:
   runtimePlatform: 'PYTHON|3.8'
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
+  azSubscription: 'Azure_Deploy_to_MPN-Production-스폰서쉽-Gold'
   # Environment name
   ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
     environmentName: 'BillingPortal-Production'
@@ -46,11 +47,24 @@ stages:
         POST_BUILD_COMMAND: python manage.py collectstatic
       displayName: Build App using Oryx
       target: oryx
+    - task: AzureAppServiceSettings@1
+      displayName: Update Settings for $(environmentName) App Service
+      inputs:
+        azureSubscription: $(azSubscription)
+        appName: $(azWebAppName)
+        appSettings: |
+          [
+            {
+              "name": "WEBSITE_RUN_FROM_PACKAGE",
+              "value": "1",
+              "slotSetting": false
+            }
+          ]
     - task: AzureRmWebAppDeployment@4
       displayName: 'Deploy to Web App $(environmentName)'
       inputs:
         ConnectionType: 'AzureRM'
-        azureSubscription: 'Azure_Deploy_to_MPN-Production-스폰서쉽-Gold'
+        azureSubscription: $(azSubscription)
         appType: 'webAppLinux'
         WebAppName: $(azWebAppName)
         package: '$(projectRoot)'
