@@ -17,9 +17,10 @@ window.onload = function () {
         type: "report",
         embedUrl: 'https://app.powerbi.com/reportEmbed',
         tokenType: models.TokenType.Embed,
+        viewMode: models.ViewMode.View,
         // Enable this setting to remove gray shoulders from embedded report
         settings: {
-            layoutType: models.LayoutType.MobilePortrait,
+            layoutType: models.LayoutType.MobileLandscape,
             background: models.BackgroundType.Transparent,
             bars: {
                 actionBar: {
