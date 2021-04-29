@@ -12,7 +12,9 @@ variables:
   # Agent VM image name
   vmImageName: 'ubuntu-20.04'
   # Python version: 3.8
-  pythonVersion: '3.8'
+  platformName: python
+  platformVersion: '3.8'
+  runtimePlatform: 'PYTHON|3.8'
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
   # Environment name
@@ -23,54 +25,64 @@ variables:
     environmentName: 'BillingPortal-Staging'
     azWebAppName: 'mate365billingpreview'
 
+resources:
+  containers:
+  - container: oryx
+    image: mcr.microsoft.com/oryx/build:latest
+
 stages:
-- stage: Package
-  displayName: Package stage
+- stage: BuildAndDeploy
+  displayName: Build and Deploy stage
   jobs:
-  - job: PackageJob
+  - job: BuildAndDeployJob
     pool:
       vmImage: $(vmImageName)
+    # container: mcr.microsoft.com/oryx/build:latest
     steps:
 
-    - task: ArchiveFiles@2
-      displayName: 'Archive files'
+    - script: |
+        oryx build
+      env:
+        POST_BUILD_COMMAND: python manage.py collectstatic
+      displayName: Build App using Oryx
+      target: oryx
+    - task: AzureRmWebAppDeployment@4
+      displayName: 'Deploy to Web App $(environmentName)'
       inputs:
-        rootFolderOrFile: '$(projectRoot)'
-        includeRootFolder: false
-        archiveType: zip
-        archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-        replaceExistingArchive: true
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'Azure_Deploy_to_MPN-Production-스폰서쉽-Gold'
+        appType: 'webAppLinux'
+        WebAppName: $(azWebAppName)
+        package: '$(projectRoot)'
+        RuntimeStack: $(runtimePlatform)
+        deploymentMethod: 'runFromPackage'
 
-    - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-      displayName: 'Upload package'
-      artifact: drop
+    # - task: ArchiveFiles@2
+    #   displayName: 'Archive files'
+    #   inputs:
+    #     rootFolderOrFile: '$(projectRoot)'
+    #     includeRootFolder: false
+    #     archiveType: zip
+    #     archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+    #     replaceExistingArchive: true
 
-- stage: Deploy
-  displayName: 'Deploy Web App'
-  dependsOn: Package
-  condition: succeeded()
-  jobs:
-  - deployment: DeploymentJob
-    pool:
-      vmImage: $(vmImageName)
-    environment: $(environmentName)
-    strategy:
-      runOnce:
-        deploy:
-          steps:
+    # - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+    #   displayName: 'Upload package'
+    #   artifact: drop
+
+# - stage: Deploy
+#   displayName: 'Deploy Web App'
+#   dependsOn: Package
+#   condition: succeeded()
+#   jobs:
+#   - deployment: DeploymentJob
+#     pool:
+#       vmImage: $(vmImageName)
+#     environment: $(environmentName)
+#     strategy:
+#       runOnce:
+#         deploy:
+#           steps:
+
           
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '$(pythonVersion)'
-            displayName: 'Use Python version'
-
-          - task: AzureRmWebAppDeployment@4
-            displayName: 'Deploy to Web App $(environmentName)'
-            inputs:
-              ConnectionType: 'AzureRM'
-              azureSubscription: 'Azure_Deploy_to_MPN-Production-스폰서쉽-Gold'
-              appType: 'webAppLinux'
-              WebAppName: $(azWebAppName)
-              packageForLinux: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
-              RuntimeStack: 'PYTHON|3.8'
               

@@ -1,0 +1,47 @@
+{% extends '_base_auth.html' %}
+{% load static %}
+{% block contents %}
+{% include '_auth_logo.html' %}
+    <div class="card">
+    {% if url_error %}
+    <div class="card-body p-4 p-sm-5">
+        <h5 class="mb-0">URL 오류</h5>
+        <small>
+        지금 접속하신 초대 URL은 찾을 수 없는 URL 이거나 이미 사용된 초대 URL입니다. 
+        회원 가입이 필요한 경우 기존 회원분께 요청하여 새 초대 URL을 받으세요.
+        </small>
+        <a class="fs--1 text-600" href="{% url 'login' %}">로그인 화면으로 돌아가기</span></a>
+      </div>      
+    </div>
+    {% else %}
+    <div class="card-body p-4 p-sm-5">
+        <h5 class="mb-0">초대 수락 및 신규 회원 가입</h5>
+        <small>아래 양식을 입력하여 제출을 완료하면, 서비스를 이용할 수 있습니다.</small>
+        <form class="mt-4" method="post">
+        <input type="hidden" class="hidden" name="email" value="{{ form.username.value }}">
+        <input type="hidden" class="hidden" name="username" value="{{ form.username.value }}">
+          {% if form.errors %}
+          <div class="alert alert-danger" role="alert">
+            {{ form.errors }}
+          </div>
+          {% endif %}
+          {% csrf_token %}
+
+          {% for field in form.visible_fields %}
+            <div class="form-group">
+            {{ field }}
+            {% if field.errors %}
+            <div class="alert alert-danger" role="alert">
+                {{ field.errors }}
+            </div>
+            {% endif %}
+          </div>
+            {% endfor %}
+          <div class="form-group">
+            <button class="btn btn-primary btn-block mt-3" type="submit" name="submit">초대 수락 및 회원가입 완료</button>
+          </div>
+        </form><a class="fs--1 text-600" href="{% url 'login' %}">로그인 화면으로 돌아가기</span></a>
+      </div>
+      {% endif %}
+    </div>
+{% endblock %}
