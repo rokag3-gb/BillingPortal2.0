@@ -68,8 +68,9 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:100,200,300,400,500,600,700,800,900&amp;display=swap" rel="stylesheet">
     <script src="{% static 'js/theme.js' %}"></script>
     <script>
+    let darkModeCss = document.querySelector(`link[href="{% static 'css/theme-dark.css' %}"]`);
+    darkModeCss.disabled = !window.matchMedia('(prefers-color-scheme: dark)').matches
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-      darkModeCss = document.querySelector(`link[href="{% static 'css/theme-dark.css' %}"]`);
       darkModeCss.disabled = !e.matches;
     });
     </script>
