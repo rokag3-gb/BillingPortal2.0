@@ -9,9 +9,9 @@
   {% block navbar-top %}{% include '_base_navbar_top.html' %}{% endblock %}
   <div class="card">
     <div class="card-header d-flex align-items-center justify-content-between border-top py-0">
-      <h5 class="mb-0 py-card">청구서 관리<small class="ml-2">결제할 청구서를 모두 선택한 후, "선택 청구서 모두 일괄 결제"를 누릅니다.</small></h5>
+      <h5 class="mb-0 py-card"></h5>
       <div id="bulk-select-replace-element" >
-        <form style="display:flex; flex-direction: row;" id="invoice_filter">
+        <form id="invoice_filter">
           <input name="page" value="{{request.GET.page}}" hidden />
           <input type="month" class="form-control" name="date_start" value="{{current_filter.date_start}}" required />
           <span class="ml-2">...</span>
@@ -23,11 +23,6 @@
       </div>
       <div class="d-none ml-3" id="bulk-select-actions">
         <div class="input-group input-group-sm">
-          <!-- <select class="custom-select" aria-label="Bulk actions">
-            <option selected="">Bulk actions</option>
-            <option value="Delete">Delete</option>
-            <option value="Archive">Archive</option>
-          </select> -->
           <button class="btn btn-falcon-default btn-sm ml-2" type="button" onclick="document.forms['pass_to_payment'].submit()">
             <span class="fas fa-shopping-basket" data-fa-transform="shrink-3 down-2"></span>
             <span>선택 청구서 모두 일괄 결제</span>
