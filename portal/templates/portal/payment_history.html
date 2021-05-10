@@ -10,9 +10,9 @@
   <div class="d-flex">
     <div class="card flex-grow-1 min-vh-75">
       <div class="card-header d-flex align-items-center justify-content-between border-top py-0">
-        <h5 class="mb-0 py-card">결제내역 조회</h5>
+        <h5 class="mb-0 py-card billing-list-title">결제내역 조회</h5>
         <div id="bulk-select-replace-element" >
-          <form style="display:flex; flex-direction: row;" id="invoice_filter">
+          <form id="invoice_filter">
             <input name="page" value="{{request.GET.page}}" hidden />
             <input type="month" class="form-control" name="date_start" value="{{current_filter.date_start}}" required />
             <span class="ml-2">...</span>
@@ -24,11 +24,6 @@
         </div>
         <div class="d-none ml-3" id="bulk-select-actions">
           <div class="input-group input-group-sm">
-            <!-- <select class="custom-select" aria-label="Bulk actions">
-              <option selected="">Bulk actions</option>
-              <option value="Delete">Delete</option>
-              <option value="Archive">Archive</option>
-            </select> -->
             <button class="btn btn-falcon-default btn-sm ml-2" type="button" onclick="document.forms['pass_to_payment'].submit()">
               <span class="fas fa-shopping-basket" data-fa-transform="shrink-3 down-2"></span>
               <span>선택 청구서 모두 일괄 결제</span>
@@ -54,7 +49,7 @@
             </thead>
             <tbody id="bulk-select-body">
               {% for payment in page_obj %}
-                  <tr onclick="document.getElementById(`payment-details`).src = `{% url 'payment_details' %}?id={{payment.orderno.orderNo}}`">
+                  <tr data-toggle="modal" data-target="#exampleModal" onclick="getInvoiceDetails({{payment.orderno.orderNo}})">
                     <th class="align-middle">{{ payment.paymentno }}</th>
                     <th class="align-middle">{{ payment.paydate }}</th>
                     <th class="align-middle">{{ payment.orderno.orderNo }}</th>
@@ -89,7 +84,51 @@
         </ul>
       </div>
     </div>
-    <iframe id="payment-details" class="flex-grow-1" src="{% url 'payment_details' %}" frameBorder="0"></iframe>
+  </div>
+  <!-- Modal-->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="invoiceDetail" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">결제내역 상세</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span class="font-weight-light" aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <h2>#<span id="invoiceId">0000</span></h2>
+          <ul>
+            <li><b>주문 일시:</b> <span id="invoiceDate"></span></li>
+            <li><b>인보이스 수량:</b> <span id="invoiceQty"></span></li>
+            <li><b>청구 금액:</b> <span id="invoiceAmount"></span></li>
+            <li><b>결제 금액:</b> <span id="invoicePaid"></span></li>
+          </ul>
+          <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">청구 날짜<br/>인보이스 ID</th>
+                <th scope="col">금액</th>
+              </tr>
+            </thead>
+            <tbody id="invoiceList">
+             <tr>
+                <td scope="row">
+                  0000-00-00<br/>
+                  <small>0000</small>
+                </td>
+                <td>
+                  0원<small>결제</small><br/>
+                  0원<small>청구</small>           
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">닫기</button>
+        </div>
+      </div>
+    </div>
   </div>
   <footer>
     {% include '_base_footer.html' %}
@@ -107,6 +146,41 @@
 
   function set_iframe(detail_url){
     document.getElementById("payment-details").src = detail_url;
+  }
+
+  async function getInvoiceDetails(id){
+    let invoiceId = document.getElementById("invoiceId");
+    let invoiceDate = document.getElementById("invoiceDate");
+    let invoiceQty = document.getElementById("invoiceQty");
+    let invoiceAmount = document.getElementById("invoiceAmount");
+    let invoicePaid = document.getElementById("invoicePaid");
+    let invoiceList = document.getElementById("invoiceList");
+    let result = await fetch("{% url 'payment_details' %}?id="+id);
+    if(result.ok){
+      let data = await result.json();
+      invoiceId.innerText = data.order_summary.orderNo;
+      invoiceDate.innerText = data.order_summary.orderDate;
+      invoiceQty.innerText = data.order_details.length;
+      invoiceAmount.innerText = `${Math.round(data.order_summary.totalAmount)}원`;
+      invoicePaid.innerText = `${Math.round(data.order_summary.paid)}원`;
+
+      let invoiceListStr = ""
+      for(let item of data.order_details){
+        invoiceListStr += `
+                <tr>
+                  <td scope="row">
+                  ${item.invoiceDate}<br/>
+                  <small>${item.invoiceId}</small>
+                  </td>
+                  <td>
+                    ${Math.round(item.paid)}원<small>결제</small><br/>
+                    ${Math.round(item.amount)}원<small>청구</small>           
+                  </td>
+                </tr>
+              `;
+      }
+      invoiceList.innerHTML = invoiceListStr;
+    }
   }
 </script>
 {% endblock %}
