@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from django.db.models import Sum
+from django.forms.models import model_to_dict
+
 
 from custom.services import get_organization
 from custom.models import Invoice, InvoiceOrder, Payment, Billkey
@@ -169,12 +171,14 @@ def payment_details(request: HttpRequest) -> HttpResponse:
     if orderNo:
         try:
             orderItem = InvoiceOrder.objects.get(orderNo=orderNo, orgId=get_organization(request))
-            details = orderItem.getOrderDetails()
-            return render(request, 'portal/payment_details.html', {
-                'order_summary': orderItem,
-                'order_details': orderItem.getOrderDetails(),
-                'details_count': details.count()
+            details = orderItem.getOrderDetails().values()
+
+            model_to_dict(orderItem, fields=["orderNo"])
+            return JsonResponse({
+                'order_summary': model_to_dict(orderItem, 
+                    fields=["orderNo", "orderDate", "totalAmount", "paid"]),
+                'order_details': list(details),
             })
         except InvoiceOrder.DoesNotExist:
             pass
-    return render(request, 'portal/payment_details.html')
+    return JsonResponse({'order_summary':[], 'order_details':[]})
