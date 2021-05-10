@@ -52,4 +52,7 @@ html {
         display       : flex;
         flex-direction: column;
     }
+    .billing-list-title{
+        display: none;
+    }
 }
