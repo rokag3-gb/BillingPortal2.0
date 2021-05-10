@@ -105,19 +105,19 @@
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">인보이스 ID</th>
-                <th scope="col">청구 날짜</th>
-                <th scope="col">결제/청구 금액</th>
+                <th scope="col">청구 날짜<br/>인보이스 ID</th>
+                <th scope="col">금액</th>
               </tr>
             </thead>
             <tbody id="invoiceList">
              <tr>
                 <td scope="row">
-                  <small>0000</small><br/>
+                  0000-00-00<br/>
+                  <small>0000</small>
                 </td>
-                <td>0000-00-00</td>
                 <td>
-                  0원<small>결제</small> / 0원<small>청구</small>           
+                  0원<small>결제</small><br/>
+                  0원<small>청구</small>           
                 </td>
               </tr>
             </tbody>
@@ -168,10 +168,13 @@
       for(let item of data.order_details){
         invoiceListStr += `
                 <tr>
-                  <td scope="row">${item.invoiceId}</td>
-                  <td>${item.invoiceDate}</td>
+                  <td scope="row">
+                  ${item.invoiceDate}<br/>
+                  <small>${item.invoiceId}</small>
+                  </td>
                   <td>
-                    ${Math.round(item.paid)}원<small>결제</small> / ${Math.round(item.amount)}원<small>청구</small>           
+                    ${Math.round(item.paid)}원<small>결제</small><br/>
+                    ${Math.round(item.amount)}원<small>청구</small>           
                   </td>
                 </tr>
               `;
