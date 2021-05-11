@@ -25,7 +25,7 @@
           <div class="scrollbar perfect-scrollbar py-3" style="height: 24rem;">
             <h6 class="dropdown-header px-card pt-0 pb-2">현재 조직</h6>
             <a class="dropdown-item fs--1 px-card py-1 hover-primary"
-              href="{% url 'switch-to-org' organization_slug=request.user.org_last_selected.slug %}">
+              href="{% url 'switch-to-org' organization_slug=request.user.org_last_selected.slug %}?next={{ request.path }}">
               <div class="d-flex align-items-center">
                 <span class="fas fa-users mr-2 text-300 fs--2"></span>
 
