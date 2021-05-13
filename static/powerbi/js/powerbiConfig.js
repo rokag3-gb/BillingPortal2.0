@@ -19,7 +19,7 @@ window.onload = function () {
         tokenType: models.TokenType.Embed,
         viewMode: models.ViewMode.View,
         theme: {
-            themeJson: powerBireportLightTheme
+            themeJson: window.matchMedia('(prefers-color-scheme: dark)').matches? powerBireportDarkTheme : powerBireportLightTheme
         },
         // Enable this setting to remove gray shoulders from embedded report
         settings: {
@@ -150,10 +150,13 @@ window.onload = function () {
                  });;
                 
             });
+
+            console.log("BI Dark mode?:"+window.matchMedia('(prefers-color-scheme: dark)').matches)
             report.applyTheme({
                 themeJson: window.matchMedia('(prefers-color-scheme: dark)').matches? powerBireportDarkTheme : powerBireportLightTheme
             })
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                console.log("event: BI Dark mode?:"+e.matches)
                 report.applyTheme({
                     themeJson: e.matches? powerBireportDarkTheme: powerBireportLightTheme
                 })
