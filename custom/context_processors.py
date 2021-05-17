@@ -6,4 +6,5 @@ def branding(request):
     return {
         'BRANDING_WEBSITE_NAME': branding["NAME"],
         'BRANDING_LOGO_PATH': branding["LOGO_PATH"],
+        'BRANDING_LOGO_PATH_DARKMODE': branding["LOGO_DARKMODE_PATH"],
         }
