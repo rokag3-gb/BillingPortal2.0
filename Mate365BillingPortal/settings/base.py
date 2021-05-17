@@ -28,7 +28,8 @@ APP_HOST = os.getenv('CUSTOM_DOMAIN', os.getenv("WEBSITE_HOSTNAME","localhost:80
 
 BRANDING = {
     "NAME": "mateBilling",
-    "LOGO_PATH": "img/logos/mate_billing_logo.png"
+    "LOGO_PATH": "img/logos/mate_billing_logo.png",
+    "LOGO_DARKMODE_PATH": "img/logos/mate_billing_logo_white.png"
 }
 
 INSTALLED_APPS = [

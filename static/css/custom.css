@@ -56,3 +56,22 @@ html {
         display: none;
     }
 }
+
+@media (prefers-color-scheme: dark){
+    .logo-darkmode{
+        display: block;
+    }
+
+    .logo-lightmode{
+        display: none;
+    }
+}
+@media (prefers-color-scheme: light){
+    .logo-darkmode{
+        display: none;
+    }
+
+    .logo-lightmode{
+        display: block;
+    }
+}
