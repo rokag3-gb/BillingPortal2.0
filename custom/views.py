@@ -30,7 +30,7 @@ def switch_to_org(request, organization_slug):
 
     set_organization(request=request, org=org)
 
-    return redirect(reverse('dashboard'))
+    return redirect(request.GET.get("next", reverse('dashboard')))
 
 
 class CustomLoginView(LoginView):

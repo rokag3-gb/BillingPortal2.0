@@ -26,7 +26,8 @@ function search_orgs(keyword){
             let resultStr = ""
             data.result.forEach((item)=>{
                 resultStr += `
-                    <a class="dropdown-item fs--1 px-card py-1 hover-primary" href="/organization/switch_to/${item.slug}">
+                    <a class="dropdown-item fs--1 px-card py-1 hover-primary"
+                        href="/organization/switch_to/${item.slug}?next=${window.location.pathname}${window.location.search}">
                         <div class="d-flex align-items-center">
                         <span class="fas fa-users mr-2 text-300 fs--2"></span>
                         <div class="font-weight-normal">${item.name}</div>

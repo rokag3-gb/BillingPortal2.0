@@ -33,6 +33,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
     <link href="{% static 'lib/perfect-scrollbar/perfect-scrollbar.css' %}" rel="stylesheet">
     <link href="{% static 'css/theme.css' %}" rel="stylesheet">
+    <link href="{% static 'css/theme-dark.css' %}" rel="stylesheet" disabled>
 
   </head>
 
@@ -66,7 +67,13 @@
     <script src="{% static 'lib/perfect-scrollbar/perfect-scrollbar.js' %}"></script>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:100,200,300,400,500,600,700,800,900&amp;display=swap" rel="stylesheet">
     <script src="{% static 'js/theme.js' %}"></script>
-
+    <script>
+    let darkModeCss = document.querySelector(`link[href="{% static 'css/theme-dark.css' %}"]`);
+    darkModeCss.disabled = !window.matchMedia('(prefers-color-scheme: dark)').matches
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+      darkModeCss.disabled = !e.matches;
+    });
+    </script>
     {% block extra_js %}
 
     {% endblock %}

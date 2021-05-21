@@ -1,8 +1,8 @@
-// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 // Desktop >= 990px
 var models = window["powerbi-client"].models;
 window.onload = function () {
+
     let reportContainer = document.getElementById("pbi-report-container");
     let errorContainer = document.getElementById("pbi-error-container");
     const queryString = window.location.search;
@@ -17,9 +17,13 @@ window.onload = function () {
         type: "report",
         embedUrl: 'https://app.powerbi.com/reportEmbed',
         tokenType: models.TokenType.Embed,
+        viewMode: models.ViewMode.View,
+        theme: {
+            themeJson: window.matchMedia('(prefers-color-scheme: dark)').matches? powerBireportDarkTheme : powerBireportLightTheme
+        },
         // Enable this setting to remove gray shoulders from embedded report
         settings: {
-            layoutType: models.LayoutType.MobilePortrait,
+            layoutType: models.LayoutType.MobileLandscape,
             background: models.BackgroundType.Transparent,
             bars: {
                 actionBar: {
@@ -146,6 +150,17 @@ window.onload = function () {
                  });;
                 
             });
+
+            console.log("BI Dark mode?:"+window.matchMedia('(prefers-color-scheme: dark)').matches)
+            report.applyTheme({
+                themeJson: window.matchMedia('(prefers-color-scheme: dark)').matches? powerBireportDarkTheme : powerBireportLightTheme
+            })
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                console.log("event: BI Dark mode?:"+e.matches)
+                report.applyTheme({
+                    themeJson: e.matches? powerBireportDarkTheme: powerBireportLightTheme
+                })
+              });
         })
         .catch(function (error) {
             console.log(error);
