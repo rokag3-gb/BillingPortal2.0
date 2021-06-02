@@ -8,6 +8,7 @@
     {% block navbar-top %}{% include '_base_navbar_top.html' %}{% endblock %}
     <div class="card mb-3">
       <div class="bg-holder d-none bg-card">
+        
       </div>
       <!--/.bg-holder-->
 
@@ -47,6 +48,17 @@
           <button type="submit" class="btn btn-light">개인정보 저장</button>
         </form>
         
+      </div>
+      <div class="card-body">
+        <h5>스타일 설정</h5>
+        <div class="form-group">
+          <label for="colorModeSelect">테마 설정</label>
+          <select class="form-control" id="colorModeSelect" onchange="setColorMode(this.value)">
+            <option value="light">밝은 테마</option>
+            <option value="dark">어두운 테마</option>
+            <option value="auto">자동(시스템 설정 따름)</option>
+          </select>
+        </div>
       </div>
     </div>
 
