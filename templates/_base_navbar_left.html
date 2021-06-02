@@ -10,8 +10,8 @@
     </div>
     <a class="navbar-brand" href="{% url 'index' %}">
       <div class="d-flex align-items-center py-3">
-        <img class="mr-2 logo-lightmode" src="{% static BRANDING_LOGO_PATH %}" alt="" width="150" />
-        <img class="mr-2 logo-darkmode" src="{% static BRANDING_LOGO_PATH_DARKMODE %}" alt="" width="150" />
+        <img class="mr-2 lightmode-only" src="{% static BRANDING_LOGO_PATH %}" alt="" width="150" />
+        <img class="mr-2 darkmode-only" src="{% static BRANDING_LOGO_PATH_DARKMODE %}" alt="" width="150" />
         {% comment %} <span class="text-sans-serif" style="font-size: 1.3rem">{{ BRANDING_WEBSITE_NAME }}</span> {% endcomment %}
       </div>
     </a>

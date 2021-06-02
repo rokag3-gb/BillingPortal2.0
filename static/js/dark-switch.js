@@ -66,9 +66,28 @@ window.addEventListener('load', ()=>{
     let darkModeCss = document.querySelector(`link[href="${darkModeCssPath}"]`);
     darkModeCss.disabled = getColorMode()!="dark";
 
+    // Logo hide init
+    const elemsToHide = document.getElementsByClassName((getColorMode()=="dark"?"light":"dark")+"mode-only")
+    const elemsToShow = document.getElementsByClassName((event.detail)+"mode-only")
+    for(let item of elemsToHide){
+        item.style.display = "none";
+    }
+    for(let item of elemsToShow){
+        item.style.display = "block";
+    }
+
     window.addEventListener('colorMode', (event)=>{
         console.log(event.detail)
         darkModeCss.disabled = event.detail!="dark";
+
+        const elemsToHide = document.getElementsByClassName((event.detail=="dark"?"light":"dark")+"mode-only");
+        const elemsToShow = document.getElementsByClassName((event.detail)+"mode-only")
+        for(let item of elemsToHide){
+            item.style.display = "none";
+        }
+        for(let item of elemsToShow){
+            item.style.display = "block";
+        }
     })
 });
 

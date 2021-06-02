@@ -70,6 +70,9 @@
     <!-- ===============================================-->
     <!--    JavaScripts-->
     <!-- ===============================================-->
+    <script>
+      const darkModeCssPath = "{% static 'css/theme-dark.css' %}";
+    </script>
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/popper.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
@@ -80,14 +83,9 @@
     <script src="{% static 'lib/lodash/lodash.min.js' %}"></script>
     <script src="{% static 'lib/perfect-scrollbar/perfect-scrollbar.js' %}"></script>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:100,200,300,400,500,600,700,800,900&amp;display=swap" rel="stylesheet">
+    <script src="{% static 'js/dark-switch.js' %}"></script>
     <script src="{% static 'js/theme.js' %}"></script>
-    <script>
-    let darkModeCss = document.querySelector(`link[href="{% static 'css/theme-dark.css' %}"]`);
-    darkModeCss.disabled = !window.matchMedia('(prefers-color-scheme: dark)').matches
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-      darkModeCss.disabled = !e.matches;
-    });
-    </script>
+
     {% block extra_js %}
 
     {% endblock %}

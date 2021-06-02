@@ -1,7 +1,7 @@
 {% load static %}
 
 <a class="d-flex flex-center mb-4" href="{% url 'index' %}">
-    <img class="mr-2 logo-lightmode" src="{% static BRANDING_LOGO_PATH %}" alt="" width="200" />
-    <img class="mr-2 logo-darkmode" src="{% static BRANDING_LOGO_PATH_DARKMODE %}" alt="" width="200" />
+    <img class="mr-2 lightmode-only" src="{% static BRANDING_LOGO_PATH %}" alt="" width="200" />
+    <img class="mr-2 darkmode-only" src="{% static BRANDING_LOGO_PATH_DARKMODE %}" alt="" width="200" />
     {% comment %} <span class="text-sans-serif" style="font-weight: bold; font-size: 1.6rem">{{ BRANDING_WEBSITE_NAME }}</span> {% endcomment %}
 </a>
