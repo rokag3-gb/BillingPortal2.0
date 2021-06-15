@@ -59,5 +59,5 @@ html {
 }
 
 .navbar-vertical.navbar-vibrant .navbar-collapse {
-    background-image: linear-gradient(-45deg, #193A69, #1F487B), url(../img/generic/bg-navbar.png)
+    background-image: linear-gradient(-45deg, rgb(26, 49, 81), rgb(15, 28, 46))
 }
