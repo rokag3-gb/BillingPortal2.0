@@ -52,7 +52,12 @@ html {
         display       : flex;
         flex-direction: column;
     }
-    .billing-list-title{
+
+    .billing-list-title {
         display: none;
     }
+}
+
+.navbar-vertical.navbar-vibrant .navbar-collapse {
+    background-image: linear-gradient(-45deg, rgb(26, 49, 81), rgb(15, 28, 46))
 }
