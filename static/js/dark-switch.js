@@ -88,6 +88,13 @@ window.addEventListener('load', ()=>{
         for(let item of elemsToShow){
             item.style.display = "block";
         }
+
+        let sidebar = document.getElementById("sidebar_class");
+        sidebar.classList.remove(event.detail=="dark"?"navbar-card":"navbar-vibrant");
+        sidebar.classList.add(event.detail=="dark"?"navbar-vibrant":"navbar-card");
     })
+
+    
+    
 });
 
