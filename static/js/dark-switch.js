@@ -56,6 +56,7 @@ function getColorMode() {
 }
 
 window.addEventListener('load', () => {
+    let enforceWithImportant = window.matchMedia('(min-width: 570px)').matches ? " !important" : "";
     try {
         // Color Mode setting init
         const colorMode = window.localStorage.getItem('colorMode');
@@ -70,10 +71,10 @@ window.addEventListener('load', () => {
     const elemsToHide = document.getElementsByClassName((getColorMode() == "dark" ? "light" : "dark") + "mode-only")
     const elemsToShow = document.getElementsByClassName((event.detail) + "mode-only")
     for (let item of elemsToHide) {
-        item.style.display = "none";
+        item.style.cssText = 'display:none' + enforceWithImportant;
     }
     for (let item of elemsToShow) {
-        item.style.display = "block";
+        item.style.cssText = 'display:block' + enforceWithImportant;
     }
 
     let sidebar = document.getElementById("sidebar_class");
@@ -81,16 +82,17 @@ window.addEventListener('load', () => {
     sidebar.classList.add(getColorMode() == "dark" ? "navbar-vibrant" : "navbar-card");
 
     window.addEventListener('colorMode', (event) => {
+        let enforceWithImportant = window.matchMedia('(min-width: 570px)').matches ? " !important" : "";
         console.log(event.detail)
         darkModeCss.disabled = event.detail != "dark";
 
         const elemsToHide = document.getElementsByClassName((event.detail == "dark" ? "light" : "dark") + "mode-only");
         const elemsToShow = document.getElementsByClassName((event.detail) + "mode-only")
         for (let item of elemsToHide) {
-            item.style.display = "none";
+            item.style.cssText = 'display:none' + enforceWithImportant;
         }
         for (let item of elemsToShow) {
-            item.style.display = "block";
+            item.style.cssText = 'display:block' + enforceWithImportant;
         }
 
         let sidebar = document.getElementById("sidebar_class");
@@ -102,3 +104,7 @@ window.addEventListener('load', () => {
 
 });
 
+const mediaQueryList = window.matchMedia("(min-width: 570px)");
+mediaQueryList.addListener(function (event) {
+    dispatchColorModeEvent(getColorMode());
+});
