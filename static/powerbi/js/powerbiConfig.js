@@ -11,7 +11,10 @@ window.onload = function () {
     // console.log(urlParams.get('menu_id'));
 
     // Initialize iframe for embedding report
-    
+    let themeSchema = themeDict[menuId]
+    if(!themeSchema){
+        themeSchema = themeDict.default;
+    }
 
     var reportLoadConfig = {
         type: "report",
@@ -19,7 +22,7 @@ window.onload = function () {
         tokenType: models.TokenType.Embed,
         viewMode: models.ViewMode.View,
         theme: {
-            themeJson: getColorMode()=="dark"? powerBireportDarkTheme : powerBireportLightTheme
+            themeJson: getColorMode()=="dark"? themeSchema.dark : themeSchema.light
         },
         // Enable this setting to remove gray shoulders from embedded report
         settings: {
@@ -152,11 +155,11 @@ window.onload = function () {
             });
 
             report.applyTheme({
-                themeJson: getColorMode()=="dark"? powerBireportDarkTheme : powerBireportLightTheme
+                themeJson: getColorMode()=="dark"? themeSchema.dark : themeSchema.light
             })
             window.addEventListener('colorMode', (event)=>{
                 report.applyTheme({
-                    themeJson: event.detail!="dark"? powerBireportDarkTheme: powerBireportLightTheme
+                    themeJson: event.detail!="dark"? themeSchema.dark: themeSchema.light
                 })
             })
         })
