@@ -7,11 +7,15 @@ window.onload = function () {
     let errorContainer = document.getElementById("pbi-error-container");
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    const menuId = urlParams.get('menu_id');
+    let menuId = urlParams.get('menu_id');
     // console.log(urlParams.get('menu_id'));
 
     // Initialize iframe for embedding report
-    
+    menuId = menuId!=null? menuId : "2";
+    let themeSchema = themeDict[menuId]
+    if(!themeSchema){
+        themeSchema = themeDict.default;
+    }
 
     var reportLoadConfig = {
         type: "report",
@@ -19,7 +23,7 @@ window.onload = function () {
         tokenType: models.TokenType.Embed,
         viewMode: models.ViewMode.View,
         theme: {
-            themeJson: getColorMode()=="dark"? powerBireportDarkTheme : powerBireportLightTheme
+            themeJson: getColorMode()=="dark"? themeSchema.dark : themeSchema.light
         },
         // Enable this setting to remove gray shoulders from embedded report
         settings: {
@@ -152,11 +156,11 @@ window.onload = function () {
             });
 
             report.applyTheme({
-                themeJson: getColorMode()=="dark"? powerBireportDarkTheme : powerBireportLightTheme
+                themeJson: getColorMode()=="dark"? themeSchema.dark : themeSchema.light
             })
             window.addEventListener('colorMode', (event)=>{
                 report.applyTheme({
-                    themeJson: event.detail!="dark"? powerBireportDarkTheme: powerBireportLightTheme
+                    themeJson: event.detail!="dark"? themeSchema.dark: themeSchema.light
                 })
             })
         })
