@@ -7,10 +7,11 @@ window.onload = function () {
     let errorContainer = document.getElementById("pbi-error-container");
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    const menuId = urlParams.get('menu_id');
+    let menuId = urlParams.get('menu_id');
     // console.log(urlParams.get('menu_id'));
 
     // Initialize iframe for embedding report
+    menuId = menuId!=null? menuId : "2";
     let themeSchema = themeDict[menuId]
     if(!themeSchema){
         themeSchema = themeDict.default;
