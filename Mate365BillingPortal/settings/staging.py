@@ -13,7 +13,7 @@ SECRET_KEY =  os.getenv('SECRET_KEY','')
 
 DATABASES = {
     'default': {
-        'ENGINE': 'sql_server.pyodbc',
+        'ENGINE': 'mssql',
         'NAME': os.getenv("DB_NAME"),
         'HOST': os.getenv("DB_HOST"),
         'PORT': os.getenv("DB_PORT", '10063'),
