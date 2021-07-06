@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'portal.apps.PortalConfig',
     'custom',
     'policy',
-    'django.contrib.humanize'
+    'django.contrib.humanize',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -181,5 +182,17 @@ POLICY_USING_CREDIT_CARD = {
     'latest': '20210204',
     'able': [
         '20210204',
+    ]
+}
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ]
 }

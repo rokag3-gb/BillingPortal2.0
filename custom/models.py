@@ -157,8 +157,9 @@ class Invoice(models.Model):
         managed = False
         db_table = 'VW_Invoice'
         # unique_together = (('invoicemonth', 'orgid', 'vendorcode', 'vendorinvoiceid'),)
+        
 class VwInvoiceDetailAzureAzure(models.Model):
-    seq = models.BigIntegerField(db_column='Seq', blank=True, null=True, primary_key=True)  # Field name made lowercase.
+    seq = models.BigIntegerField(db_column='Seq', primary_key=True)  # Field name made lowercase.
     invoicemonth = models.CharField(db_column='InvoiceMonth', max_length=6, blank=True, null=True)  # Field name made lowercase.
     invoicedate = models.DateField(db_column='InvoiceDate', blank=True, null=True)  # Field name made lowercase.
     invoiceid = models.CharField(db_column='InvoiceId', max_length=13, blank=True, null=True)  # Field name made lowercase.
