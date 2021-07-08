@@ -1,9 +1,9 @@
 import datetime
 from django.http import response, Http404
-from django.urls import path, include
-from rest_framework import routers, serializers, viewsets, status, filters
+from rest_framework import routers, serializers, viewsets, status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
+import django_filters.rest_framework
 from custom.models import Invoice, VwInvoiceDetailAzureAzure
 from custom.services import get_organization
 
@@ -13,6 +13,19 @@ class InvoiceSerializer(serializers.ModelSerializer):
         model = Invoice
         fields = '__all__' 
         # fields = ['url', 'username', 'email', 'is_staff']
+
+class InvoiceRestList(generics.ListAPIView):
+    model = Invoice
+    serializer_class = InvoiceSerializer
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
+    filterset_fields = ['invoiceMonth', 'invoiceDate', 'orgId', 'orgKey', 'orgName', 'vendorCode', 'vendorName']
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = Invoice.objects.all()
+        if not user.is_staff:
+                queryset = queryset.filter(orgId=get_organization(self.request))
+        return queryset.all()
 
 class InvoiceRestView(APIView):
 
@@ -24,38 +37,31 @@ class InvoiceRestView(APIView):
                 return Invoice.objects.get(pk=pk, orgId=get_organization(request))
         except Invoice.DoesNotExist:
             raise Http404
-    def get_queryset(self):
-        username = self.kwargs['username']
-        return Invoice.objects.filter(purchaser__username=username)
 
-    def get(self, request,  format=None):
-        invoice_id = request.query_params.get('id')
-        if invoice_id:
-            invoice_id = int(invoice_id)
-            snippet = self.get_object(request, invoice_id)
-            serializer = InvoiceSerializer(snippet)
-            return Response(serializer.data)
-        else:
-            result = Invoice.objects.all()
-            if not request.user.is_staff:
-                result = result.filter(orgId=get_organization(request))
-            date_start = request.query_params.get('date_start')
-            date_end = request.query_params.get('date_end')
-            if date_start:
-                date_start = datetime.datetime.strptime(date_start, "%Y-%m")
-                result = result.filter(invoiceDate__gte=date_start)
-            if date_end:
-                date_end = datetime.datetime.strptime(date_end, "%Y-%m")
-                date_end = date_end.replace(month=date_end.month + 1) - datetime.timedelta(days=1)
-                result = result.filter(invoiceDate__lte=date_end)
-            if date_start == None and date_end == None:
-                date_end = datetime.datetime.now()
-                date_start = date_end - datetime.timedelta(days=32)
-                date_start = date_start.replace(day=1)
-                result = result.filter(invoiceDate__gte=date_start)
-                result = result.filter(invoiceDate__lte=date_end)
-            result = result.order_by("-invoiceDate")
-            return Response(InvoiceSerializer(result, many=True).data)
+    def get(self, request, pk: int, format=None):
+        snippet = self.get_object(request, pk)
+        serializer = InvoiceSerializer(snippet)
+        return Response(serializer.data)
+            # result = Invoice.objects.all()
+            # if not request.user.is_staff:
+            #     result = result.filter(orgId=get_organization(request))
+            # date_start = request.query_params.get('date_start')
+            # date_end = request.query_params.get('date_end')
+            # if date_start:
+            #     date_start = datetime.datetime.strptime(date_start, "%Y-%m")
+            #     result = result.filter(invoiceDate__gte=date_start)
+            # if date_end:
+            #     date_end = datetime.datetime.strptime(date_end, "%Y-%m")
+            #     date_end = date_end.replace(month=date_end.month + 1) - datetime.timedelta(days=1)
+            #     result = result.filter(invoiceDate__lte=date_end)
+            # if date_start == None and date_end == None:
+            #     date_end = datetime.datetime.now()
+            #     date_start = date_end - datetime.timedelta(days=32)
+            #     date_start = date_start.replace(day=1)
+            #     result = result.filter(invoiceDate__gte=date_start)
+            #     result = result.filter(invoiceDate__lte=date_end)
+            # result = result.order_by("-invoiceDate")
+            # return Response(InvoiceSerializer(result, many=True).data)
             
     
     def post(self, request, format=None):
@@ -68,9 +74,9 @@ class InvoiceRestView(APIView):
         else:
             raise Http404
 
-    def put(self, request,  format=None):
+    def put(self, request, pk: int, format=None):
         if request.user.is_staff:
-            snippet = self.get_object(request, int(request.query_params.get('id')))
+            snippet = self.get_object(request, pk)
             serializer = InvoiceSerializer(snippet, data=request.data)
             if serializer.is_valid():
                 serializer.save()
@@ -79,9 +85,9 @@ class InvoiceRestView(APIView):
         else:
             raise Http404
 
-    def delete(self, request,  format=None):
+    def delete(self, request, pk: int, format=None):
         if request.user.is_staff:
-            snippet = self.get_object(request, int(request.query_params.get('id')))
+            snippet = self.get_object(request, pk)
             snippet.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
