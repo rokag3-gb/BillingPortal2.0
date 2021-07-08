@@ -58,25 +58,34 @@ class InvoiceRestView(APIView):
             return Response(InvoiceSerializer(result, many=True).data)
             
     
-    def post(self, request,  format=None):
-        serializer = InvoiceSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.create()
-            return response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request, format=None):
+        if request.user.is_staff:
+            serializer = InvoiceSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.create()
+                return response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            raise Http404
 
     def put(self, request,  format=None):
-        snippet = self.get_object(request, int(request.query_params.get('id')))
-        serializer = InvoiceSerializer(snippet, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if request.user.is_staff:
+            snippet = self.get_object(request, int(request.query_params.get('id')))
+            serializer = InvoiceSerializer(snippet, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            raise Http404
 
     def delete(self, request,  format=None):
-        snippet = self.get_object(request, int(request.query_params.get('id')))
-        snippet.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if request.user.is_staff:
+            snippet = self.get_object(request, int(request.query_params.get('id')))
+            snippet.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            raise Http404
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
