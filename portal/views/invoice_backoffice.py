@@ -42,27 +42,6 @@ class InvoiceRestView(APIView):
         snippet = self.get_object(request, pk)
         serializer = InvoiceSerializer(snippet)
         return Response(serializer.data)
-            # result = Invoice.objects.all()
-            # if not request.user.is_staff:
-            #     result = result.filter(orgId=get_organization(request))
-            # date_start = request.query_params.get('date_start')
-            # date_end = request.query_params.get('date_end')
-            # if date_start:
-            #     date_start = datetime.datetime.strptime(date_start, "%Y-%m")
-            #     result = result.filter(invoiceDate__gte=date_start)
-            # if date_end:
-            #     date_end = datetime.datetime.strptime(date_end, "%Y-%m")
-            #     date_end = date_end.replace(month=date_end.month + 1) - datetime.timedelta(days=1)
-            #     result = result.filter(invoiceDate__lte=date_end)
-            # if date_start == None and date_end == None:
-            #     date_end = datetime.datetime.now()
-            #     date_start = date_end - datetime.timedelta(days=32)
-            #     date_start = date_start.replace(day=1)
-            #     result = result.filter(invoiceDate__gte=date_start)
-            #     result = result.filter(invoiceDate__lte=date_end)
-            # result = result.order_by("-invoiceDate")
-            # return Response(InvoiceSerializer(result, many=True).data)
-            
     
     def post(self, request, format=None):
         if request.user.is_staff:
@@ -103,20 +82,61 @@ class InvoiceDetailAzAzSerializer(serializers.ModelSerializer):
         fields = '__all__' 
         # fields = ['url', 'username', 'email', 'is_staff']
 
-# ViewSets define the view behavior.
-class InvoiceDetailAzAzViewSet(viewsets.ModelViewSet):
-    queryset = Invoice.objects.all()
+class InvoiceDetailAzAzRestView(APIView):
+
+    def get_object(self, request, pk):
+        try:
+            if(request.user.is_staff):
+                return VwInvoiceDetailAzureAzure.objects.get(pk=pk)
+            else:
+                return VwInvoiceDetailAzureAzure.objects.get(pk=pk, orgId=get_organization(request))
+        except VwInvoiceDetailAzureAzure.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk: int, format=None):
+        snippet = self.get_object(request, pk)
+        serializer = InvoiceDetailAzAzSerializer(snippet)
+        return Response(serializer.data)
+    
+    def post(self, request, format=None):
+        if request.user.is_staff:
+            serializer = InvoiceDetailAzAzSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.create()
+                return response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            raise Http404
+
+    def put(self, request, pk: int, format=None):
+        if request.user.is_staff:
+            snippet = self.get_object(request, pk)
+            serializer = InvoiceDetailAzAzSerializer(snippet, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            raise Http404
+
+    def delete(self, request, pk: int, format=None):
+        if request.user.is_staff:
+            snippet = self.get_object(request, pk)
+            snippet.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            raise Http404
+
+class InvoiceDetailAzAzRestList(generics.ListAPIView):
+    model = VwInvoiceDetailAzureAzure
     serializer_class = InvoiceDetailAzAzSerializer
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
+    filterset_fields = ['invoicemonth', 'invoicedate', 'invoiceid', 'orgid', 'orgname', 'orgkey', 'vendorcode', 'vendorname']
+    def get_queryset(self):
+        user = self.request.user
+        queryset = VwInvoiceDetailAzureAzure.objects.all()
+        if not user.is_staff:
+                queryset = queryset.filter(orgid=get_organization(self.request))
+        return queryset.all()
 
-# Routers provide an easy way of automatically determining the URL conf.
-# rest_router = routers.DefaultRouter()
-
-# rest_router.register('invoice_master', InvoiceRestView.as_view())
-# rest_router.register('invoice_azaz', InvoiceViewSet)
-
-# Wire up our API using automatic URL routing.
-# Additionally, we include login URLs for the browsable API.
-# urlpatterns = [
-#     path('', include(router.urls)),
-#     # path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
-# ]
+    
