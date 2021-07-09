@@ -1,6 +1,6 @@
 import datetime
 from django.http import response, Http404
-from rest_framework import routers, serializers, viewsets, status, generics
+from rest_framework import routers, serializers, permissions, status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 import django_filters.rest_framework
@@ -19,6 +19,7 @@ class InvoiceRestList(generics.ListAPIView):
     serializer_class = InvoiceSerializer
     filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
     filterset_fields = ['invoiceMonth', 'invoiceDate', 'orgId', 'orgKey', 'orgName', 'vendorCode', 'vendorName']
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
@@ -28,7 +29,7 @@ class InvoiceRestList(generics.ListAPIView):
         return queryset.all()
 
 class InvoiceRestView(APIView):
-
+    permission_classes = [permissions.IsAuthenticated]
     def get_object(self, request, pk):
         try:
             if(request.user.is_staff):
@@ -83,7 +84,7 @@ class InvoiceDetailAzAzSerializer(serializers.ModelSerializer):
         # fields = ['url', 'username', 'email', 'is_staff']
 
 class InvoiceDetailAzAzRestView(APIView):
-
+    permission_classes = [permissions.IsAuthenticated]
     def get_object(self, request, pk):
         try:
             if(request.user.is_staff):
@@ -132,6 +133,7 @@ class InvoiceDetailAzAzRestList(generics.ListAPIView):
     serializer_class = InvoiceDetailAzAzSerializer
     filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
     filterset_fields = ['invoicemonth', 'invoicedate', 'invoiceid', 'orgid', 'orgname', 'orgkey', 'vendorcode', 'vendorname']
+    permission_classes = [permissions.IsAuthenticated]
     def get_queryset(self):
         user = self.request.user
         queryset = VwInvoiceDetailAzureAzure.objects.all()
