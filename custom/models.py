@@ -163,7 +163,7 @@ class VwInvoiceDetailAzureAzure(models.Model):
     invoicemonth = models.CharField(db_column='InvoiceMonth', max_length=6, blank=True, null=True)  # Field name made lowercase.
     invoicedate = models.DateField(db_column='InvoiceDate', blank=True, null=True)  # Field name made lowercase.
     invoiceid = models.CharField(db_column='InvoiceId', max_length=13, blank=True, null=True)  # Field name made lowercase.
-    orgid = models.IntegerField(db_column='OrgId', blank=True, null=True)  # Field name made lowercase.
+    orgid = models.ForeignKey(Organization, models.DO_NOTHING, db_column='OrgId')  # Field name made lowercase.
     orgname = models.CharField(db_column='OrgName', max_length=200, blank=True, null=True)  # Field name made lowercase.
     orgkey = models.CharField(db_column='OrgKey', max_length=7, blank=True, null=True)  # Field name made lowercase.
     vendorcode = models.CharField(db_column='VendorCode', max_length=7, blank=True, null=True)  # Field name made lowercase.

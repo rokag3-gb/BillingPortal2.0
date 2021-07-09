@@ -89,7 +89,7 @@ class InvoiceDetailAzAzRestView(APIView):
             if(request.user.is_staff):
                 return VwInvoiceDetailAzureAzure.objects.get(pk=pk)
             else:
-                return VwInvoiceDetailAzureAzure.objects.get(pk=pk, orgId=get_organization(request))
+                return VwInvoiceDetailAzureAzure.objects.get(pk=pk, orgid=get_organization(request))
         except VwInvoiceDetailAzureAzure.DoesNotExist:
             raise Http404
 
