@@ -24,7 +24,7 @@ from custom.views import CustomLoginView
 from portal.views import payment, dashboard, index, preference, invoices, charge_oneimte_payment, \
     payment_history, payment_details, manage_payments, search_orgs, orgsettings, \
     cert_form, issue_token, issue_param, issue_param_callback, charge_token_payment
-from portal.views.invoice_backoffice import InvoiceRestList, InvoiceRestView
+from portal.views.invoice_backoffice import InvoiceRestList, InvoiceRestView, InvoiceDetailAzAzRestList, InvoiceDetailAzAzRestView
 from django.conf import settings # import the settings file
 
 branding = getattr(settings, "BRANDING", {})
@@ -68,6 +68,8 @@ urlpatterns = [
     path('policy/', include('policy.urls')),
     path('restapi/invoice_master/<int:pk>/', InvoiceRestView.as_view()),
     path('restapi/invoice_master/', InvoiceRestList.as_view()),
+    path('restapi/invoice_azaz/<int:pk>/', InvoiceDetailAzAzRestView.as_view()),
+    path('restapi/invoice_azaz/', InvoiceDetailAzAzRestList.as_view()),
     path('api-auth/', include('rest_framework.urls')),
     path('', index, name='index'),
 ]
