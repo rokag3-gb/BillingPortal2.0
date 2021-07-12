@@ -12,6 +12,23 @@ class InvoiceSerializer(serializers.ModelSerializer):
     orgId = serializers.PrimaryKeyRelatedField(queryset=Organization.objects.all(), style={'base_template': 'input.html'})
     class Meta:
         model = Invoice
+        read_only_fields = (
+            "seq",
+            # "invoiceMonth",
+            "invoiceId",
+            "orgKey",
+            "orgName",
+            "vendorCode",
+            "vendorName",
+            "vendorInvoiceCount",
+            "partnerAmount",
+            "rrpAmount",
+            "ourAmount",
+            "paid",
+            "regDate",
+            "statechgid",
+            "statechgdate",
+        )
         fields = '__all__' 
         # fields = ['url', 'username', 'email', 'is_staff']
     
@@ -43,11 +60,11 @@ class InvoiceRestView(APIView):
         serializer = InvoiceSerializer(snippet)
         return Response(serializer.data)
     
-    def post(self, request, format=None):
+    def post(self, request,  pk: int, format=None):
         if request.user.is_staff:
             serializer = InvoiceSerializer(data=request.data)
             if serializer.is_valid():
-                serializer.create()
+                serializer.create(serializer.validated_data)
                 return response(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
