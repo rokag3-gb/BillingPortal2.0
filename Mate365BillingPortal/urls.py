@@ -66,10 +66,10 @@ urlpatterns = [
     path('settings/org/', orgsettings, name='organization_list'),
 
     path('policy/', include('policy.urls')),
-    path('restapi/invoice_master/<int:pk>/', InvoiceRestView.as_view()),
-    path('restapi/invoice_master/', InvoiceRestList.as_view()),
-    path('restapi/invoice_azaz/<int:pk>/', InvoiceDetailAzAzRestView.as_view()),
-    path('restapi/invoice_azaz/', InvoiceDetailAzAzRestList.as_view()),
+    path('api/v1/invoice/<int:pk>/', InvoiceRestView.as_view()),
+    path('api/v1/invoice/', InvoiceRestList.as_view()),
+    path('api/v1/invoice_azaz/<int:pk>/', InvoiceDetailAzAzRestView.as_view()),
+    path('api/v1/invoice_azaz/', InvoiceDetailAzAzRestList.as_view()),
     path('api-auth/', include('rest_framework.urls')),
     path('', index, name='index'),
 ]
