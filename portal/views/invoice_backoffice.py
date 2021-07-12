@@ -1,19 +1,18 @@
-import datetime
 from django.http import response, Http404
 from rest_framework import routers, serializers, permissions, status, generics
 from rest_framework.views import APIView
-from rest_framework.response import Response
 import django_filters.rest_framework
-from custom.models import Invoice, VwInvoiceDetailAzureAzure
+from custom.models import Invoice, VwInvoiceDetailAzureAzure, Organization
 from custom.services import get_organization
 
 # Serializers define the API representation.
 class InvoiceSerializer(serializers.ModelSerializer):
+    orgId = serializers.PrimaryKeyRelatedField(queryset=Organization.objects.all(), style={'base_template': 'input.html'})
     class Meta:
         model = Invoice
         fields = '__all__' 
         # fields = ['url', 'username', 'email', 'is_staff']
-
+    
 class InvoiceRestList(generics.ListAPIView):
     model = Invoice
     serializer_class = InvoiceSerializer
@@ -22,11 +21,9 @@ class InvoiceRestList(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        user = self.request.user
-        queryset = Invoice.objects.all()
-        if not user.is_staff:
-                queryset = queryset.filter(orgId=get_organization(self.request))
-        return queryset.all()
+        if not self.request.user.is_staff:
+            return Invoice.objects.filter(orgid=get_organization(self.request))
+        return Invoice.objects.all()
 
 class InvoiceRestView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -78,6 +75,7 @@ router = routers.DefaultRouter()
 
 # Serializers define the API representation.
 class InvoiceDetailAzAzSerializer(serializers.ModelSerializer):
+    orgid = serializers.PrimaryKeyRelatedField(queryset=Organization.objects.all(), style={'base_template': 'input.html'})
     class Meta:
         model = VwInvoiceDetailAzureAzure
         fields = '__all__' 
@@ -135,10 +133,8 @@ class InvoiceDetailAzAzRestList(generics.ListAPIView):
     filterset_fields = ['invoicemonth', 'invoicedate', 'invoiceid', 'orgid', 'orgname', 'orgkey', 'vendorcode', 'vendorname']
     permission_classes = [permissions.IsAuthenticated]
     def get_queryset(self):
-        user = self.request.user
-        queryset = VwInvoiceDetailAzureAzure.objects.all()
-        if not user.is_staff:
-                queryset = queryset.filter(orgid=get_organization(self.request))
-        return queryset.all()
+        if not self.request.user.is_staff:
+            return VwInvoiceDetailAzureAzure.objects.filter(orgid=get_organization(self.request))
+        return VwInvoiceDetailAzureAzure.objects.all()
 
     
