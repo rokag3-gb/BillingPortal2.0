@@ -128,6 +128,34 @@ class OrganizationVendor(models.Model):
     vendorkey = models.CharField(db_column='VendorKey', max_length=200, verbose_name='벤더 키(테넌트ID, 구독ID 등)')  # Field name made lowercase.
     regdate = models.DateTimeField(db_column='RegDate', verbose_name='등록일시', auto_now_add=True)  # Field name made lowercase.
 
+class InvoiceTable(models.Model):
+    seq = models.AutoField(db_column='Seq', primary_key=True)  # Field name made lowercase.
+    invoicemonth = models.CharField(db_column='InvoiceMonth', max_length=6)  # Field name made lowercase.
+    invoicedate = models.DateField(db_column='InvoiceDate')  # Field name made lowercase.
+    invoiceid = models.CharField(db_column='InvoiceId', unique=True, max_length=13, blank=True, null=True)  # Field name made lowercase.
+    orgid = models.IntegerField(db_column='OrgId')  # Field name made lowercase.
+    orgkey = models.CharField(db_column='OrgKey', max_length=7)  # Field name made lowercase.
+    vendorcode = models.CharField(db_column='VendorCode', max_length=7)  # Field name made lowercase.
+    vendorinvoicecount = models.IntegerField(db_column='VendorInvoiceCount')  # Field name made lowercase.
+    chargestartdate = models.DateField(db_column='ChargeStartDate')  # Field name made lowercase.
+    chargeenddate = models.DateField(db_column='ChargeEndDate')  # Field name made lowercase.
+    partner_amount_pretax = models.DecimalField(max_digits=19, decimal_places=4)
+    rrp_amount_pretax = models.DecimalField(max_digits=19, decimal_places=4)
+    our_amount_pretax = models.DecimalField(max_digits=19, decimal_places=4)
+    our_tax = models.DecimalField(max_digits=19, decimal_places=4)
+    our_amount = models.DecimalField(max_digits=19, decimal_places=4)
+    regid = models.IntegerField(db_column='RegId')  # Field name made lowercase.
+    regdate = models.DateTimeField(db_column='RegDate')  # Field name made lowercase.
+    statecode = models.CharField(db_column='StateCode', max_length=7, blank=True, null=True)  # Field name made lowercase.
+    statechgid = models.IntegerField(db_column='StateChgId', blank=True, null=True)  # Field name made lowercase.
+    statechgdate = models.DateTimeField(db_column='StateChgDate', blank=True, null=True)  # Field name made lowercase.
+    remark = models.CharField(db_column='Remark', max_length=2000, blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'Invoice'
+        unique_together = (('invoicemonth', 'orgid'),)
+
 class Invoice(models.Model):
    
     seq = models.AutoField(db_column='Seq', primary_key=True)  # Field name made lowercase.
