@@ -6,31 +6,6 @@ from custom.models import Invoice, VwInvoiceDetailAzureAzure, Organization
 from custom.services import get_organization
 from rest_framework.response import Response
 from .rest_serializers import InvoiceDetailAzAzSerializer, InvoiceSerializer, InvoiceTableSerializer
-
-# Serializers define the API representation.
-class InvoiceSerializer(serializers.ModelSerializer):
-    orgId = serializers.PrimaryKeyRelatedField(queryset=Organization.objects.all(), style={'base_template': 'input.html'})
-    class Meta:
-        model = Invoice
-        read_only_fields = (
-            "seq",
-            # "invoiceMonth",
-            "invoiceId",
-            "orgKey",
-            "orgName",
-            "vendorCode",
-            "vendorName",
-            "vendorInvoiceCount",
-            "partnerAmount",
-            "rrpAmount",
-            "ourAmount",
-            "paid",
-            "regDate",
-            "statechgid",
-            "statechgdate",
-        )
-        fields = '__all__' 
-        # fields = ['url', 'username', 'email', 'is_staff']
     
 class InvoiceRestList(generics.ListAPIView):
     model = Invoice

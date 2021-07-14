@@ -1,38 +1,33 @@
-from django.http import response, Http404
-from rest_framework import routers, serializers, permissions, status, generics
-from rest_framework.views import APIView
-import django_filters.rest_framework
+from rest_framework import serializers
 from custom.models import Invoice, VwInvoiceDetailAzureAzure, Organization, InvoiceTable
-from custom.services import get_organization
-from rest_framework.response import Response
 
 class InvoiceTableSerializer(serializers.ModelSerializer):
-    orgid = serializers.PrimaryKeyRelatedField(queryset=Organization.objects.all(), style={'base_template': 'input.html'})
+    orgId = serializers.PrimaryKeyRelatedField(queryset=Organization.objects.all(), style={'base_template': 'input.html'})
     class Meta:
         model = InvoiceTable
         fields = '__all__'
         read_only_fields = (
             "seq",
-            "invoicemonth",
-            # "invoicedate",
-            # "invoiceid",
-            # "orgid",
-            "orgkey",
-            "vendorcode",
-            "vendorinvoicecount",
-            # "chargestartdate",
-            # "chargeenddate",
-            "partner_amount_pretax",
-            "rrp_amount_pretax",
-            "our_amount_pretax",
-            "our_tax",
-            "our_amount",
-            # "regid",
-            "regdate",
-            # "statecode",
-            "statechgid",
-            "statechgdate",
-            # "remark"
+            # "invoiceMonth",
+            # "invoiceDate",
+            "invoiceId",
+            # "orgId",
+            "orgKey",
+            "vendorCode",
+            # "vendorInvoicecount",
+            # "chargeStartDate",
+            # "chargeEndDate",
+            # "partnerAmount",
+            # "rrpAmount",
+            # "ourAmount",
+            # "ourTax",
+            # "ourAmount",
+            # "regId",
+            "regDate",
+            # "stateCode",
+            "stateChgId",
+            "stateChgDate",
+            # "remark",
         )
 
 # Serializers define the API representation.
