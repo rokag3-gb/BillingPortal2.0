@@ -5,32 +5,7 @@ import django_filters.rest_framework
 from custom.models import Invoice, VwInvoiceDetailAzureAzure, Organization
 from custom.services import get_organization
 from rest_framework.response import Response
-
-
-# Serializers define the API representation.
-class InvoiceSerializer(serializers.ModelSerializer):
-    orgId = serializers.PrimaryKeyRelatedField(queryset=Organization.objects.all(), style={'base_template': 'input.html'})
-    class Meta:
-        model = Invoice
-        read_only_fields = (
-            "seq",
-            # "invoiceMonth",
-            "invoiceId",
-            "orgKey",
-            "orgName",
-            "vendorCode",
-            "vendorName",
-            "vendorInvoiceCount",
-            "partnerAmount",
-            "rrpAmount",
-            "ourAmount",
-            "paid",
-            "regDate",
-            "statechgid",
-            "statechgdate",
-        )
-        fields = '__all__' 
-        # fields = ['url', 'username', 'email', 'is_staff']
+from .rest_serializers import InvoiceDetailAzAzSerializer, InvoiceSerializer, InvoiceTableSerializer
     
 class InvoiceRestList(generics.ListAPIView):
     model = Invoice
@@ -62,7 +37,7 @@ class InvoiceRestView(APIView):
     
     def post(self, request,  pk: int, format=None):
         if request.user.is_staff:
-            serializer = InvoiceSerializer(data=request.data)
+            serializer = InvoiceTableSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.create(serializer.validated_data)
                 return response(serializer.data)
@@ -73,7 +48,7 @@ class InvoiceRestView(APIView):
     def put(self, request, pk: int, format=None):
         if request.user.is_staff:
             snippet = self.get_object(request, pk)
-            serializer = InvoiceSerializer(snippet, data=request.data)
+            serializer = InvoiceTableSerializer(snippet, data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
@@ -92,13 +67,7 @@ class InvoiceRestView(APIView):
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 
-# Serializers define the API representation.
-class InvoiceDetailAzAzSerializer(serializers.ModelSerializer):
-    orgid = serializers.PrimaryKeyRelatedField(queryset=Organization.objects.all(), style={'base_template': 'input.html'})
-    class Meta:
-        model = VwInvoiceDetailAzureAzure
-        fields = '__all__' 
-        # fields = ['url', 'username', 'email', 'is_staff']
+
 
 class InvoiceDetailAzAzRestView(APIView):
     permission_classes = [permissions.IsAuthenticated]
