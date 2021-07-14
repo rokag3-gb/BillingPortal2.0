@@ -1,12 +1,27 @@
 from django.http import response, Http404
-from rest_framework import routers, serializers, permissions, status, generics
+from rest_framework import routers, permissions, status, generics
 from rest_framework.views import APIView
 import django_filters.rest_framework
 from custom.models import Invoice, VwInvoiceDetailAzureAzure, Organization
 from custom.services import get_organization
 from rest_framework.response import Response
 from .rest_serializers import InvoiceDetailAzAzSerializer, InvoiceSerializer, InvoiceTableSerializer
-    
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi    
+
+swagger_view = get_schema_view(
+   openapi.Info(
+      title="MateBilling Invoice REST API",
+      default_version='v1',
+      description="MateBilling Invoice REST API",
+    #   terms_of_service="https://www.google.com/policies/terms/",
+    #   contact=openapi.Contact(email="contact@snippets.local"),
+    #   license=openapi.License(name="BSD License"),
+   ),
+   public=True,
+   permission_classes=[permissions.IsAuthenticated],
+)
+
 class InvoiceRestList(generics.ListAPIView):
     model = Invoice
     serializer_class = InvoiceSerializer
