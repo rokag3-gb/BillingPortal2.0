@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'custom',
     'policy',
     'django.contrib.humanize',
+    'drf_yasg',
     'rest_framework',
     'django_filters'
 ]
