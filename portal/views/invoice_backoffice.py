@@ -8,6 +8,8 @@ from rest_framework.response import Response
 from .rest_serializers import InvoiceDetailAzAzSerializer, InvoiceSerializer, InvoiceTableSerializer
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi    
+from drf_yasg.utils import no_body, swagger_auto_schema
+from rest_framework.decorators import action, api_view
 
 swagger_view = get_schema_view(
    openapi.Info(
@@ -22,6 +24,8 @@ swagger_view = get_schema_view(
    permission_classes=[permissions.IsAuthenticated],
 )
 
+@swagger_auto_schema(method='get', responses={200: InvoiceTableSerializer()})
+@action(detail=False, methods=['get'])
 class InvoiceRestList(generics.ListAPIView):
     model = Invoice
     serializer_class = InvoiceSerializer
