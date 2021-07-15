@@ -141,7 +141,7 @@ class InvoiceTable(models.Model):
     chargeEndDate = models.DateField(db_column='ChargeEndDate')  # Field name made lowercase.
     partnerAmount = models.DecimalField(db_column='partner_amount_pretax', max_digits=19, decimal_places=4, default=0, null=False)
     rrpAmount = models.DecimalField(db_column='rrp_amount_pretax', max_digits=19, decimal_places=4, default=0, null=False)
-    ourAmount = models.DecimalField(db_column='our_amount_pretax', max_digits=19, decimal_places=4, default=0, null=False)
+    ourAmountPretax = models.DecimalField(db_column='our_amount_pretax', max_digits=19, decimal_places=4, default=0, null=False)
     ourTax = models.DecimalField(db_column='our_tax', max_digits=19, decimal_places=4, default=0, null=False)
     ourAmount = models.DecimalField(db_column='our_amount', max_digits=19, decimal_places=4, default=0, null=False)
     regId = models.IntegerField(db_column='RegId')  # Field name made lowercase.
