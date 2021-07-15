@@ -46,7 +46,7 @@ class InvoiceRestCreate(APIView):
             serializer = InvoiceTableSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.create(serializer.validated_data)
-                return response(serializer.data)
+                return Response(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             raise Http404
