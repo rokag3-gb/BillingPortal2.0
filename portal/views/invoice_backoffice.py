@@ -37,8 +37,20 @@ class InvoiceRestList(generics.ListAPIView):
         if not self.request.user.is_staff:
             return Invoice.objects.filter(orgid=get_organization(self.request))
         return Invoice.objects.all()
-
-class InvoiceRestBase(APIView):
+class InvoiceRestCreate(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    @swagger_auto_schema(method='post', request_body=InvoiceTableSerializer, responses={200: InvoiceTableSerializer()})
+    @action(detail=False, methods=['post'])
+    def post(self, request, format=None):
+        if request.user.is_staff:
+            serializer = InvoiceTableSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.create(serializer.validated_data)
+                return response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            raise Http404
+class InvoiceRestView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     def get_object(self, request, pk):
         try:
@@ -48,20 +60,6 @@ class InvoiceRestBase(APIView):
                 return Invoice.objects.get(pk=pk, orgId=get_organization(request))
         except Invoice.DoesNotExist:
             raise Http404
-
-class InvoiceRestCreate(InvoiceRestBase):
-    @swagger_auto_schema(method='post', request_body=InvoiceTableSerializer, responses={200: InvoiceTableSerializer()})
-    @action(detail=False, methods=['post'])
-    def post(self, request,  pk: int, format=None):
-        if request.user.is_staff:
-            serializer = InvoiceTableSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.create(serializer.validated_data)
-                return response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            raise Http404
-class InvoiceRestView(InvoiceRestBase):
 
     @swagger_auto_schema(method='get', responses={200: InvoiceSerializer()})
     @action(detail=True, methods=['get'])

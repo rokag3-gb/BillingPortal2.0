@@ -154,7 +154,7 @@ class InvoiceTable(models.Model):
     class Meta:
         managed = False
         db_table = 'Invoice'
-        constraints = [ models.UniqueConstraint(fields=['invoiceMonth', 'orgId'], name='unique_invoice_month_date_orgkey') ]
+        constraints = [ models.UniqueConstraint(fields=['invoiceMonth', 'orgId'], name='IDX_InvoiceMonth_OrgId') ]
 
 class Invoice(models.Model):
    
