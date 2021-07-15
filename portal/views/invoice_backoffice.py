@@ -2,7 +2,7 @@ from django.http import response, Http404
 from rest_framework import routers, permissions, status, generics
 from rest_framework.views import APIView
 from django_filters import rest_framework as drf_filters
-from custom.models import Invoice, VwInvoiceDetailAzureAzure, Organization
+from custom.models import Invoice, InvoiceTable, VwInvoiceDetailAzureAzure, Organization
 from custom.services import get_organization
 from rest_framework.response import Response
 from .rest_serializers import InvoiceDetailAzAzSerializer, InvoiceSerializer, InvoiceTableSerializer
@@ -63,6 +63,15 @@ class InvoiceRestView(APIView):
                 return Invoice.objects.get(pk=pk, orgId=get_organization(request))
         except Invoice.DoesNotExist:
             raise Http404
+    
+    def get_tblrow_object(self, request, pk):
+        try:
+            if(request.user.is_staff):
+                return InvoiceTable.objects.get(pk=pk)
+            else:
+                return InvoiceTable.objects.get(pk=pk, orgId=get_organization(request))
+        except Invoice.DoesNotExist:
+            raise Http404
 
     @swagger_auto_schema(method='get', responses={200: InvoiceSerializer()})
     @action(detail=True, methods=['get'])
@@ -75,7 +84,7 @@ class InvoiceRestView(APIView):
     @action(detail=True, methods=['put'])
     def put(self, request, pk: int, format=None):
         if request.user.is_staff:
-            snippet = self.get_object(request, pk)
+            snippet = self.get_tblrow_object(request, pk)
             serializer = InvoiceTableSerializer(snippet, data=request.data)
             if serializer.is_valid():
                 serializer.save()
@@ -88,7 +97,7 @@ class InvoiceRestView(APIView):
     @action(detail=True, methods=['delete'])
     def delete(self, request, pk: int, format=None):
         if request.user.is_staff:
-            snippet = self.get_object(request, pk)
+            snippet = self.get_tblrow_object(request, pk)
             snippet.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
