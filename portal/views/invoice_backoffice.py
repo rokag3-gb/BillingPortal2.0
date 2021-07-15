@@ -38,7 +38,7 @@ class InvoiceRestList(generics.ListAPIView):
             return Invoice.objects.filter(orgid=get_organization(self.request))
         return Invoice.objects.all()
 
-class InvoiceRestView(APIView):
+class InvoiceRestBase(APIView):
     permission_classes = [permissions.IsAuthenticated]
     def get_object(self, request, pk):
         try:
@@ -49,11 +49,9 @@ class InvoiceRestView(APIView):
         except Invoice.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk: int, format=None):
-        snippet = self.get_object(request, pk)
-        serializer = InvoiceSerializer(snippet)
-        return Response(serializer.data)
-    
+class InvoiceRestCreate(InvoiceRestBase):
+    @swagger_auto_schema(method='post', request_body=InvoiceTableSerializer, responses={200: InvoiceTableSerializer()})
+    @action(detail=False, methods=['post'])
     def post(self, request,  pk: int, format=None):
         if request.user.is_staff:
             serializer = InvoiceTableSerializer(data=request.data)
@@ -63,7 +61,17 @@ class InvoiceRestView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             raise Http404
+class InvoiceRestView(InvoiceRestBase):
 
+    @swagger_auto_schema(method='get', responses={200: InvoiceSerializer()})
+    @action(detail=True, methods=['get'])
+    def get(self, request, pk: int, format=None):
+        snippet = self.get_object(request, pk)
+        serializer = InvoiceSerializer(snippet)
+        return Response(serializer.data)
+
+    @swagger_auto_schema(method='put', request_body=InvoiceTableSerializer, responses={200: InvoiceTableSerializer()})
+    @action(detail=True, methods=['put'])
     def put(self, request, pk: int, format=None):
         if request.user.is_staff:
             snippet = self.get_object(request, pk)
@@ -75,6 +83,8 @@ class InvoiceRestView(APIView):
         else:
             raise Http404
 
+    @swagger_auto_schema(method='delete')
+    @action(detail=True, methods=['delete'])
     def delete(self, request, pk: int, format=None):
         if request.user.is_staff:
             snippet = self.get_object(request, pk)
