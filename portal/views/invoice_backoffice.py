@@ -1,7 +1,7 @@
 from django.http import response, Http404
 from rest_framework import routers, permissions, status, generics
 from rest_framework.views import APIView
-import django_filters.rest_framework
+from django_filters import rest_framework as drf_filters
 from custom.models import Invoice, VwInvoiceDetailAzureAzure, Organization
 from custom.services import get_organization
 from rest_framework.response import Response
@@ -15,22 +15,25 @@ swagger_view = get_schema_view(
    openapi.Info(
       title="MateBilling Invoice REST API",
       default_version='v1',
-      description="MateBilling Invoice REST API",
-    #   terms_of_service="https://www.google.com/policies/terms/",
-    #   contact=openapi.Contact(email="contact@snippets.local"),
-    #   license=openapi.License(name="BSD License"),
+      description="MateBilling Invoice REST API"
    ),
    public=True,
    permission_classes=[permissions.IsAuthenticated],
 )
+
+class InvoiceFilter(drf_filters.FilterSet):
+    invoiceDate = drf_filters.DateFromToRangeFilter(field_name='invoiceDate')
+    class Meta:
+        model = Invoice
+        fields = ['invoiceMonth', 'invoiceDate', 'orgId', 'orgKey', 'orgName', 'vendorCode', 'vendorName']
 
 @swagger_auto_schema(method='get', responses={200: InvoiceTableSerializer()})
 @action(detail=False, methods=['get'])
 class InvoiceRestList(generics.ListAPIView):
     model = Invoice
     serializer_class = InvoiceSerializer
-    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
-    filterset_fields = ['invoiceMonth', 'invoiceDate', 'orgId', 'orgKey', 'orgName', 'vendorCode', 'vendorName']
+    filter_backends = [drf_filters.DjangoFilterBackend]
+    filterset_class = InvoiceFilter
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
@@ -91,11 +94,6 @@ class InvoiceRestView(APIView):
         else:
             raise Http404
 
-# Routers provide an easy way of automatically determining the URL conf.
-router = routers.DefaultRouter()
-
-
-
 class InvoiceDetailAzAzRestView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     def get_object(self, request, pk):
@@ -144,7 +142,7 @@ class InvoiceDetailAzAzRestView(APIView):
 class InvoiceDetailAzAzRestList(generics.ListAPIView):
     model = VwInvoiceDetailAzureAzure
     serializer_class = InvoiceDetailAzAzSerializer
-    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
+    filter_backends = [drf_filters.DjangoFilterBackend]
     filterset_fields = ['invoicemonth', 'invoicedate', 'invoiceid', 'orgid', 'orgname', 'orgkey', 'vendorcode', 'vendorname']
     permission_classes = [permissions.IsAuthenticated]
     def get_queryset(self):
