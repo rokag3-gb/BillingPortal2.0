@@ -43,10 +43,12 @@ INSTALLED_APPS = [
     'portal.apps.PortalConfig',
     'custom',
     'policy',
+    'frontend',
     'django.contrib.humanize',
     'drf_yasg',
     'rest_framework',
-    'django_filters'
+    'django_filters',
+    'webpack_loader'
 ]
 
 MIDDLEWARE = [
@@ -199,4 +201,11 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
     ]
+}
+
+WEBPACK_LOADER = {
+  'DEFAULT': {
+    'BUNDLE_DIR_NAME': 'frontend/',
+    'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json')
+  }
 }

@@ -201,3 +201,6 @@ modules.xml
 
 # Sonarlint plugin
 .idea/sonarlint
+node_modules
+webpack-stats.json
+frontend/static/frontend
