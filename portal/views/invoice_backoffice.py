@@ -38,8 +38,10 @@ class InvoiceRestList(generics.ListAPIView):
 
     def get_queryset(self):
         if not self.request.user.is_staff:
-            return Invoice.objects.filter(orgid=get_organization(self.request))
-        return Invoice.objects.all()
+            return Invoice.objects \
+                .filter(orgId=get_organization(self.request)) \
+                .prefetch_related('orgId')
+        return Invoice.objects.all().prefetch_related('orgId')
 class InvoiceRestCreate(APIView):
     permission_classes = [permissions.IsAuthenticated]
     @swagger_auto_schema(method='post', request_body=InvoiceTableSerializer, responses={200: InvoiceTableSerializer()})
@@ -156,7 +158,7 @@ class InvoiceDetailAzAzRestList(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     def get_queryset(self):
         if not self.request.user.is_staff:
-            return VwInvoiceDetailAzureAzure.objects.filter(orgid=get_organization(self.request))
-        return VwInvoiceDetailAzureAzure.objects.all()
+            return VwInvoiceDetailAzureAzure.objects.filter(orgid=get_organization(self.request)).prefetch_related('orgid')
+        return VwInvoiceDetailAzureAzure.objects.all().prefetch_related('orgid')
 
     
