@@ -4,6 +4,7 @@
 
 trigger:
 - main
+- develop
 
 resources:
 - repo: self
@@ -11,13 +12,17 @@ resources:
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '5dbad1df-cde9-49af-bced-1351d0c9539a'
-  imageRepository: 'staging'
   containerRegistry: 'matebilling.azurecr.io'
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
-
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
+  ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+    imageRepository: 'prod'
+  ${{ if eq(variables['Build.SourceBranchName'], 'develop') }}:
+    imageRepository: 'dev'
+
+  
 
 stages:
 - stage: Build
