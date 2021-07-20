@@ -44,9 +44,9 @@ INSTALLED_APPS = [
     'custom',
     'policy',
     'django.contrib.humanize',
-    # 'drf_yasg',
-    # 'rest_framework',
-    # 'django_filters'
+    'drf_yasg',
+    'rest_framework',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -187,19 +187,19 @@ POLICY_USING_CREDIT_CARD = {
     ]
 }
 
-# REST_FRAMEWORK = {
-#     # Use Django's standard `django.contrib.auth` permissions,
-#     # or allow read-only access for unauthenticated users.
-#     # 'DEFAULT_PERMISSION_CLASSES': [
-#     #     'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-#     # ],
-#     'DEFAULT_PAGINATION_CLASS': 'custom.pagination.LimitOffsetPaginationWithoutCount',
-#     'PAGE_SIZE': 100,
-#     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-#     'DEFAULT_AUTHENTICATION_CLASSES': [
-#         'rest_framework.authentication.SessionAuthentication',
-#     ],
-#     'DEFAULT_RENDERER_CLASSES': (
-#         'rest_framework.renderers.JSONRenderer',
-#     )
-# }
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    # ],
+    'DEFAULT_PAGINATION_CLASS': 'custom.pagination.LimitOffsetPaginationWithoutCount',
+    'PAGE_SIZE': 100,
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    )
+}

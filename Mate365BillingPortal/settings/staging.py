@@ -2,9 +2,9 @@ from .base import *
 import os
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = [os.getenv('WEBSITE_HOSTNAME',''), '127.0.0.1'] + os.getenv('CUSTOM_DOMAIN','').split(" ")
+# ALLOWED_HOSTS = [os.getenv('WEBSITE_HOSTNAME',''), '127.0.0.1'] + os.getenv('CUSTOM_DOMAIN','').split(" ")
 
 SECRET_KEY =  os.getenv('SECRET_KEY','')
 
