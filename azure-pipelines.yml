@@ -42,9 +42,10 @@ stages:
     #     containerRegistry: $(dockerRegistryServiceConnection)
     #     tags: $(tag)
     - script: |
-        docker build -t $(containerRegistry)/$(imageRepository):$(tag) .
-        docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock dslim/docker-slim build $(containerRegistry)/$(imageRepository):$(tag)
-        docker tag $(containerRegistry)/$(imageRepository).slim:$(tag) $(containerRegistry)/$(imageRepository):$(tag)
+        docker build -t containerimg:$(tag) .
+        docker pull dslim/docker-slim
+        docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock dslim/docker-slim build containerimg:$(tag)
+        docker tag containerimg.slim:$(tag) $(containerRegistry)/$(imageRepository):$(tag)
       displayName: Build and Minify container image
     - task: Docker@2
       displayName: Push container image to registry
