@@ -45,9 +45,6 @@ stages:
         oryx build
       env:
         POST_BUILD_COMMAND: python manage.py collectstatic
-        PLATFORM_NAME: $(platformName)
-        PLATFORM_VERSION: $(platformVersion)
-        ORYX_APP_TYPE: webapps
       displayName: Build App using Oryx
       target: oryx
     - task: AzureAppServiceSettings@1
