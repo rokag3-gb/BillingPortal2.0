@@ -11,10 +11,10 @@ trigger:
 variables:
   # Agent VM image name
   vmImageName: 'ubuntu-20.04'
-  # Python version: 3.9
+  # Python version: 3.8
   platformName: python
-  platformVersion: '3.9'
-  runtimePlatform: 'PYTHON|3.9'
+  platformVersion: '3.8'
+  runtimePlatform: 'PYTHON|3.8'
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
   azSubscription: 'Azure_Deploy_to_MPN-Production-스폰서쉽-Gold'
