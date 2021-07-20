@@ -34,11 +34,25 @@ stages:
       vmImage: $(vmImageName)
     steps:
     - task: Docker@2
-      displayName: Build and push an image to container registry
+      displayName: Build container image
       inputs:
-        command: buildAndPush
+        command: build
         repository: $(imageRepository)
         dockerfile: $(dockerfilePath)
         containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
+        tags: $(tag)
+    - displayName: Minify container image
+      scripts: |
+        docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock dslim/docker-slim build $(containerRegistry)/$(imageRepository):$(tag)
+        docker tag $(containerRegistry)/$(imageRepository).slim:$(tag) $(containerRegistry)/$(imageRepository):$(tag)
+    - task: Docker@2
+      displayName: Push container image to registry
+      inputs:
+        command: push
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: $(tag)
+          
+
+#docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock dslim/docker-slim build
