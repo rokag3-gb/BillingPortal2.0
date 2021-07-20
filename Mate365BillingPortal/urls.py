@@ -72,7 +72,7 @@ urlpatterns = [
     path('api/v1/invoice/<int:pk>/', InvoiceRestView.as_view()),
     path('api/v1/invoice_azaz/<int:pk>/', InvoiceDetailAzAzRestView.as_view()),
     path('api/v1/invoice_azaz/', InvoiceDetailAzAzRestList.as_view()),
-    path('api-auth/', include('rest_framework.urls')),
+    # path('api-auth/', include('rest_framework.urls')),
     path('swagger/schema-json.json', swagger_view.without_ui(cache_timeout=0), name='schema-json'),
     path('swagger/', swagger_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('', index, name='index'),
