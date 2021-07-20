@@ -33,18 +33,13 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
-    # - task: Docker@2
-    #   displayName: Build container image
-    #   inputs:
-    #     command: build
-    #     repository: $(imageRepository)
-    #     dockerfile: $(dockerfilePath)
-    #     containerRegistry: $(dockerRegistryServiceConnection)
-    #     tags: $(tag)
+    - script: |
+        yes | /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/main/install.sh)"
+        yes | brew install docker-slim
+      displayName: Install Docker Slim
     - script: |
         docker build -t containerimg:$(tag) .
-        docker pull dslim/docker-slim
-        docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock dslim/docker-slim build containerimg:$(tag)
+        docker-slim build containerimg:$(tag)
         docker tag containerimg.slim:$(tag) $(containerRegistry)/$(imageRepository):$(tag)
       displayName: Build and Minify container image
     - task: Docker@2
