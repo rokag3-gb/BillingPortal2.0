@@ -47,22 +47,20 @@ stages:
         containerRegistry: $(containerRegistryServiceConnection)
         tags: $(tag)
 
-    - task: AzureWebAppContainer@1 # Add this at the end of your file
-      displayName: 'Deploy to Web App $(environmentName)'
-      condition: eq(variables['Build.SourceBranchName'], 'develop')
-      inputs:
-        azureSubscription: $(azSubscription)
-        appName: $(azWebAppName)
-        containers: $(containerRegistry)/$(imageRepository):$(tag)
-        slotName: staging
+    # - task: AzureWebAppContainer@1 # Add this at the end of your file
+    #   displayName: 'Deploy to Web App $(environmentName)'
+    #   condition: eq(variables['Build.SourceBranchName'], 'develop')
+    #   inputs:
+    #     azureSubscription: $(azSubscription)
+    #     appName: $(azWebAppName)
+    #     containers: $(containerRegistry)/$(imageRepository):$(tag)
+    #     slotName: staging
     
-    - task: AzureWebAppContainer@1 # Add this at the end of your file
-      displayName: 'Deploy to Web App $(environmentName)'
-      condition: eq(variables['Build.SourceBranchName'], 'main')
-      inputs:
-        azureSubscription: $(azSubscription)
-        appName: $(azWebAppName)
-        containers: $(containerRegistry)/$(imageRepository):$(tag)
+    # - task: AzureWebAppContainer@1 # Add this at the end of your file
+    #   displayName: 'Deploy to Web App $(environmentName)'
+    #   condition: eq(variables['Build.SourceBranchName'], 'main')
+    #   inputs:
+    #     azureSubscription: $(azSubscription)
+    #     appName: $(azWebAppName)
+    #     containers: $(containerRegistry)/$(imageRepository):$(tag)
 
-
-              
