@@ -1,5 +1,5 @@
 from django.http import response, Http404
-from rest_framework import routers, permissions, status, generics
+from rest_framework import routers, permissions, status, generics, mixins
 from rest_framework.views import APIView
 from django_filters import rest_framework as drf_filters
 from custom.models import Invoice, InvoiceTable, VwInvoiceDetailAzureAzure, Organization
@@ -27,9 +27,7 @@ class InvoiceFilter(drf_filters.FilterSet):
         model = Invoice
         fields = ['invoiceMonth', 'invoiceDate', 'orgId', 'orgKey', 'orgName', 'vendorCode', 'vendorName']
 
-@swagger_auto_schema(method='get', responses={200: InvoiceTableSerializer()})
-@action(detail=False, methods=['get'])
-class InvoiceRestList(generics.ListAPIView):
+class InvoiceCreateListView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
     model = Invoice
     serializer_class = InvoiceSerializer
     filter_backends = [drf_filters.DjangoFilterBackend]
@@ -42,8 +40,12 @@ class InvoiceRestList(generics.ListAPIView):
                 .filter(orgId=get_organization(self.request)) \
                 .prefetch_related('orgId')
         return Invoice.objects.all().prefetch_related('orgId')
-class InvoiceRestCreate(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+
+    @swagger_auto_schema(method='get', responses={200: InvoiceTableSerializer()})
+    @action(detail=False, methods=['get'])
+    def get(self, request):
+        return self.list(request)
+
     @swagger_auto_schema(method='post', request_body=InvoiceTableSerializer, responses={200: InvoiceTableSerializer()})
     @action(detail=False, methods=['post'])
     def post(self, request, format=None):
@@ -55,6 +57,7 @@ class InvoiceRestCreate(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             raise Http404
+
 class InvoiceRestView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     def get_object(self, request, pk):
@@ -104,7 +107,6 @@ class InvoiceRestView(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             raise Http404
-
 class InvoiceDetailAzAzRestView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     def get_object(self, request, pk):
@@ -120,16 +122,6 @@ class InvoiceDetailAzAzRestView(APIView):
         snippet = self.get_object(request, pk)
         serializer = InvoiceDetailAzAzSerializer(snippet)
         return Response(serializer.data)
-    
-    def post(self, request, format=None):
-        if request.user.is_staff:
-            serializer = InvoiceDetailAzAzSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.create()
-                return response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            raise Http404
 
     def put(self, request, pk: int, format=None):
         if request.user.is_staff:
@@ -150,7 +142,7 @@ class InvoiceDetailAzAzRestView(APIView):
         else:
             raise Http404
 
-class InvoiceDetailAzAzRestList(generics.ListAPIView):
+class InvoiceDetailAzAzCreateListView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
     model = VwInvoiceDetailAzureAzure
     serializer_class = InvoiceDetailAzAzSerializer
     filter_backends = [drf_filters.DjangoFilterBackend]
@@ -161,4 +153,19 @@ class InvoiceDetailAzAzRestList(generics.ListAPIView):
             return VwInvoiceDetailAzureAzure.objects.filter(orgid=get_organization(self.request)).prefetch_related('orgid')
         return VwInvoiceDetailAzureAzure.objects.all().prefetch_related('orgid')
 
+    @swagger_auto_schema(method='post', request_body=InvoiceDetailAzAzSerializer, responses={200: InvoiceDetailAzAzSerializer()})
+    @action(detail=False, methods=['post'])
+    def post(self, request, format=None):
+        if request.user.is_staff:
+            serializer = InvoiceDetailAzAzSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.create(serializer.validated_data)
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            raise Http404
     
+    @swagger_auto_schema(method='get', responses={200: InvoiceDetailAzAzSerializer()})
+    @action(detail=False, methods=['get'])
+    def get(self, request):
+        return self.list(request)
