@@ -12,6 +12,7 @@ trigger:
 - develop
 
 variables:
+  containerRegistryServiceConnection: 'MateBilling ACR'
   containerRegistry: 'matebilling.azurecr.io'
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
@@ -43,7 +44,7 @@ stages:
         command: buildAndPush
         repository: $(imageRepository)
         dockerfile: $(dockerfilePath)
-        containerRegistry: $(azSubscription)
+        containerRegistry: $(containerRegistryServiceConnection)
         tags: $(tag)
 
     - task: AzureWebAppContainer@1 # Add this at the end of your file
