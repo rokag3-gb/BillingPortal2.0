@@ -1,3 +1,6 @@
+
+
+
 # Python to Linux Web App on Azure
 
 # Build your Python project and deploy it to Azure as a Linux Web App.
@@ -9,26 +12,23 @@ trigger:
 - develop
 
 variables:
+  dockerRegistryServiceConnection: '5dbad1df-cde9-49af-bced-1351d0c9539a'
+  containerRegistry: 'matebilling.azurecr.io'
+  dockerfilePath: '**/Dockerfile'
+  tag: '$(Build.BuildId)'
   # Agent VM image name
   vmImageName: 'ubuntu-20.04'
-  # Python version: 3.8
-  platformName: python
-  platformVersion: '3.8'
-  runtimePlatform: 'PYTHON|3.8'
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
   azSubscription: 'Azure_Deploy_to_MPN-Production-스폰서쉽-Gold'
-  azWebAppName: 'mate365billing'
+  azWebAppName: 'matebilling'
   # Environment name
   ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
     environmentName: 'BillingPortal-Production'
+    imageRepository: 'prod'
   ${{ if eq(variables['Build.SourceBranchName'], 'develop') }}:
     environmentName: 'BillingPortal-Staging'
-
-resources:
-  containers:
-  - container: oryx
-    image: mcr.microsoft.com/oryx/build:latest
+    imageRepository: 'dev'
 
 stages:
 - stage: BuildAndDeploy
@@ -37,51 +37,32 @@ stages:
   - job: BuildAndDeployJob
     pool:
       vmImage: $(vmImageName)
-    # container: mcr.microsoft.com/oryx/build:latest
     steps:
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: $(tag)
 
-    - script: |
-        oryx build
-      env:
-        POST_BUILD_COMMAND: python manage.py collectstatic
-      displayName: Build App using Oryx
-      target: oryx
-    - task: AzureAppServiceSettings@1
-      displayName: Update Settings for $(environmentName) App Service
-      inputs:
-        azureSubscription: $(azSubscription)
-        appName: $(azWebAppName)
-        appSettings: |
-          [
-            {
-              "name": "WEBSITE_RUN_FROM_PACKAGE",
-              "value": "1",
-              "slotSetting": false
-            }
-          ]
-    - task: AzureRmWebAppDeployment@4
-      displayName: 'Deploy to Web App $(environmentName)'
-      condition: eq(variables['Build.SourceBranchName'], 'main')
-      inputs:
-        ConnectionType: 'AzureRM'
-        azureSubscription: $(azSubscription)
-        appType: 'webAppLinux'
-        WebAppName: $(azWebAppName)
-        package: '$(projectRoot)'
-        RuntimeStack: $(runtimePlatform)
-        deploymentMethod: 'runFromPackage'
-        
-    - task: AzureRmWebAppDeployment@4
+    - task: AzureWebAppContainer@1 # Add this at the end of your file
       displayName: 'Deploy to Web App $(environmentName)'
       condition: eq(variables['Build.SourceBranchName'], 'develop')
       inputs:
-        ConnectionType: 'AzureRM'
         azureSubscription: $(azSubscription)
-        appType: 'webAppLinux'
-        WebAppName: $(azWebAppName)
-        package: '$(projectRoot)'
-        RuntimeStack: $(runtimePlatform)
-        deploymentMethod: 'runFromPackage'
+        appName: $(azWebAppName)
+        containers: $(containerRegistry)/$(imageRepository):$(tag)
         slotName: staging
-          
+    
+    - task: AzureWebAppContainer@1 # Add this at the end of your file
+      displayName: 'Deploy to Web App $(environmentName)'
+      condition: eq(variables['Build.SourceBranchName'], 'main')
+      inputs:
+        azureSubscription: $(azSubscription)
+        appName: $(azWebAppName)
+        containers: $(containerRegistry)/$(imageRepository):$(tag)
+
+
               

@@ -12,4 +12,4 @@ COPY . /app
 RUN pip install -r requirements.txt && python manage.py collectstatic --noinput
 
 EXPOSE 8000
-CMD ["gunicorn", "Mate365BillingPortal.asgi:application", "-k", "uvicorn.workers.UvicornWorker", "-b", "0.0.0.0:8000"]
+CMD ["daphne", "-b", "0.0.0.0", "Mate365BillingPortal.asgi:application"]
