@@ -139,11 +139,11 @@ class InvoiceTable(models.Model):
     vendorInvoiceCount = models.IntegerField(db_column='VendorInvoiceCount', default=0, null=False)  # Field name made lowercase.
     chargeStartDate = models.DateField(db_column='ChargeStartDate')  # Field name made lowercase.
     chargeEndDate = models.DateField(db_column='ChargeEndDate')  # Field name made lowercase.
-    partnerAmount = models.DecimalField(db_column='partner_amount_pretax', max_digits=19, decimal_places=4, default=0, null=False)
-    rrpAmount = models.DecimalField(db_column='rrp_amount_pretax', max_digits=19, decimal_places=4, default=0, null=False)
-    ourAmountPretax = models.DecimalField(db_column='our_amount_pretax', max_digits=19, decimal_places=4, default=0, null=False)
-    ourTax = models.DecimalField(db_column='our_tax', max_digits=19, decimal_places=4, default=0, null=False)
-    ourAmount = models.DecimalField(db_column='our_amount', max_digits=19, decimal_places=4, default=0, null=False)
+    partner_amount_pretax = models.DecimalField(db_column='partner_amount_pretax', max_digits=19, decimal_places=4, default=0, null=False)
+    rrp_amount_pretax = models.DecimalField(db_column='rrp_amount_pretax', max_digits=19, decimal_places=4, default=0, null=False)
+    our_amount_pretax = models.DecimalField(db_column='our_amount_pretax', max_digits=19, decimal_places=4, default=0, null=False)
+    our_tax = models.DecimalField(db_column='our_tax', max_digits=19, decimal_places=4, default=0, null=False)
+    our_amount = models.DecimalField(db_column='our_amount', max_digits=19, decimal_places=4, default=0, null=False)
     regId = models.IntegerField(db_column='RegId')  # Field name made lowercase.
     regDate = models.DateTimeField(db_column='RegDate', auto_now_add=True)  # Field name made lowercase.
     stateCode = models.CharField(db_column='StateCode', max_length=7, blank=True, null=True)  # Field name made lowercase.
@@ -170,9 +170,11 @@ class Invoice(models.Model):
     vendorInvoiceCount = models.CharField(db_column='VendorInvoiceCount', max_length=100)  # Field name made lowercase.
     chargeStartDate = models.DateField(db_column='ChargeStartDate')  # Field name made lowercase.
     chargeEndDate = models.DateField(db_column='ChargeEndDate')  # Field name made lowercase.
-    partnerAmount = models.DecimalField(db_column='partner_amount_pretax', max_digits=19, decimal_places=4)
-    rrpAmount = models.DecimalField(db_column='rrp_amount_pretax', max_digits=19, decimal_places=4)
-    ourAmount = models.DecimalField(db_column='our_amount_pretax', max_digits=19, decimal_places=4)
+    partner_amount_pretax = models.DecimalField(db_column='partner_amount_pretax', max_digits=19, decimal_places=4)
+    rrp_amount_pretax = models.DecimalField(db_column='rrp_amount_pretax', max_digits=19, decimal_places=4)
+    our_amount_pretax = models.DecimalField(db_column='our_amount_pretax', max_digits=19, decimal_places=4)
+    our_tax = models.DecimalField(db_column='our_tax', max_digits=19, decimal_places=4)
+    our_amount = models.DecimalField(db_column='our_amount', max_digits=19, decimal_places=4)
     paid = models.DecimalField(db_column="Paid", max_digits=19, decimal_places=4)
     regId = models.IntegerField(db_column='RegId')  # Field name made lowercase.
     regDate = models.DateTimeField(db_column='RegDate')  # Field name made lowercase.

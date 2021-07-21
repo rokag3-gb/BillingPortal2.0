@@ -24,8 +24,8 @@ from custom.views import CustomLoginView
 from portal.views import payment, dashboard, index, preference, invoices, charge_oneimte_payment, \
     payment_history, payment_details, manage_payments, search_orgs, orgsettings, \
     cert_form, issue_token, issue_param, issue_param_callback, charge_token_payment
-# from portal.views.invoice_backoffice import InvoiceRestList, InvoiceRestView, InvoiceDetailAzAzRestList,\
-#     InvoiceDetailAzAzRestView, InvoiceRestCreate, swagger_view
+from portal.views.invoice_backoffice import InvoiceRestList, InvoiceRestView, InvoiceDetailAzAzRestList,\
+    InvoiceDetailAzAzRestView, InvoiceRestCreate, swagger_view
 from django.conf import settings # import the settings file
 
 branding = getattr(settings, "BRANDING", {})
@@ -67,13 +67,13 @@ urlpatterns = [
     path('settings/org/', orgsettings, name='organization_list'),
 
     path('policy/', include('policy.urls')),
-    # path('api/v1/invoice/', InvoiceRestCreate.as_view()),
-    # path('api/v1/invoice/list', InvoiceRestList.as_view()),
-    # path('api/v1/invoice/<int:pk>/', InvoiceRestView.as_view()),
-    # path('api/v1/invoice_azaz/<int:pk>/', InvoiceDetailAzAzRestView.as_view()),
-    # path('api/v1/invoice_azaz/', InvoiceDetailAzAzRestList.as_view()),
-    # path('api-auth/', include('rest_framework.urls')),
-    # path('swagger/schema-json.json', swagger_view.without_ui(cache_timeout=0), name='schema-json'),
-    # path('swagger/', swagger_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('api/v1/invoice/', InvoiceRestCreate.as_view()),
+    path('api/v1/invoice/list', InvoiceRestList.as_view()),
+    path('api/v1/invoice/<int:pk>/', InvoiceRestView.as_view()),
+    path('api/v1/invoice_azaz/<int:pk>/', InvoiceDetailAzAzRestView.as_view()),
+    path('api/v1/invoice_azaz/', InvoiceDetailAzAzRestList.as_view()),
+    path('api-auth/', include('rest_framework.urls')),
+    path('swagger/schema-json.json', swagger_view.without_ui(cache_timeout=0), name='schema-json'),
+    path('swagger/', swagger_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('', index, name='index'),
 ]
