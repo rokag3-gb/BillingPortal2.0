@@ -43,10 +43,12 @@ INSTALLED_APPS = [
     'portal.apps.PortalConfig',
     'custom',
     'policy',
+    'frontend',
     'django.contrib.humanize',
     'drf_yasg',
     'rest_framework',
-    'django_filters'
+    'django_filters',
+    'webpack_loader'
 ]
 
 MIDDLEWARE = [
@@ -146,6 +148,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [
     str(BASE_DIR.joinpath('static')),
+    str(BASE_DIR.joinpath('frontend')),
 ]
 
 PG_BACKEND = {
@@ -202,4 +205,11 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
     )
+}
+
+WEBPACK_LOADER = {
+  'DEFAULT': {
+    'BUNDLE_DIR_NAME': 'bundles/',
+    'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json')
+  }
 }
