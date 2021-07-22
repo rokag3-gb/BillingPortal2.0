@@ -22,6 +22,8 @@ COPY . /app
 
 # Copy react app bundle to runtime image
 COPY --from=node /app/frontend/bundles /app/frontend/bundles
+COPY --from=node /app/webpack-stats.json /app/webpack-stats.json
+
 RUN pip install -r requirements.txt && python manage.py collectstatic --noinput
 
 EXPOSE 8000
