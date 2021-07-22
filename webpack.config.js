@@ -1,34 +1,53 @@
-const path = require('path')
-const BundleTracker = require('webpack-bundle-tracker')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+var path = require("path")
+var webpack = require('webpack')
+var BundleTracker = require('webpack-bundle-tracker')
 
 module.exports = {
-  entry: {
-    frontend: './frontend/src/index.js',
-  },
+  context: __dirname,
+
+  entry: './frontend/src/index', // entry point of our app. assets/js/index.js should require other js modules and dependencies it needs
+
   output: {
-    path: path.resolve('./frontend/static/frontend/'),
-    filename: '[name]-[fullhash].js',
-    publicPath: 'static/frontend/',
+      path: path.resolve('./frontend/bundles/'),
+      filename: "[name]-[hash].js",
   },
+
   plugins: [
-    new CleanWebpackPlugin(),
-    new BundleTracker({
-      path: __dirname,
-      filename: './webpack-stats.json',
-    }),
+    new BundleTracker({filename: './webpack-stats.json'}),
   ],
+
   module: {
-    rules: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: ['babel-loader'],
-      },
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
-      },
-    ],
+      rules: [
+          {
+              use: [
+                  'babel-loader',
+              ]
+          }
+      ],
+    // use: [
+    //   { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader'}, // to transform JSX into JS
+    // ],
+  },
+
+  resolve: {
+    // modulesDirectories: ['node_modules', 'bower_components'],
+    extensions: ['', '.js', '.jsx']
   },
 }
+
+// var path = require('path');
+// var webpack = require('webpack');
+// var BundleTracker = require('webpack-bundle-tracker');
+
+// module.exports = {
+//   context: __dirname,
+//   entry: './frontend/src/index',
+//   output: {
+//       path: path.resolve('./frontend/bundles/'),
+//       filename: "[name]-[hash].js"
+//   },
+
+//   plugins: [
+//     new BundleTracker({filename: './webpack-stats.json'})
+//   ]
+// }

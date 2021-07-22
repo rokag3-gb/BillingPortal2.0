@@ -148,6 +148,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [
     str(BASE_DIR.joinpath('static')),
+    str(BASE_DIR.joinpath('frontend')),
 ]
 
 PG_BACKEND = {
@@ -208,7 +209,7 @@ REST_FRAMEWORK = {
 
 WEBPACK_LOADER = {
   'DEFAULT': {
-    'BUNDLE_DIR_NAME': 'frontend/',
+    'BUNDLE_DIR_NAME': 'bundles/',
     'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json')
   }
 }

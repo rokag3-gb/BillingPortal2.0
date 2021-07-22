@@ -204,3 +204,4 @@ modules.xml
 node_modules
 webpack-stats.json
 frontend/static/frontend
+frontend/bundles/
