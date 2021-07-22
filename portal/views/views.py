@@ -92,3 +92,5 @@ def search_orgs(request: HttpRequest) -> HttpResponse:
     print(list(result))
     return JsonResponse({'result':list(result)})
                   
+def invoice_backoffice_iframe(request: HttpRequest) -> HttpResponse:
+    return render(request, 'portal/iframe.html', {"iframe_url":"/app"})
