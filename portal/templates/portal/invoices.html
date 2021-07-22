@@ -76,7 +76,7 @@
                   <td class="align-middle">{{ invoice.invoiceDate }}</td>
                   <td class="align-middle">{{ invoice.chargeStartDate }}</td>
                   <td class="align-middle">{{ invoice.chargeEndDate }}</td>
-                  <td class="align-middle white-space-nowrap text-right pr-3">{{ invoice.rrpAmount | floatformat:"0" | intcomma }}원</td>
+                  <td class="align-middle white-space-nowrap text-right pr-3">{{ invoice.rrp_amount_pretax | floatformat:"0" | intcomma }}원</td>
                   <td class="align-middle white-space-nowrap text-right pr-3">{{ invoice.paid | floatformat:"0" | intcomma }}원</td>
                   <td class="align-middle">
                     <button class="btn btn-falcon-default btn-sm ml-2" type="button">
