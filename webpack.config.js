@@ -9,7 +9,7 @@ module.exports = {
 
   output: {
       path: path.resolve('./frontend/bundles/'),
-      filename: "[name]-[hash].js",
+      filename: "[name]-[fullhash].js",
   },
 
   plugins: [

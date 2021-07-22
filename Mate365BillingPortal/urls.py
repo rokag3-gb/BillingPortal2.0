@@ -23,7 +23,7 @@ from organizations.backends import invitation_backend
 from custom.views import CustomLoginView
 from portal.views import payment, dashboard, index, preference, invoices, charge_oneimte_payment, \
     payment_history, payment_details, manage_payments, search_orgs, orgsettings, \
-    cert_form, issue_token, issue_param, issue_param_callback, charge_token_payment
+    cert_form, issue_token, issue_param, issue_param_callback, charge_token_payment, invoice_backoffice_iframe
 from portal.views.invoice_backoffice import InvoiceCreateListView, InvoiceRestView, InvoiceDetailAzAzCreateListView, \
     InvoiceDetailAzAzRestView, swagger_view
 from django.conf import settings # import the settings file
@@ -51,6 +51,7 @@ urlpatterns = [
     path('payment_history/', login_required(payment_history), name='payment_history'),
     path('payment_details/', login_required(payment_details), name='payment_details'),
     path('search_orgs/', login_required(search_orgs), name='search_orgs'),
+    path('invoice_backoffice/', login_required(invoice_backoffice_iframe), name='invoice_backoffice'),
 
     path('manage_payments/', login_required(manage_payments), name="manage_payments"),
     path('manage_payments/new/', login_required(cert_form), name="new_payment"),
