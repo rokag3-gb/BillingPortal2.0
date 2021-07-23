@@ -76,7 +76,7 @@ const ds = new DataSource({
     store: store
 })
 
-function MainGrid({ setDetailOrgId }) {
+function MainGrid({ setInvoiceId }) {
     const handlePDF = (e) => {
         e.event.preventDefault()
         // window.open(`report/${e.row.data.invoiceId}`, "_blank", "resizable, width=650, height=950")
@@ -87,7 +87,8 @@ function MainGrid({ setDetailOrgId }) {
     }
     const handleDetail = (e) => {
         e.event.preventDefault()
-        setDetailOrgId(e.row.data.orgId)
+        // setDetailOrgId(e.row.data.orgId)
+        setInvoiceId(e.row.data.invoiceId)
     }
 
     return (

@@ -32,7 +32,7 @@ const store = new CustomStore({
 
         let params = "?"
         for (let i in loadOptions.filter) {
-            if (loadOptions.filter[i][0] === "orgid" && loadOptions.filter[i][2] === 0) {
+            if (loadOptions.filter[i][0] === "invoiceid" && loadOptions.filter[i][2] === 0) {
                 return
             } else {
                 params += `${loadOptions.filter[i].join("")}&`
@@ -64,16 +64,16 @@ const store = new CustomStore({
     
 });
 
-function DetailGrid({ orgId }) {
+function DetailGrid({ invoiceId }) {
     const ds = new DataSource({store: store})
 
     useEffect(() => {
         ds.filter([
-            ["orgid", "=", orgId],
+            ["invoiceid", "=", invoiceId],
             ["limit", "=", 1000],
         ])
         ds.load()
-    }, [orgId])
+    }, [invoiceId])
 
     return (
         <>
