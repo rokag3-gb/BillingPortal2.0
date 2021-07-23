@@ -17,16 +17,15 @@ import DataSource from 'devextreme/data/data_source';
 const urlInvoice = "/api/v1/invoice/"
 const headers = {
     'Content-Type': 'application/json',
-    'accept': 'application/json',
-    'Cookie': '_ga=GA1.3.50520333.1612416976; _ga_P6G94JLMP0=GS1.1.1626239122.11.1.1626240040.0; _gid=GA1.3.238228918.1626921312; csrftoken=aydlp0xh3RJ4lVj1mJVRgcb4Z4RJOArQGt25NE6omZftjZY6bnKwMKhc9hXPC8yZ; sessionid=lpl4ny4jx6ykpailvhmw0u5h9uqgw4g9'
+    'accept': 'application/json'
 }
 
 const store = new CustomStore({
     key: 'seq',
     load: function() {
-        const url = urlInvoice //+ "?limit=1000"
+        const url = urlInvoice + "?limit=1000"
 
-        return axios.get(url, {headers},{withCredentials: true})
+        return axios.get(url)
             .then((res) => {
                 console.log(`GET ${url} ok - len:${res.data.results.length}`)
                 
