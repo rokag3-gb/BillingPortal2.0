@@ -3,12 +3,12 @@ import MainGrid from './MainGrid';
 import DetailGrid from './DetailGrid';
 
 function GridPage() {
-    const [detailOrgId, setDetailOrgId] = useState(0)
+    const [invoiceId, setInvoiceId] = useState(0)
 
     return (
         <>
-            <MainGrid setDetailOrgId={setDetailOrgId} />
-            <DetailGrid orgId={detailOrgId} />
+            <MainGrid setInvoiceId={setInvoiceId} />
+            <DetailGrid invoiceId={invoiceId} />
         </>
     )
 }
