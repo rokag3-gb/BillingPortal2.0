@@ -4,7 +4,7 @@
 # Node.js build environment (react frontend app)
 FROM node:16-slim AS node
 WORKDIR /app
-COPY . /app
+COPY invoice_frontend /app
 RUN npm install && npm run build
 
 # Runtime image
@@ -21,10 +21,9 @@ WORKDIR /app
 COPY . /app
 
 # Copy react app bundle to runtime image
-COPY --from=node /app/frontend/bundles /app/frontend/bundles
-COPY --from=node /app/webpack-stats.json /app/webpack-stats.json
+COPY --from=node /app/build /app/invoice_backoffice/build
 
-RUN pip install -r requirements.txt && python manage.py collectstatic --noinput
+RUN rm -rf invoice_frontend && pip install -r requirements.txt && python manage.py collectstatic --noinput
 
 EXPOSE 8000
 CMD ["daphne", "-b", "0.0.0.0", "Mate365BillingPortal.asgi:application"]
