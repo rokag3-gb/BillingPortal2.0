@@ -76,6 +76,6 @@ urlpatterns = [
     path('swagger/schema-json.json', swagger_view.without_ui(cache_timeout=0), name='schema-json'),
     path('swagger/', swagger_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 
-    path('app/', include('frontend.urls')),
+    path('app/', include('invoice_backoffice.urls')),
     path('', index, name='index'),
 ]
