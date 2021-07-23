@@ -13,8 +13,8 @@ function App() {
     <>
       <BrowserRouter>
         <Switch>
-          <Route exact path="/" component={GridPage} />
-          <Route path={`/report/:id`} component={Report} />
+          <Route exact path="/app/" component={GridPage} />
+          <Route path={`/app/report/:id`} component={Report} />
         </Switch>
       </BrowserRouter>
     </>
