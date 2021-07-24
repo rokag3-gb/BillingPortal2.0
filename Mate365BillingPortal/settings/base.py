@@ -43,10 +43,11 @@ INSTALLED_APPS = [
     'portal.apps.PortalConfig',
     'custom',
     'policy',
+    'invoice_backoffice',
     'django.contrib.humanize',
     'drf_yasg',
     'rest_framework',
-    'django_filters'
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -67,7 +68,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            str(BASE_DIR.joinpath('templates'))
+            str(BASE_DIR.joinpath('templates')),
+            os.path.join(BASE_DIR, 'invoice_backoffice')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -146,6 +148,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [
     str(BASE_DIR.joinpath('static')),
+    os.path.join(BASE_DIR, 'invoice_backoffice', "build", "static"),
 ]
 
 PG_BACKEND = {

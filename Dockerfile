@@ -1,4 +1,14 @@
-FROM python:3.9-slim
+
+
+
+# Node.js build environment (react frontend app)
+FROM node:16-slim AS node
+WORKDIR /app
+COPY invoice_frontend /app
+RUN npm install && npm run build
+
+# Runtime image
+FROM python:3.9-slim AS runtime
 ENV PYTHONUNBUFFERED=1
 
 RUN apt-get update && apt-get install -y g++ build-essential unixodbc-dev ca-certificates curl libgssapi-krb5-2 && \
@@ -9,7 +19,11 @@ RUN apt-get update && apt-get install -y g++ build-essential unixodbc-dev ca-cer
 
 WORKDIR /app
 COPY . /app
-RUN pip install -r requirements.txt && python manage.py collectstatic --noinput
+
+# Copy react app bundle to runtime image
+COPY --from=node /app/build /app/invoice_backoffice/build
+
+RUN rm -rf invoice_frontend && pip install -r requirements.txt && python manage.py collectstatic --noinput
 
 EXPOSE 8000
 CMD ["daphne", "-b", "0.0.0.0", "Mate365BillingPortal.asgi:application"]

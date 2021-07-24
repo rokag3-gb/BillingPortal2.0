@@ -91,4 +91,9 @@ def search_orgs(request: HttpRequest) -> HttpResponse:
         result = result.filter(name__contains=query, is_active=True).values("name", "slug")
     print(list(result))
     return JsonResponse({'result':list(result)})
-                  
+
+def invoice_list_iframe(request: HttpRequest) -> HttpResponse:
+    return render(request, 'portal/iframe.html', {"iframe_url":"/app"})
+
+def invoice_backoffice_iframe(request: HttpRequest) -> HttpResponse:
+    return render(request, 'portal/iframe.html', {"iframe_url":"/app/management"})
