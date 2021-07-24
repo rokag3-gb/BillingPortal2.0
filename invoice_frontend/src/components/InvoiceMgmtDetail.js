@@ -77,12 +77,12 @@ function DetailGrid({ invoiceId }) {
 
     return (
         <>
-            MgmtDetail
             <DataGrid
                 showBorders
                 columnAutoWidth
                 dataSource={ds}
                 remoteOperations={{ filtering: true }}
+                style={{height: '50vh', paddingTop: 20}}
             >
                 <Editing
                     mode="batch"
@@ -90,14 +90,6 @@ function DetailGrid({ invoiceId }) {
                     allowDeleting
                     allowUpdating
                     startEditAction="dblClick"
-                />
-                <Paging defaultPageSize={10} />
-                <Pager
-                    visible={true}
-                    allowedPageSizes={[5, 10, 15, 20]}
-                    showPageSizeSelector={true}
-                    showInfo={true}
-                    showNavigationButtons={true}
                 />
             </DataGrid>
         </>

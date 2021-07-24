@@ -2,13 +2,9 @@ import React from 'react';
 import DataGrid, {
     Button,
     Column,
-    Editing,
-    RequiredRule,
     ColumnChooser,
     FilterRow,
-    Pager,
-    Paging,
-    PatternRule,
+    Scrolling,
 } from 'devextreme-react/data-grid';
 import axios from 'axios';
 import CustomStore from 'devextreme/data/custom_store';
@@ -79,90 +75,55 @@ const ds = new DataSource({
 function MainGrid({ setInvoiceId }) {
     const handlePDF = (e) => {
         e.event.preventDefault()
-        // window.open(`report/${e.row.data.invoiceId}`, "_blank", "resizable, width=650, height=950")
         window.open(`report/${e.row.data.invoiceId}`, "_blank")
-    }
-    const handleRowUpdating = (e) => {
-        e.newData = {...e.oldData, ...e.newData}
+        // New window
+        // window.open(`report/${e.row.data.invoiceId}`, "_blank", "resizable, width=650, height=950")
     }
     const handleDetail = (e) => {
         e.event.preventDefault()
-        // setDetailOrgId(e.row.data.orgId)
         setInvoiceId(e.row.data.invoiceId)
     }
 
     return (
         <>
-            LIST Main
             <DataGrid
                 dataSource={ds}
                 showBorders
                 columnAutoWidth
-                onRowUpdating={handleRowUpdating}
+                style={{height: '45vh'}}
             >
-                <Editing
-                    mode="batch"
-                    allowAdding
-                    allowDeleting
-                    allowUpdating
-                    startEditAction="dblClick"
-                />
                 <ColumnChooser enabled />
                 <FilterRow visible={true} />
-                <Paging defaultPageSize={10} />
-                <Pager
-                    visible={true}
-                    allowedPageSizes={[5, 10, 15, 20]}
-                    showPageSizeSelector={true}
-                    showInfo={true}
-                    showNavigationButtons={true}
-                />
+                <Scrolling mode="virtual" />
 
-                <Column type="buttons" width="90">
+                <Column type="buttons" width="80">
                     <Button icon="pdffile" onClick={handlePDF} />
                     <Button icon="showpanel" onClick={handleDetail} />
-                    <Button name="delete" />
                 </Column>
-                {/* <Column type="buttons" width="70" /> */}
-
-                <Column dataField="seq" allowEditting={false} />
-                <Column dataField="invoiceMonth" allowEditting={false}>
-                    <RequiredRule />
-                </Column>
-                <Column dataField="invoiceDate" allowEditting={true}>
-                    <RequiredRule />
-                </Column>
-                <Column dataField="invoiceId" allowEditting={false} />
-                <Column dataField="orgId" allowEditting={false}>
-                    <RequiredRule />
-                </Column>
-                <Column dataField="orgKey" allowEditting={false} visible={false} />
-                <Column dataField="orgName" allowEditting={true} />
-                <Column dataField="vendorCode" allowEditting={false} visible={false} />
-                <Column dataField="vendorName" allowEditting={false} visible={false} />
-                <Column dataField="vendorInvoiceCount" allowEditting={false} visible={false} />
-                <Column dataField="chargeStartDate" allowEditting={true}>
-                    <RequiredRule />
-                </Column>
-                <Column dataField="chargeEndDate" allowEditting={true}>
-                    <RequiredRule />
-                </Column>
-                <Column dataField="partner_amount_pretax" allowEditting={false} visible={true} />
-                <Column dataField="rrp_amount_pretax" allowEditting={false} />
-                <Column dataField="our_amount_pretax" allowEditting={false} />
-                <Column dataField="our_tax" allowEditting={false} />
-                <Column dataField="our_amount" allowEditting={false} />
-                <Column dataField="paid" allowEditting={false} />
-                <Column dataField="regId" allowEditting={false}>
-                    <RequiredRule />
-                </Column>
-                <Column dataField="regDate" allowEditting={false} />
-                <Column dataField="stateCode" allowEditting={true}>
-                    <RequiredRule />
-                </Column>
-                <Column dataField="stateChgId" allowEditting={false} />
-                <Column dataField="stateChgDate" allowEditting={false} />
-                <Column dataField="remark" allowEditting={true} />
+                <Column dataField="seq" />
+                <Column dataField="invoiceMonth" />
+                <Column dataField="invoiceDate" />
+                <Column dataField="invoiceId" />
+                <Column dataField="orgId" />
+                <Column dataField="orgKey"visible={false} />
+                <Column dataField="orgName" />
+                <Column dataField="vendorCode"visible={false} />
+                <Column dataField="vendorName"visible={false} />
+                <Column dataField="vendorInvoiceCount"visible={false} />
+                <Column dataField="chargeStartDate" />
+                <Column dataField="chargeEndDate" />
+                <Column dataField="partner_amount_pretax" visible={true} />
+                <Column dataField="rrp_amount_pretax" />
+                <Column dataField="our_amount_pretax" />
+                <Column dataField="our_tax" />
+                <Column dataField="our_amount" />
+                <Column dataField="paid" />
+                <Column dataField="regId" />
+                <Column dataField="regDate" />
+                <Column dataField="stateCode" />
+                <Column dataField="stateChgId" />
+                <Column dataField="stateChgDate"/ >
+                <Column dataField="remark" />
 
             </DataGrid>
         </>

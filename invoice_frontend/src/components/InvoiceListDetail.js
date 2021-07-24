@@ -1,14 +1,6 @@
 import React, { useEffect } from 'react';
 import DataGrid, {
-    Button,
-    Column,
-    Editing,
-    RequiredRule,
-    ColumnChooser,
-    FilterRow,
-    Pager,
-    Paging,
-    PatternRule,
+    Scrolling,
 } from 'devextreme-react/data-grid';
 import axios from 'axios';
 import CustomStore from 'devextreme/data/custom_store';
@@ -77,28 +69,14 @@ function DetailGrid({ invoiceId }) {
 
     return (
         <>
-            ListDetail
             <DataGrid
                 showBorders
                 columnAutoWidth
                 dataSource={ds}
                 remoteOperations={{ filtering: true }}
+                style={{height: '50vh', paddingTop: 20}}
             >
-                <Editing
-                    mode="batch"
-                    allowAdding
-                    allowDeleting
-                    allowUpdating
-                    startEditAction="dblClick"
-                />
-                <Paging defaultPageSize={10} />
-                <Pager
-                    visible={true}
-                    allowedPageSizes={[5, 10, 15, 20]}
-                    showPageSizeSelector={true}
-                    showInfo={true}
-                    showNavigationButtons={true}
-                />
+                <Scrolling mode="virtual" />
             </DataGrid>
         </>
     )

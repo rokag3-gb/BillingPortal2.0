@@ -9,6 +9,7 @@ import DataGrid, {
     Pager,
     Paging,
     PatternRule,
+    Scrolling,
 } from 'devextreme-react/data-grid';
 import axios from 'axios';
 import CustomStore from 'devextreme/data/custom_store';
@@ -93,12 +94,12 @@ function MainGrid({ setInvoiceId }) {
 
     return (
         <>
-            MgmtMain
             <DataGrid
                 dataSource={ds}
                 showBorders
                 columnAutoWidth
                 onRowUpdating={handleRowUpdating}
+                style={{height: '45vh'}}
             >
                 <Editing
                     mode="batch"
@@ -106,24 +107,17 @@ function MainGrid({ setInvoiceId }) {
                     allowDeleting
                     allowUpdating
                     startEditAction="dblClick"
+                    useIcons
                 />
                 <ColumnChooser enabled />
                 <FilterRow visible={true} />
-                <Paging defaultPageSize={10} />
-                <Pager
-                    visible={true}
-                    allowedPageSizes={[5, 10, 15, 20]}
-                    showPageSizeSelector={true}
-                    showInfo={true}
-                    showNavigationButtons={true}
-                />
+                <Scrolling mode="virtual" />
 
                 <Column type="buttons" width="90">
                     <Button icon="pdffile" onClick={handlePDF} />
                     <Button icon="showpanel" onClick={handleDetail} />
                     <Button name="delete" />
                 </Column>
-                {/* <Column type="buttons" width="70" /> */}
 
                 <Column dataField="seq" allowEditting={false} />
                 <Column dataField="invoiceMonth" allowEditting={false}>
