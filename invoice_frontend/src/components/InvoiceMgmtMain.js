@@ -93,6 +93,7 @@ function MainGrid({ setInvoiceId }) {
 
     return (
         <>
+            MgmtMain
             <DataGrid
                 dataSource={ds}
                 showBorders

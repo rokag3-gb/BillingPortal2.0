@@ -77,6 +77,7 @@ function DetailGrid({ invoiceId }) {
 
     return (
         <>
+            ListDetail
             <DataGrid
                 showBorders
                 columnAutoWidth
