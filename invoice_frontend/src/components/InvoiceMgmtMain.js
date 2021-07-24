@@ -80,7 +80,6 @@ const ds = new DataSource({
 function MainGrid({ setInvoiceId }) {
     const handlePDF = (e) => {
         e.event.preventDefault()
-        // window.open(`report/${e.row.data.invoiceId}`, "_blank", "resizable, width=650, height=950")
         window.open(`report/${e.row.data.invoiceId}`, "_blank")
     }
     const handleRowUpdating = (e) => {

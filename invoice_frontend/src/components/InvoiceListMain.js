@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import DataGrid, {
     Button,
     Column,
     ColumnChooser,
     FilterRow,
     Scrolling,
+    Selection,
 } from 'devextreme-react/data-grid';
 import axios from 'axios';
 import CustomStore from 'devextreme/data/custom_store';
@@ -72,7 +73,12 @@ const ds = new DataSource({
     store: store
 })
 
+const getInvoiceIds = (rowsData) => {
+    return rowsData.map((row) => row.invoiceId)
+}
+
 function MainGrid({ setInvoiceId }) {
+    const refDataGrid = useRef(null);
     const handlePDF = (e) => {
         e.event.preventDefault()
         window.open(`report/${e.row.data.invoiceId}`, "_blank")
@@ -83,15 +89,28 @@ function MainGrid({ setInvoiceId }) {
         e.event.preventDefault()
         setInvoiceId(e.row.data.invoiceId)
     }
+    const handlePaymentClick = () => {
+        // Ready for payment
+        if (refDataGrid === null) { return }
+        const dg = refDataGrid.current.instance;
+        const selectedInvoiceIds = getInvoiceIds(dg.getSelectedRowsData())
+        const url = "http://localhost:8000/payment?ids=" + selectedInvoiceIds.join(',')
+
+        window.parent.change_parent_url(url)
+    }
 
     return (
         <>
+            {/* <button onClick={handlePaymentClick}>payment</button> */}
             <DataGrid
                 dataSource={ds}
                 showBorders
                 columnAutoWidth
                 style={{height: '45vh'}}
+                hoverStateEnabled={true}
+                ref={refDataGrid}
             >
+                <Selection mode="multiple" />
                 <ColumnChooser enabled />
                 <FilterRow visible={true} />
                 <Scrolling mode="virtual" />
