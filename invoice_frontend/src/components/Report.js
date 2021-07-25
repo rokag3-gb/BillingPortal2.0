@@ -34,7 +34,7 @@ function Report({ match }) {
 
     return (
         <>
-            <PDFViewer style={{position: 'fixed', top: 0, left: 0, height: '100%', width: '100%', margin: 0}}>
+            <PDFViewer frameBorder={0} style={{position: 'fixed', top: 0, left: 0, height: '100%', width: '100%', margin: 0}}>
                 <DocPDF
                     id={id}
                     clientInfo={clientInfo}
