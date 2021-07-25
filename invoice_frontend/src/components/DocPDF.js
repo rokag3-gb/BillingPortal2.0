@@ -200,7 +200,7 @@ function DocPDF({ id, clientInfo, paymentInfo, cloudServiceUsageInfo, additional
                 </View>
                 <View style={styles.sectionRemark}>
                     <Text style={styles.textHeader}>Remarks</Text>
-                    {REMARKS.map((text, idx) => <Text style={{marginLeft: 5}}>{`${idx+1}. ${text}`}</Text>)}
+                    {REMARKS.map((text, idx) => <Text key={'rm'+idx} style={{marginLeft: 5}}>{`${idx+1}. ${text}`}</Text>)}
                 </View>
             </Page>
         </Document>

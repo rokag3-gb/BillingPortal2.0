@@ -1,12 +1,13 @@
 import React, { useRef } from 'react';
 import DataGrid, {
-    Button,
+    Button as CellButton,
     Column,
     ColumnChooser,
     FilterRow,
     Scrolling,
     Selection,
 } from 'devextreme-react/data-grid';
+import { Button } from 'devextreme-react/button';
 import axios from 'axios';
 import CustomStore from 'devextreme/data/custom_store';
 import DataSource from 'devextreme/data/data_source';
@@ -101,7 +102,9 @@ function MainGrid({ setInvoiceId }) {
 
     return (
         <>
-            {/* <button onClick={handlePaymentClick}>payment</button> */}
+            <div>
+                <Button text="결제하기" stylingMode="contained" onClick={handlePaymentClick} />
+            </div>
             <DataGrid
                 dataSource={ds}
                 showBorders
@@ -116,8 +119,8 @@ function MainGrid({ setInvoiceId }) {
                 <Scrolling mode="virtual" />
 
                 <Column type="buttons" width="80">
-                    <Button icon="pdffile" onClick={handlePDF} />
-                    <Button icon="showpanel" onClick={handleDetail} />
+                    <CellButton icon="pdffile" onClick={handlePDF} />
+                    <CellButton icon="showpanel" onClick={handleDetail} />
                 </Column>
                 <Column dataField="seq" />
                 <Column dataField="invoiceMonth" />
