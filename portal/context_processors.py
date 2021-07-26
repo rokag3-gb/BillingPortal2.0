@@ -43,24 +43,25 @@ def get_sidebar_menu(request):
                      }
         _r_sub_menu = list()
         for sub in _sub_menu:
-            if sub.link_type == "Page":
-                _r_sub_menu.append({'menu_id': sub.menu_id,
-                                'caption': sub.caption,
-                                'url': sub.page_path,
-                                'is_enable': sub.is_enable
-                                })
-            elif sub.link_type == "Report":
-                _r_sub_menu.append({'menu_id': sub.menu_id,
+            if (sub.is_admin_only and request.user.is_staff) or not sub.is_admin_only:
+                if sub.link_type == "Page":
+                    _r_sub_menu.append({'menu_id': sub.menu_id,
                                     'caption': sub.caption,
-                                    'url': "dashboard",
+                                    'url': sub.page_path,
                                     'is_enable': sub.is_enable
                                     })
-            else:
-                _r_sub_menu.append({'menu_id': sub.menu_id,
-                                    'caption': sub.caption,
-                                    'url': "index",
-                                    'is_enable': sub.is_enable
-                                    })
+                elif sub.link_type == "Report":
+                    _r_sub_menu.append({'menu_id': sub.menu_id,
+                                        'caption': sub.caption,
+                                        'url': "dashboard",
+                                        'is_enable': sub.is_enable
+                                        })
+                else:
+                    _r_sub_menu.append({'menu_id': sub.menu_id,
+                                        'caption': sub.caption,
+                                        'url': "index",
+                                        'is_enable': sub.is_enable
+                                        })
                 # _r_sub_menu.append({'menu_id': sub.menu_id,
                 #                     'caption': sub.caption,
                 #                     'url': sub_menu_url[sub.menu_id] if sub.menu_id in sub_menu_url else sub_menu_url['Default'],
