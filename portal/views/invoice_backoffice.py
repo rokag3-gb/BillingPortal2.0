@@ -2,15 +2,15 @@ from django.http import Http404
 from rest_framework import permissions, status, generics, mixins
 from rest_framework.views import APIView
 from django_filters import rest_framework as drf_filters
-from custom.models import Invoice, InvoiceTable, VwInvoiceDetailAzureAzure, Organization
+from custom.models import Invoice, InvoiceTable, VwInvoiceDetailAzureAzure, OrganizationUser
 from custom.services import get_organization
 from rest_framework.response import Response
 from .rest_serializers import InvoiceDetailAzAzSerializer, InvoiceSerializer, InvoiceTableSerializer
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi    
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework.decorators import action
-from django.db import connection
+from rest_framework.decorators import action, api_view
+from portal.raw_queries import get_invoice_report_data
 
 
 swagger_view = get_schema_view(
@@ -181,16 +181,13 @@ class InvoiceDetailAzAzCreateListView(mixins.ListModelMixin, mixins.CreateModelM
     def get(self, request):
         return self.list(request)
 
-
-def run_raw_proc(proc_statement, *proc_args):
-    cursor =  connection.cursor().execute(proc_statement, *proc_args)
-    resultarr = []
-    while True:
-        columns = [col[0] for col in cursor.description]
-        dictset = [dict(zip(columns, row)) for row in cursor.fetchall()]
-        if len(dictset) > 0: resultarr.append(dictset)
-        if not cursor.nextset(): break
-    return resultarr
-
-def get_invoice_report_data(invoiceId):
-    return run_raw_proc("EXEC dbo.UP_S_GetInvoiceReport @InvoiceId = '{}';".format("2107F90051417"))
+@swagger_auto_schema(method='get')
+@api_view(["GET"])
+def get_invoice_report(request, invoice_id):
+    if request.user.is_staff:
+        return Response(get_invoice_report_data(invoice_id))
+    else:
+        orgOfInvoice = InvoiceTable.objects.get(invoiceid=invoice_id).orgId
+        org = OrganizationUser.objects.get(user=request.user, organization=orgOfInvoice)
+        if org is not None:
+            return Response(get_invoice_report_data(invoice_id))
