@@ -26,7 +26,15 @@ class InvoiceFilter(drf_filters.FilterSet):
     invoiceDateEnd = drf_filters.DateFilter(field_name='invoiceDate', lookup_expr='lte')
     class Meta:
         model = Invoice
-        fields = ['invoiceMonth', 'invoiceDate', 'orgId', 'orgKey', 'orgName', 'vendorCode', 'vendorName']
+        fields = [
+            # 'invoiceMonth', 
+            # 'invoiceDate', 
+            'orgId', 
+            # 'orgKey', 
+            # 'orgName', 
+            # 'vendorCode', 
+            # 'vendorName'
+            ]
 
 class InvoiceCreateListView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
     model = Invoice
