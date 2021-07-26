@@ -1,5 +1,5 @@
-from django.http import response, Http404
-from rest_framework import routers, permissions, status, generics, mixins
+from django.http import Http404
+from rest_framework import permissions, status, generics, mixins
 from rest_framework.views import APIView
 from django_filters import rest_framework as drf_filters
 from custom.models import Invoice, InvoiceTable, VwInvoiceDetailAzureAzure, Organization
@@ -8,8 +8,10 @@ from rest_framework.response import Response
 from .rest_serializers import InvoiceDetailAzAzSerializer, InvoiceSerializer, InvoiceTableSerializer
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi    
-from drf_yasg.utils import no_body, swagger_auto_schema
-from rest_framework.decorators import action, api_view
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework.decorators import action
+from django.db import connection
+
 
 swagger_view = get_schema_view(
    openapi.Info(
@@ -178,3 +180,17 @@ class InvoiceDetailAzAzCreateListView(mixins.ListModelMixin, mixins.CreateModelM
     @action(detail=False, methods=['get'])
     def get(self, request):
         return self.list(request)
+
+
+def run_raw_proc(proc_statement, *proc_args):
+    cursor =  connection.cursor().execute(proc_statement, *proc_args)
+    resultarr = []
+    while True:
+        columns = [col[0] for col in cursor.description]
+        dictset = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        if len(dictset) > 0: resultarr.append(dictset)
+        if not cursor.nextset(): break
+    return resultarr
+
+def get_invoice_report_data(invoiceId):
+    return run_raw_proc("EXEC dbo.UP_S_GetInvoiceReport @InvoiceId = '{}';".format("2107F90051417"))
