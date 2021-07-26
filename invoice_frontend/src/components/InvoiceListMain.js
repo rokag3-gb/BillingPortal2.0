@@ -95,9 +95,8 @@ function MainGrid({ setInvoiceId }) {
         if (refDataGrid === null) { return }
         const dg = refDataGrid.current.instance;
         const selectedInvoiceIds = getInvoiceIds(dg.getSelectedRowsData())
-        const url = "http://localhost:8000/payment?ids=" + selectedInvoiceIds.join(',')
-
-        window.parent.change_parent_url(url)
+        
+        window.parent.proceed_payment(selectedInvoiceIds)
     }
 
     return (
