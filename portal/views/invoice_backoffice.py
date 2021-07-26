@@ -22,7 +22,8 @@ swagger_view = get_schema_view(
 )
 
 class InvoiceFilter(drf_filters.FilterSet):
-    invoiceDate = drf_filters.DateFromToRangeFilter(field_name='invoiceDate')
+    invoiceDateStart = drf_filters.DateFilter(field_name='invoiceDate', lookup_expr='gte')
+    invoiceDateEnd = drf_filters.DateFilter(field_name='invoiceDate', lookup_expr='lte')
     class Meta:
         model = Invoice
         fields = ['invoiceMonth', 'invoiceDate', 'orgId', 'orgKey', 'orgName', 'vendorCode', 'vendorName']
