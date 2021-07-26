@@ -1,15 +1,17 @@
-from django.http import response, Http404
-from rest_framework import routers, permissions, status, generics, mixins
+from django.http import Http404
+from rest_framework import permissions, status, generics, mixins
 from rest_framework.views import APIView
 from django_filters import rest_framework as drf_filters
-from custom.models import Invoice, InvoiceTable, VwInvoiceDetailAzureAzure, Organization
+from custom.models import Invoice, InvoiceTable, VwInvoiceDetailAzureAzure, OrganizationUser
 from custom.services import get_organization
 from rest_framework.response import Response
 from .rest_serializers import InvoiceDetailAzAzSerializer, InvoiceSerializer, InvoiceTableSerializer
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi    
-from drf_yasg.utils import no_body, swagger_auto_schema
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action, api_view
+from portal.raw_queries import get_invoice_report_data
+
 
 swagger_view = get_schema_view(
    openapi.Info(
@@ -26,7 +28,15 @@ class InvoiceFilter(drf_filters.FilterSet):
     invoiceDateEnd = drf_filters.DateFilter(field_name='invoiceDate', lookup_expr='lte')
     class Meta:
         model = Invoice
-        fields = ['invoiceMonth', 'invoiceDate', 'orgId', 'orgKey', 'orgName', 'vendorCode', 'vendorName']
+        fields = [
+            # 'invoiceMonth', 
+            # 'invoiceDate', 
+            'orgId', 
+            # 'orgKey', 
+            # 'orgName', 
+            # 'vendorCode', 
+            # 'vendorName'
+            ]
 
 class InvoiceCreateListView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
     model = Invoice
@@ -170,3 +180,14 @@ class InvoiceDetailAzAzCreateListView(mixins.ListModelMixin, mixins.CreateModelM
     @action(detail=False, methods=['get'])
     def get(self, request):
         return self.list(request)
+
+@swagger_auto_schema(method='get')
+@api_view(["GET"])
+def get_invoice_report(request, invoice_id):
+    if request.user.is_staff:
+        return Response(get_invoice_report_data(invoice_id))
+    else:
+        orgOfInvoice = InvoiceTable.objects.get(invoiceid=invoice_id).orgId
+        org = OrganizationUser.objects.get(user=request.user, organization=orgOfInvoice)
+        if org is not None:
+            return Response(get_invoice_report_data(invoice_id))
