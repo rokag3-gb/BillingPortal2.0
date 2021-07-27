@@ -7,104 +7,38 @@ import DataGrid, {
     Scrolling,
     Selection,
 } from 'devextreme-react/data-grid';
-import { Button } from 'devextreme-react/button';
-import axios from 'axios';
-import CustomStore from 'devextreme/data/custom_store';
-import DataSource from 'devextreme/data/data_source';
 
-const urlInvoice = "/api/v1/invoice/"
-const headers = {
-    'Content-Type': 'application/json',
-    'accept': 'application/json'
-}
-
-const store = new CustomStore({
-    key: 'seq',
-    load: function() {
-        const url = urlInvoice + "?limit=1000"
-
-        return axios.get(url)
-            .then((res) => {
-                console.log(`GET ${url} ok - len:${res.data.results.length}`)
-                
-                return res.data.results
-            })
-            .catch((err) => {
-                console.log(`GET ${url} fail`)
-                throw new Error("데이터 불러오기 실패")
-            })
-    },
-    insert: function(values) {
-        return axios.post(urlInvoice, values, { headers })
-            .then((res) => {
-                console.log(`POST ${urlInvoice} ok`)
-            })
-            .catch((err) => {
-                console.log(err.response.data)
-                throw new Error("데이터 생성 실패")
-            })
-    },
-    update: function(key, values) {
-        const url = urlInvoice + key
-
-        return axios.put(url, values, { headers })
-            .then((res) => {
-                console.log(`PUT ${url} ok`)
-            })
-            .catch((err) => {
-                console.log(err.response)
-                throw new Error(`데이터 업데이트 실패(Seq: ${key})`)
-            })
-    },
-    remove: function(key) {
-        const url = urlInvoice + key
-
-        return axios.delete(url, { headers })
-            .then((res) => {
-                console.log(`DELETE ${url} ok`)
-            })
-            .catch((err) => {
-                console.log(err.response)
-                throw new Error(`데이터 삭제 실패(Seq: ${key})`)
-            })
-    }
-});
-
-const ds = new DataSource({
-    store: store
-})
-
-const getInvoiceIds = (rowsData) => {
-    return rowsData.map((row) => row.invoiceId)
-}
-
-function MainGrid({ setInvoiceId }) {
+const getInvoiceIds = (rowsData) => rowsData.map((row) => row.invoiceId)
+function MainGrid({ ds, setInvoiceId, setStartDate, getStartDate }) {
     const refDataGrid = useRef(null);
-    const handlePDF = (e) => {
+    const handlePDFClick = (e) => {
         e.event.preventDefault()
         window.open(`report/${e.row.data.invoiceId}`, "_blank")
-        // New window
-        // window.open(`report/${e.row.data.invoiceId}`, "_blank", "resizable, width=650, height=950")
     }
-    const handleDetail = (e) => {
+    const handleDetailClick = (e) => {
         e.event.preventDefault()
         setInvoiceId(e.row.data.invoiceId)
     }
     const handlePaymentClick = () => {
-        // Ready for payment
         if (refDataGrid === null) { return }
         const dg = refDataGrid.current.instance;
         const selectedInvoiceIds = getInvoiceIds(dg.getSelectedRowsData())
-        const url = "http://localhost:8000/payment?ids=" + selectedInvoiceIds.join(',')
-
-        window.parent.change_parent_url(url)
+        window.parent.proceed_payment(selectedInvoiceIds)
     }
-
+    const handleToolbarPreparing = (e) => {
+        e.toolbarOptions.items.unshift(
+            {
+                location: 'after',
+                widget: 'dxButton',
+                options: {
+                    text: '결제하기',
+                    onClick: handlePaymentClick
+                }
+            },
+        )
+    }
     return (
-        <>
-            <div>
-                <Button text="결제하기" stylingMode="contained" onClick={handlePaymentClick} />
-            </div>
+        <div>
             <DataGrid
                 dataSource={ds}
                 showBorders
@@ -112,6 +46,8 @@ function MainGrid({ setInvoiceId }) {
                 style={{height: '45vh'}}
                 hoverStateEnabled={true}
                 ref={refDataGrid}
+                onToolbarPreparing={handleToolbarPreparing}
+                remoteOperations={{ filtering: true }}
             >
                 <Selection mode="multiple" />
                 <ColumnChooser enabled />
@@ -119,8 +55,8 @@ function MainGrid({ setInvoiceId }) {
                 <Scrolling mode="virtual" />
 
                 <Column type="buttons" width="80">
-                    <CellButton icon="pdffile" onClick={handlePDF} />
-                    <CellButton icon="showpanel" onClick={handleDetail} />
+                    <CellButton icon="pdffile" onClick={handlePDFClick} />
+                    <CellButton icon="showpanel" onClick={handleDetailClick} />
                 </Column>
                 <Column dataField="seq" />
                 <Column dataField="invoiceMonth" />
@@ -146,10 +82,9 @@ function MainGrid({ setInvoiceId }) {
                 <Column dataField="stateChgId" />
                 <Column dataField="stateChgDate"/ >
                 <Column dataField="remark" />
-
             </DataGrid>
-        </>
+        </div>
     );
 }
 
-export default MainGrid;
+export default React.memo(MainGrid);
