@@ -157,12 +157,24 @@ class InvoiceDetailAzAzCreateListView(mixins.ListModelMixin, mixins.CreateModelM
     model = VwInvoiceDetailAzureAzure
     serializer_class = InvoiceDetailAzAzSerializer
     filter_backends = [drf_filters.DjangoFilterBackend]
-    filterset_fields = ['invoicemonth', 'invoicedate', 'invoiceid', 'orgid', 'orgname', 'orgkey', 'vendorcode', 'vendorname']
+    filterset_fields = [
+        # 'invoicemonth',
+        # 'invoicedate',
+        'invoiceid',
+        # 'chargestartdate',
+        # 'chargeenddate'
+        # 'orgid',
+        # 'orgname',
+        # 'orgkey',
+        # 'vendorcode',
+        # 'vendorname'
+        ]
     permission_classes = [permissions.IsAuthenticated]
     def get_queryset(self):
+        result = VwInvoiceDetailAzureAzure.objects.all().prefetch_related('orgid')
         if not self.request.user.is_staff:
-            return VwInvoiceDetailAzureAzure.objects.filter(orgid=get_organization(self.request)).prefetch_related('orgid')
-        return VwInvoiceDetailAzureAzure.objects.all().prefetch_related('orgid')
+            result = result.filter(orgid=get_organization(self.request)).prefetch_related('orgid')
+        return result
 
     @swagger_auto_schema(method='post', request_body=InvoiceDetailAzAzSerializer, responses={200: InvoiceDetailAzAzSerializer()})
     @action(detail=False, methods=['post'])
@@ -175,11 +187,20 @@ class InvoiceDetailAzAzCreateListView(mixins.ListModelMixin, mixins.CreateModelM
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             raise Http404
-    
-    @swagger_auto_schema(method='get', responses={200: InvoiceDetailAzAzSerializer()})
-    @action(detail=False, methods=['get'])
-    def get(self, request):
-        return self.list(request)
+
+class InvoiceDetailAzureRestListView(generics.ListAPIView):
+    model = VwInvoiceDetailAzureAzure
+    serializer_class = InvoiceDetailAzAzSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    def get_queryset(self):
+        invoice_id = self.kwargs['invoice_id']
+        result = VwInvoiceDetailAzureAzure.objects.all().prefetch_related('orgid')
+        if not self.request.user.is_staff:
+            result = result.filter(orgid=get_organization(self.request)).prefetch_related('orgid')
+        if invoice_id:
+            result = result.filter(invoiceid=invoice_id)
+        return result
+        
 
 @swagger_auto_schema(method='get')
 @api_view(["GET"])

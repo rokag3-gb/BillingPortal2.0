@@ -61,5 +61,6 @@ class InvoiceDetailAzAzSerializer(serializers.ModelSerializer):
     orgid = serializers.PrimaryKeyRelatedField(queryset=Organization.objects.all(), style={'base_template': 'input.html'})
     class Meta:
         model = VwInvoiceDetailAzureAzure
-        fields = '__all__' 
+        # fields = '__all__' 
+        exclude = ('invoicemonth', 'invoicedate', 'orgkey')
         # fields = ['url', 'username', 'email', 'is_staff']
