@@ -39,6 +39,8 @@ function DetailGrid({ invoiceId }) {
                 dataSource={ds}
                 remoteOperations={{ filtering: true }}
                 style={{height: '50vh', paddingTop: 20}}
+                allowColumnResizing={true}
+                columnResizingMode="widget"
             >
                 <Scrolling mode="virtual" />
             </DataGrid>

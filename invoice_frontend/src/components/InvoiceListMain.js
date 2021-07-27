@@ -48,6 +48,8 @@ function MainGrid({ ds, setInvoiceId, setStartDate, getStartDate }) {
                 ref={refDataGrid}
                 onToolbarPreparing={handleToolbarPreparing}
                 remoteOperations={{ filtering: true }}
+                allowColumnResizing={true}
+                columnResizingMode="widget"
             >
                 <Selection mode="multiple" />
                 <ColumnChooser enabled />
