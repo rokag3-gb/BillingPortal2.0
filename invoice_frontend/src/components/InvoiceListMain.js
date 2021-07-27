@@ -85,19 +85,19 @@ function MainGrid({ ds, setInvoiceId, setStartDate, getStartDate }) {
                 <Column dataField="vendorInvoiceCount"visible={false} />
                 <Column dataField="chargeStartDate" />
                 <Column dataField="chargeEndDate" />
-                <Column dataField="partner_amount_pretax" visible={true}>
+                <Column dataField="partner_amount_pretax" caption="partner_amount" visible={true}>
                     <Format type="fixedPoint" precision={2} />
                 </Column>
-                <Column dataField="rrp_amount_pretax">
+                <Column dataField="rrp_amount_pretax" caption="rrp_amount">
                     <Format type="fixedPoint" precision={2} />
                 </Column>
-                <Column dataField="our_amount_pretax">
+                <Column dataField="our_amount_pretax" caption="amount">
                     <Format type="fixedPoint" precision={2} />
                 </Column>
-                <Column dataField="our_tax">
+                <Column dataField="our_tax" caption="tax">
                     <Format type="fixedPoint" precision={2} />
                 </Column>
-                <Column dataField="our_amount">
+                <Column dataField="our_amount" caption="amount + tax">
                     <Format type="fixedPoint" precision={2} />
                 </Column>
                 <Column dataField="paid">
