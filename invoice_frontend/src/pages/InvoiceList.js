@@ -27,7 +27,18 @@ const storeMain = new CustomStore({
         return axios.get(url)
             .then((res) => {
                 console.log(`GET ${url} ok - len:${res.data.results.length}`)
-                return res.data.results
+                // return res.data.results
+                return res.data.results.map((data) => (
+                    {
+                        ...data,
+                        partner_amount_pretax: parseFloat(data.partner_amount_pretax),
+                        rrp_amount_pretax: parseFloat(data.rrp_amount_pretax),
+                        our_amount_pretax: parseFloat(data.our_amount_pretax),
+                        our_tax: parseFloat(data.our_tax),
+                        our_amount: parseFloat(data.our_amount),
+                        paid: parseFloat(data.paid)
+                    }
+                ))
             })
             .catch((err) => {
                 console.log(`GET ${url} fail`)

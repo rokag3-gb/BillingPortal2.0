@@ -8,6 +8,8 @@ import DataGrid, {
     Selection,
     Summary,
     TotalItem,
+    Format,
+    Editing,
 } from 'devextreme-react/data-grid';
 
 const getInvoiceIds = (rowsData) => rowsData.map((row) => row.invoiceId)
@@ -20,6 +22,10 @@ function MainGrid({ ds, setInvoiceId, setStartDate, getStartDate }) {
     const handleDetailClick = (e) => {
         e.event.preventDefault()
         setInvoiceId(e.row.data.invoiceId)
+    }
+    const handleDbClick = (e) => {
+        e.event.preventDefault()
+        setInvoiceId(e.data.invoiceId)
     }
     const handlePaymentClick = () => {
         if (refDataGrid === null) { return }
@@ -39,6 +45,7 @@ function MainGrid({ ds, setInvoiceId, setStartDate, getStartDate }) {
             },
         )
     }
+
     return (
         <div>
             <DataGrid
@@ -54,6 +61,7 @@ function MainGrid({ ds, setInvoiceId, setStartDate, getStartDate }) {
                 columnResizingMode="widget"
                 showRowLines
                 rowAlternationEnabled
+                onRowDblClick={handleDbClick}
             >
                 <Selection mode="multiple" />
                 <ColumnChooser enabled />
@@ -62,7 +70,7 @@ function MainGrid({ ds, setInvoiceId, setStartDate, getStartDate }) {
 
                 <Column type="buttons" width="80">
                     <CellButton icon="pdffile" onClick={handlePDFClick} />
-                    <CellButton icon="showpanel" onClick={handleDetailClick} />
+                    <CellButton icon="showpanel" onClick={handleDetailClick} text="상세보기" />
                 </Column>
                 {/* <Column caption="#" cellRender={(a)=><div>{a.row.dataIndex+1}</div>} /> */}
                 <Column dataField="seq" />
@@ -77,12 +85,24 @@ function MainGrid({ ds, setInvoiceId, setStartDate, getStartDate }) {
                 <Column dataField="vendorInvoiceCount"visible={false} />
                 <Column dataField="chargeStartDate" />
                 <Column dataField="chargeEndDate" />
-                <Column dataField="partner_amount_pretax" visible={true} />
-                <Column dataField="rrp_amount_pretax" />
-                <Column dataField="our_amount_pretax" />
-                <Column dataField="our_tax" />
-                <Column dataField="our_amount" />
-                <Column dataField="paid" />
+                <Column dataField="partner_amount_pretax" visible={true}>
+                    <Format type="fixedPoint" precision={2} />
+                </Column>
+                <Column dataField="rrp_amount_pretax">
+                    <Format type="fixedPoint" precision={2} />
+                </Column>
+                <Column dataField="our_amount_pretax">
+                    <Format type="fixedPoint" precision={2} />
+                </Column>
+                <Column dataField="our_tax">
+                    <Format type="fixedPoint" precision={2} />
+                </Column>
+                <Column dataField="our_amount">
+                    <Format type="fixedPoint" precision={2} />
+                </Column>
+                <Column dataField="paid">
+                    <Format type="fixedPoint" precision={2} />
+                </Column>
                 <Column dataField="regId" />
                 <Column dataField="regDate" />
                 <Column dataField="stateCode" />
