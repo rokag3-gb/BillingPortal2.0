@@ -190,27 +190,27 @@ class Invoice(models.Model):
         
 class VwInvoiceDetailAzureAzure(models.Model):
     seq = models.BigIntegerField(db_column='Seq', primary_key=True)  # Field name made lowercase.
-    invoicemonth = models.CharField(db_column='InvoiceMonth', max_length=6, blank=True, null=True)  # Field name made lowercase.
-    invoicedate = models.DateField(db_column='InvoiceDate', blank=True, null=True)  # Field name made lowercase.
-    invoiceid = models.CharField(db_column='InvoiceId', max_length=13, blank=True, null=True)  # Field name made lowercase.
-    orgid = models.ForeignKey(Organization, models.DO_NOTHING, db_column='OrgId')  # Field name made lowercase.
-    orgname = models.CharField(db_column='OrgName', max_length=200, blank=True, null=True)  # Field name made lowercase.
-    orgkey = models.CharField(db_column='OrgKey', max_length=7, blank=True, null=True)  # Field name made lowercase.
-    vendorcode = models.CharField(db_column='VendorCode', max_length=7, blank=True, null=True)  # Field name made lowercase.
-    vendorname = models.CharField(db_column='VendorName', max_length=200, blank=True, null=True)  # Field name made lowercase.
-    tenantid = models.CharField(db_column='TenantId', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    subscriptionid = models.CharField(db_column='SubscriptionId', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    subscriptionname = models.CharField(db_column='SubscriptionName', max_length=1000, blank=True, null=True)  # Field name made lowercase.
+    invoiceMonth = models.CharField(db_column='InvoiceMonth', max_length=6, blank=True, null=True)  # Field name made lowercase.
+    invoiceDate = models.DateField(db_column='InvoiceDate', blank=True, null=True)  # Field name made lowercase.
+    invoiceId = models.CharField(db_column='InvoiceId', max_length=13, blank=True, null=True)  # Field name made lowercase.
+    orgId = models.ForeignKey(Organization, models.DO_NOTHING, db_column='OrgId')  # Field name made lowercase.
+    orgName = models.CharField(db_column='OrgName', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    orgKey = models.CharField(db_column='OrgKey', max_length=7, blank=True, null=True)  # Field name made lowercase.
+    vendorCode = models.CharField(db_column='VendorCode', max_length=7, blank=True, null=True)  # Field name made lowercase.
+    vendorName = models.CharField(db_column='VendorName', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    tenantId = models.CharField(db_column='TenantId', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    subscriptionId = models.CharField(db_column='SubscriptionId', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    subscriptionName = models.CharField(db_column='SubscriptionName', max_length=1000, blank=True, null=True)  # Field name made lowercase.
     sku = models.CharField(max_length=50, blank=True, null=True)
     unit = models.CharField(db_column='Unit', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    chargestartdate = models.DateTimeField(db_column='ChargeStartDate', blank=True, null=True)  # Field name made lowercase.
-    chargeenddate = models.DateTimeField(db_column='ChargeEndDate', blank=True, null=True)  # Field name made lowercase.
-    orderid = models.CharField(db_column='orderId', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    chargeStartDate = models.DateTimeField(db_column='ChargeStartDate', blank=True, null=True)  # Field name made lowercase.
+    chargeEndDate = models.DateTimeField(db_column='ChargeEndDate', blank=True, null=True)  # Field name made lowercase.
+    orderId = models.CharField(db_column='orderId', max_length=50, blank=True, null=True)  # Field name made lowercase.
     region = models.CharField(max_length=100, blank=True, null=True)
-    servicetype = models.CharField(db_column='serviceType', max_length=200, blank=True, null=True)  # Field name made lowercase.
-    servicename = models.CharField(db_column='serviceName', max_length=200, blank=True, null=True)  # Field name made lowercase.
-    resourcename = models.CharField(db_column='resourceName', max_length=200, blank=True, null=True)  # Field name made lowercase.
-    overagequantity = models.DecimalField(db_column='overageQuantity', max_digits=20, decimal_places=10, blank=True, null=True)  # Field name made lowercase.
+    serviceType = models.CharField(db_column='serviceType', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    serviceName = models.CharField(db_column='serviceName', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    resourceName = models.CharField(db_column='resourceName', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    overageQuantity = models.DecimalField(db_column='overageQuantity', max_digits=20, decimal_places=10, blank=True, null=True)  # Field name made lowercase.
     currency = models.CharField(max_length=50, blank=True, null=True)
     partner_price = models.DecimalField(max_digits=19, decimal_places=4, blank=True, null=True)
     partner_amount = models.DecimalField(max_digits=38, decimal_places=12, blank=True, null=True)
@@ -218,9 +218,9 @@ class VwInvoiceDetailAzureAzure(models.Model):
     rrp_amount = models.DecimalField(max_digits=38, decimal_places=6, blank=True, null=True)
     our_price = models.DecimalField(max_digits=38, decimal_places=6, blank=True, null=True)
     our_amount = models.DecimalField(max_digits=38, decimal_places=6, blank=True, null=True)
-    vendorinvoiceid = models.CharField(db_column='VendorInvoiceId', max_length=50)  # Field name made lowercase.
-    billingcycletype = models.CharField(db_column='billingCycleType', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    regdate = models.DateTimeField(db_column='RegDate', blank=True, null=True)  # Field name made lowercase.
+    vendorInvoiceId = models.CharField(db_column='VendorInvoiceId', max_length=50)  # Field name made lowercase.
+    billingCycleType = models.CharField(db_column='billingCycleType', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    regDate = models.DateTimeField(db_column='RegDate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False  # Created from a view. Don't remove.
