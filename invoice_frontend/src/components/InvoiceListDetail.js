@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import DataGrid, {
     Scrolling,
+    Summary,
+    TotalItem,
 } from 'devextreme-react/data-grid';
 import axios from 'axios';
 import CustomStore from 'devextreme/data/custom_store';
@@ -39,8 +41,21 @@ function DetailGrid({ invoiceId }) {
                 dataSource={ds}
                 remoteOperations={{ filtering: true }}
                 style={{height: '50vh', paddingTop: 20}}
+                allowColumnResizing={true}
+                columnResizingMode="widget"
+                showRowLines
+                rowAlternationEnabled
             >
                 <Scrolling mode="virtual" />
+                <Summary>
+                    <TotalItem column="seq" summaryType="count" valueFormat=",##0" />
+                    <TotalItem column="partner_price" summaryType="sum" valueFormat=",##0" />
+                    <TotalItem column="partner_amount" summaryType="sum" valueFormat=",##0" />
+                    <TotalItem column="rrp_price" summaryType="sum" valueFormat=",##0" />
+                    <TotalItem column="rrp_amount" summaryType="sum" valueFormat=",##0" />
+                    <TotalItem column="our_price" summaryType="sum" valueFormat=",##0" />
+                    <TotalItem column="our_amount" summaryType="sum" valueFormat=",##0" />
+                </Summary>
             </DataGrid>
         </>
     )
