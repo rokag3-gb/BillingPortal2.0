@@ -92,10 +92,10 @@ function DetailGrid({ invoiceId }) {
                 <Column dataField="rrp_amount">
                     <Format type="fixedPoint" precision={2} />
                 </Column>
-                <Column dataField="our_price">
+                <Column dataField="our_price" caption="price">
                     <Format type="fixedPoint" precision={2} />
                 </Column>
-                <Column dataField="our_amount">
+                <Column dataField="our_amount" caption="amount">
                     <Format type="fixedPoint" precision={2} />
                 </Column>
                 <Column dataField="vendorInvoiceId" />
