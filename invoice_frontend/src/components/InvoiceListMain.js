@@ -45,7 +45,21 @@ function MainGrid({ ds, setInvoiceId, setStartDate, getStartDate }) {
             },
         )
     }
-
+    const calculateCustomSummary = (options) => {
+        if (options.name === "UniqueOrg") {
+            if (options.summaryProcess === "start") {
+                options.totalValue = []
+            }
+            if (options.summaryProcess === "calculate") {
+                if (!options.totalValue.includes(options.value.orgId)) {
+                    options.totalValue.push(options.value.orgId)
+                }
+            }
+            if (options.summaryProcess === "finalize") {
+                options.totalValue = "Count: " + options.totalValue.length
+            }
+        }
+    }
     return (
         <div>
             <DataGrid
@@ -109,8 +123,13 @@ function MainGrid({ ds, setInvoiceId, setStartDate, getStartDate }) {
                 <Column dataField="stateChgId" />
                 <Column dataField="stateChgDate"/ >
                 <Column dataField="remark" />
-                <Summary>
+                <Summary calculateCustomSummary={calculateCustomSummary}>
                     <TotalItem column="seq" summaryType="count" valueFormat=",##0" />
+                    <TotalItem
+                        name="UniqueOrg"
+                        summaryType="custom"
+                        showInColumn="orgId"
+                    />
                     <TotalItem column="partner_amount_pretax" summaryType="sum" valueFormat=",##0" />
                     <TotalItem column="rrp_amount_pretax" summaryType="sum" valueFormat=",##0" />
                     <TotalItem column="our_amount_pretax" summaryType="sum" valueFormat=",##0" />
