@@ -6,6 +6,8 @@ import DataGrid, {
     FilterRow,
     Scrolling,
     Selection,
+    Summary,
+    TotalItem,
 } from 'devextreme-react/data-grid';
 
 const getInvoiceIds = (rowsData) => rowsData.map((row) => row.invoiceId)
@@ -50,16 +52,19 @@ function MainGrid({ ds, setInvoiceId, setStartDate, getStartDate }) {
                 remoteOperations={{ filtering: true }}
                 allowColumnResizing={true}
                 columnResizingMode="widget"
+                showRowLines
+                rowAlternationEnabled
             >
                 <Selection mode="multiple" />
                 <ColumnChooser enabled />
                 <FilterRow visible={true} />
-                <Scrolling mode="virtual" />
+                <Scrolling mode="virtual" rowRenderingMode="virtual" />
 
                 <Column type="buttons" width="80">
                     <CellButton icon="pdffile" onClick={handlePDFClick} />
                     <CellButton icon="showpanel" onClick={handleDetailClick} />
                 </Column>
+                {/* <Column caption="#" cellRender={(a)=><div>{a.row.dataIndex+1}</div>} /> */}
                 <Column dataField="seq" />
                 <Column dataField="invoiceMonth" />
                 <Column dataField="invoiceDate" />
@@ -84,6 +89,15 @@ function MainGrid({ ds, setInvoiceId, setStartDate, getStartDate }) {
                 <Column dataField="stateChgId" />
                 <Column dataField="stateChgDate"/ >
                 <Column dataField="remark" />
+                <Summary>
+                    <TotalItem column="seq" summaryType="count" valueFormat=",##0" />
+                    <TotalItem column="partner_amount_pretax" summaryType="sum" valueFormat=",##0" />
+                    <TotalItem column="rrp_amount_pretax" summaryType="sum" valueFormat=",##0" />
+                    <TotalItem column="our_amount_pretax" summaryType="sum" valueFormat=",##0" />
+                    <TotalItem column="our_tax" summaryType="sum" valueFormat=",##0" />
+                    <TotalItem column="our_amount" summaryType="sum" valueFormat=",##0" />
+                    <TotalItem column="paid" summaryType="sum" valueFormat=",##0" />
+                </Summary>
             </DataGrid>
         </div>
     );
