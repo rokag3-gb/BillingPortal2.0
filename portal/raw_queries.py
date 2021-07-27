@@ -11,4 +11,7 @@ def run_raw_proc(proc_statement, *proc_args):
     return resultarr
 
 def get_invoice_report_data(invoiceId):
-    return run_raw_proc("EXEC dbo.UP_S_GetInvoiceReport @InvoiceId = '{}';".format("2107F90051417"))
+    return run_raw_proc("EXEC dbo.UP_S_GetInvoiceReport @InvoiceId = '{}';".format(invoiceId))
+
+# def get_invoice_detail_data(invoiceId):
+#     return run_raw_proc("EXEC dbo.UP_S_GetInvoiceReport @InvoiceId = '{}';".format(invoiceId))

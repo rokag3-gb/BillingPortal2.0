@@ -58,8 +58,9 @@ class InvoiceSerializer(serializers.ModelSerializer):
 
 # Serializers define the API representation.
 class InvoiceDetailAzAzSerializer(serializers.ModelSerializer):
-    orgid = serializers.PrimaryKeyRelatedField(queryset=Organization.objects.all(), style={'base_template': 'input.html'})
+    orgId = serializers.PrimaryKeyRelatedField(queryset=Organization.objects.all(), style={'base_template': 'input.html'})
     class Meta:
         model = VwInvoiceDetailAzureAzure
-        fields = '__all__' 
+        # fields = '__all__' 
+        exclude = ('invoiceMonth', 'invoiceDate', 'orgKey')
         # fields = ['url', 'username', 'email', 'is_staff']
