@@ -10,21 +10,23 @@ import DataGrid, {
     TotalItem,
     Format,
     Editing,
+    RequiredRule,
 } from 'devextreme-react/data-grid';
 import axios from 'axios';
 import CustomStore from 'devextreme/data/custom_store';
 import DataSource from 'devextreme/data/data_source';
 
+const url = "/api/v1/invoice/"
 const headers = {
     'Content-Type': 'application/json',
     'accept': 'application/json'
 }
 
-function loadStore(loadOptions, url) {
+function loadStore(loadOptions, param) {
     console.log("load main store")
-    return axios.get(url)
+    return axios.get(url + param)
         .then((res) => {
-            console.log(`GET ${url} ok - len:${res.data.results.length}`)
+            console.log(`GET ${url + param} ok - len:${res.data.results.length}`)
             return res.data.results.map((data) => (
                 {
                     ...data,
@@ -43,12 +45,24 @@ function loadStore(loadOptions, url) {
             throw new Error("데이터 불러오기 실패")
         })
 }
+function insertStore(values) {
+    return axios.post(url, values, { headers })
+        .then((res) => {
+            console.log(`POST ${url} ok`)
+            return ""
+        })
+        .catch((err) => {
+            console.log(err.response.data)
+            throw new Error("데이터 생성 실패")
+        })
+}
 const getInvoiceIds = (rowsData) => rowsData.map((row) => row.invoiceId)
 
-function InvoiceMgmtMain({ url, param, setInvoiceId }) {
+function InvoiceMgmtMain({ param, setInvoiceId }) {
     const storeMain = new CustomStore({
         key: 'seq',
-        load: (loadOptions) => param ? loadStore(loadOptions, url + param) : null
+        load: (loadOptions) => param ? loadStore(loadOptions, param) : null,
+        insert: insertStore,
     });
     const dsMain = new DataSource({store: storeMain})
     const refDataGrid = useRef(null);
@@ -60,15 +74,13 @@ function InvoiceMgmtMain({ url, param, setInvoiceId }) {
         e.event.preventDefault()
         setInvoiceId(e.row.data.invoiceId)
     }
-    const handleDbClick = (e) => {
-        e.event.preventDefault()
-        setInvoiceId(e.data.invoiceId)
-    }
     const handlePaymentClick = () => {
         if (refDataGrid === null) { return }
         const dg = refDataGrid.current.instance;
         const selectedInvoiceIds = getInvoiceIds(dg.getSelectedRowsData())
-        window.parent.proceed_payment(selectedInvoiceIds)
+        if (selectedInvoiceIds.length) {
+            window.parent.proceed_payment(selectedInvoiceIds)
+        }
     }
     const handleToolbarPreparing = (e) => {
         e.toolbarOptions.items.unshift(
@@ -111,7 +123,9 @@ function InvoiceMgmtMain({ url, param, setInvoiceId }) {
                 columnResizingMode="widget"
                 showRowLines
                 rowAlternationEnabled
-                // onRowDblClick={handleDbClick}
+                onInitNewRow={(e)=>{
+                    console.log("YA!")
+                }}
             >
                 <Editing
                     mode="batch"
@@ -119,29 +133,41 @@ function InvoiceMgmtMain({ url, param, setInvoiceId }) {
                     allowDeleting
                     allowUpdating
                     startEditAction="dblClick"
+                    useIcons
                 />
                 <Selection mode="multiple" />
                 <ColumnChooser enabled />
                 <FilterRow visible={true} />
                 <Scrolling mode="virtual" rowRenderingMode="virtual" />
+                
 
-                <Column type="buttons" width="80">
-                    <CellButton icon="pdffile" onClick={handlePDFClick} />
+                <Column type="buttons" width="95">
+                    <CellButton icon="pdffile" onClick={handlePDFClick} text="리포트" />
                     <CellButton icon="showpanel" onClick={handleDetailClick} text="상세보기" />
+                    <CellButton name="delete" />
                 </Column>
-                {/* <Column caption="#" cellRender={(a)=><div>{a.row.dataIndex+1}</div>} /> */}
                 <Column dataField="seq" />
-                <Column dataField="invoiceMonth" />
-                <Column dataField="invoiceDate" />
+                <Column dataField="invoiceMonth">
+                    <RequiredRule />
+                </Column>
+                <Column dataField="invoiceDate">
+                    <RequiredRule />
+                </Column>
                 <Column dataField="invoiceId" />
-                <Column dataField="orgId" />
+                <Column dataField="orgId">
+                    <RequiredRule />
+                </Column>
                 <Column dataField="orgKey"visible={false} />
                 <Column dataField="orgName" />
                 <Column dataField="vendorCode"visible={false} />
                 <Column dataField="vendorName"visible={false} />
                 <Column dataField="vendorInvoiceCount"visible={false} />
-                <Column dataField="chargeStartDate" />
-                <Column dataField="chargeEndDate" />
+                <Column dataField="chargeStartDate">
+                    <RequiredRule />
+                </Column>
+                <Column dataField="chargeEndDate">
+                    <RequiredRule />
+                </Column>
                 <Column dataField="partner_amount_pretax" caption="partner_amount" visible={true}>
                     <Format type="fixedPoint" precision={2} />
                 </Column>
@@ -160,7 +186,9 @@ function InvoiceMgmtMain({ url, param, setInvoiceId }) {
                 <Column dataField="paid">
                     <Format type="fixedPoint" precision={2} />
                 </Column>
-                <Column dataField="regId" />
+                <Column dataField="regId">
+                    <RequiredRule />
+                </Column>
                 <Column dataField="regDate" />
                 <Column dataField="stateCode" />
                 <Column dataField="stateChgId" />

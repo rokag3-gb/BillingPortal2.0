@@ -6,7 +6,6 @@ import * as utils from '../utils';
 
 const initialSearchMonth = 3
 const girdToolbarSize = 280
-const urlInvoice = "/api/v1/invoice/"
 
 function InvoiceMgmt() {
     const [start, end] = utils.getDateSet(initialSearchMonth)
@@ -27,7 +26,7 @@ function InvoiceMgmt() {
                     setMainParam={setMainParam}
                 />
             </div>
-            <InvoiceMgmtMain setInvoiceId={setInvoiceId} url={urlInvoice} param={mainParam} />
+            <InvoiceMgmtMain setInvoiceId={setInvoiceId} param={mainParam} />
             <InvoiceMgmtDetail invoiceId={invoiceId} />
         </div>
     )

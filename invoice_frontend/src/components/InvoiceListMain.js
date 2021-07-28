@@ -14,11 +14,12 @@ import axios from 'axios';
 import CustomStore from 'devextreme/data/custom_store';
 import DataSource from 'devextreme/data/data_source';
 
-function loadStore(loadOptions, url) {
+const url = "/api/v1/invoice/"
+function loadStore(loadOptions, param) {
     console.log("load main store")
-    return axios.get(url)
+    return axios.get(url + param)
         .then((res) => {
-            console.log(`GET ${url} ok - len:${res.data.results.length}`)
+            console.log(`GET ${url + param} ok - len:${res.data.results.length}`)
             return res.data.results.map((data) => (
                 {
                     ...data,
@@ -39,10 +40,10 @@ function loadStore(loadOptions, url) {
 }
 const getInvoiceIds = (rowsData) => rowsData.map((row) => row.invoiceId)
 
-function InvoiceListMain({ url, param, setInvoiceId }) {
+function InvoiceListMain({ param, setInvoiceId }) {
     const storeMain = new CustomStore({
         key: 'seq',
-        load: (loadOptions) => param ? loadStore(loadOptions, url + param) : null
+        load: (loadOptions) => param ? loadStore(loadOptions, param) : null
     });
     const dsMain = new DataSource({store: storeMain})
     const refDataGrid = useRef(null);
@@ -62,7 +63,9 @@ function InvoiceListMain({ url, param, setInvoiceId }) {
         if (refDataGrid === null) { return }
         const dg = refDataGrid.current.instance;
         const selectedInvoiceIds = getInvoiceIds(dg.getSelectedRowsData())
-        window.parent.proceed_payment(selectedInvoiceIds)
+        if (selectedInvoiceIds.length) {
+            window.parent.proceed_payment(selectedInvoiceIds)
+        }
     }
     const handleToolbarPreparing = (e) => {
         e.toolbarOptions.items.unshift(
@@ -113,7 +116,7 @@ function InvoiceListMain({ url, param, setInvoiceId }) {
                 <Scrolling mode="virtual" rowRenderingMode="virtual" />
 
                 <Column type="buttons" width="80">
-                    <CellButton icon="pdffile" onClick={handlePDFClick} />
+                    <CellButton icon="pdffile" onClick={handlePDFClick} text="리포트" />
                     <CellButton icon="showpanel" onClick={handleDetailClick} text="상세보기" />
                 </Column>
                 {/* <Column caption="#" cellRender={(a)=><div>{a.row.dataIndex+1}</div>} /> */}
