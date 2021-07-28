@@ -19,7 +19,12 @@
     function proceed_payment(invoiceIds){
       let form = document.getElementById('pass_to_payment');
       for (let i = 0; i < invoiceIds.length; i++){
-        form.append("invoice", invoiceIds[i]);
+        let input = document.createElement("input");
+        input.type = "text";
+        input.name = "invoice";
+        input.value = invoiceIds[i];
+        input.id = `invoice_${i}`;
+        form.appendChild(input);
       }
       form.submit();
     }
