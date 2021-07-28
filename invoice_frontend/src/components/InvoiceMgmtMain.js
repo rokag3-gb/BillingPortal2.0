@@ -4,13 +4,13 @@ import DataGrid, {
     Column,
     ColumnChooser,
     FilterRow,
-    Scrolling,
     Selection,
     Summary,
     TotalItem,
     Format,
     Editing,
     RequiredRule,
+    Paging,
 } from 'devextreme-react/data-grid';
 import axios from 'axios';
 import CustomStore from 'devextreme/data/custom_store';
@@ -109,6 +109,7 @@ function InvoiceMgmtMain({ param, setInvoiceId }) {
             }
         }
     }
+    const indexRender = (a) => (<div style={{textAlign: 'center'}}>{a.row.dataIndex+1}</div>)
     return (
         <div>
             <DataGrid
@@ -123,9 +124,6 @@ function InvoiceMgmtMain({ param, setInvoiceId }) {
                 columnResizingMode="widget"
                 showRowLines
                 rowAlternationEnabled
-                onInitNewRow={(e)=>{
-                    console.log("YA!")
-                }}
             >
                 <Editing
                     mode="batch"
@@ -138,14 +136,14 @@ function InvoiceMgmtMain({ param, setInvoiceId }) {
                 <Selection mode="multiple" />
                 <ColumnChooser enabled />
                 <FilterRow visible={true} />
-                <Scrolling mode="virtual" rowRenderingMode="virtual" />
-                
+                <Paging enabled={false} />
 
                 <Column type="buttons" width="95">
                     <CellButton icon="pdffile" onClick={handlePDFClick} text="리포트" />
                     <CellButton icon="showpanel" onClick={handleDetailClick} text="상세보기" />
                     <CellButton name="delete" />
                 </Column>
+                <Column caption="#" cellRender={indexRender} />
                 <Column dataField="seq" />
                 <Column dataField="invoiceMonth">
                     <RequiredRule />
