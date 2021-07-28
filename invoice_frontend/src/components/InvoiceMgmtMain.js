@@ -46,11 +46,9 @@ function loadStore(loadOptions, param) {
         })
 }
 function insertStore(values) {
-    console.log(values)
     return axios.post(url, values, { headers })
         .then((res) => {
             console.log(`POST ${url} ok`)
-            console.log(res)
         })
         .catch((err) => {
             console.log(err.response.data)
