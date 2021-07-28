@@ -1,17 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import DateBox from 'devextreme-react/date-box';
 import Button from 'devextreme-react/button';
 import * as utils from '../utils';
 
 
-function TestToolbar({startDate, setStartDate, endDate, setEndDate, handleSearch}) {
+function GridToolbar({startDate, setStartDate, endDate, setEndDate, handleSearch, girdToolbarSize}) {
+    const [windowSize, setWindowSize] = useState(window.innerWidth)
     const handleDateClick = (mm) => {
         const [start, end] = utils.getDateSet(mm)
         setStartDate(start)
         setEndDate(end)   
     }
+    const handleResize = () => setWindowSize(window.innerWidth);
+    useEffect(()=>{
+        handleSearch()
+        window.addEventListener('resize', handleResize)
+        return () => {
+            window.removeEventListener('resize', handleResize)
+        }
+    },[])
     return (
-        <div style={{display: "flex", justifyContent: "space-between"}}>
+        <div style={{display: "flex", justifyContent: "space-between", width: (windowSize-girdToolbarSize)+'px'}}>
             <div style={{display: "flex"}}>
                 <DateBox
                     width={120}
@@ -36,4 +45,4 @@ function TestToolbar({startDate, setStartDate, endDate, setEndDate, handleSearch
     );
 }
 
-export default TestToolbar;
+export default GridToolbar;
