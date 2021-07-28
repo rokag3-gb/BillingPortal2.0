@@ -9,11 +9,42 @@ import DataGrid, {
     Summary,
     TotalItem,
     Format,
-    Editing,
 } from 'devextreme-react/data-grid';
+import axios from 'axios';
+import CustomStore from 'devextreme/data/custom_store';
+import DataSource from 'devextreme/data/data_source';
 
+function loadStore(loadOptions, url) {
+    console.log("load main store")
+    return axios.get(url)
+        .then((res) => {
+            console.log(`GET ${url} ok - len:${res.data.results.length}`)
+            return res.data.results.map((data) => (
+                {
+                    ...data,
+                    partner_amount_pretax: parseFloat(data.partner_amount_pretax),
+                    rrp_amount_pretax: parseFloat(data.rrp_amount_pretax),
+                    our_amount_pretax: parseFloat(data.our_amount_pretax),
+                    our_tax: parseFloat(data.our_tax),
+                    our_amount: parseFloat(data.our_amount),
+                    paid: parseFloat(data.paid)
+                }
+            ))
+        })
+        .catch((err) => {
+            console.log(`GET ${url} fail`)
+            console.log(err.response)
+            throw new Error("데이터 불러오기 실패")
+        })
+}
 const getInvoiceIds = (rowsData) => rowsData.map((row) => row.invoiceId)
-function InvoiceListMain({ ds, setInvoiceId, setStartDate, getStartDate }) {
+
+function InvoiceListMain({ url, param, setInvoiceId }) {
+    const storeMain = new CustomStore({
+        key: 'seq',
+        load: (loadOptions) => param ? loadStore(loadOptions, url + param) : null
+    });
+    const dsMain = new DataSource({store: storeMain})
     const refDataGrid = useRef(null);
     const handlePDFClick = (e) => {
         e.event.preventDefault()
@@ -63,14 +94,13 @@ function InvoiceListMain({ ds, setInvoiceId, setStartDate, getStartDate }) {
     return (
         <div>
             <DataGrid
-                dataSource={ds}
+                dataSource={dsMain}
                 showBorders
                 columnAutoWidth
                 style={{height: '45vh'}}
                 hoverStateEnabled={true}
                 ref={refDataGrid}
                 onToolbarPreparing={handleToolbarPreparing}
-                remoteOperations={{ filtering: true }}
                 allowColumnResizing={true}
                 columnResizingMode="widget"
                 showRowLines

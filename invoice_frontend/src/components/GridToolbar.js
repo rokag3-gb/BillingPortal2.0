@@ -3,8 +3,11 @@ import DateBox from 'devextreme-react/date-box';
 import Button from 'devextreme-react/button';
 import * as utils from '../utils';
 
+function makeParam(startDate, endDate) {
+    return `?invoiceDateStart=${startDate}&invoiceDateEnd=${endDate}&limit=10000`
+}
 
-function GridToolbar({startDate, setStartDate, endDate, setEndDate, handleSearch, girdToolbarSize}) {
+function GridToolbar({startDate, setStartDate, endDate, setEndDate, girdToolbarSize, setMainParam}) {
     const [windowSize, setWindowSize] = useState(window.innerWidth)
     const handleDateClick = (mm) => {
         const [start, end] = utils.getDateSet(mm)
@@ -12,6 +15,9 @@ function GridToolbar({startDate, setStartDate, endDate, setEndDate, handleSearch
         setEndDate(end)   
     }
     const handleResize = () => setWindowSize(window.innerWidth);
+    const handleSearch = () => {
+        setMainParam(makeParam(utils.getDateFormat(startDate), utils.getDateFormat(endDate)))
+    }
     useEffect(()=>{
         handleSearch()
         window.addEventListener('resize', handleResize)
