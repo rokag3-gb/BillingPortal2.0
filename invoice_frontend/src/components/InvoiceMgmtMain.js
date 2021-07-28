@@ -46,14 +46,35 @@ function loadStore(loadOptions, param) {
         })
 }
 function insertStore(values) {
+    console.log(values)
     return axios.post(url, values, { headers })
         .then((res) => {
             console.log(`POST ${url} ok`)
-            return ""
+            console.log(res)
         })
         .catch((err) => {
             console.log(err.response.data)
             throw new Error("데이터 생성 실패")
+        })
+}
+function updateStore(key, values) {
+    return axios.put(url + key, values, { headers })
+        .then((res) => {
+            console.log(`PUT ${url} ok`)
+        })
+        .catch((err) => {
+            console.log(err.response)
+            throw new Error(`데이터 업데이트 실패(Seq: ${key})`)
+        })    
+}
+function removeStore(key) {
+    return axios.delete(url + key, { headers })
+        .then((res) => {
+            console.log(`DELETE ${url} ok`)
+        })
+        .catch((err) => {
+            console.log(err.response)
+            throw new Error(`데이터 삭제 실패(Seq: ${key})`)
         })
 }
 const getInvoiceIds = (rowsData) => rowsData.map((row) => row.invoiceId)
@@ -63,6 +84,8 @@ function InvoiceMgmtMain({ param, setInvoiceId }) {
         key: 'seq',
         load: (loadOptions) => param ? loadStore(loadOptions, param) : null,
         insert: insertStore,
+        update: updateStore,
+        remove: removeStore
     });
     const dsMain = new DataSource({store: storeMain})
     const refDataGrid = useRef(null);
@@ -110,6 +133,9 @@ function InvoiceMgmtMain({ param, setInvoiceId }) {
         }
     }
     const indexRender = (a) => typeof a.row.dataIndex === 'number' ? <div style={{textAlign: 'center'}}>{a.row.dataIndex+1}</div> : null;
+    const handleRowUpdating = (e) => {
+        e.newData = {...e.oldData, ...e.newData}
+    }
     return (
         <div>
             <DataGrid
@@ -124,6 +150,7 @@ function InvoiceMgmtMain({ param, setInvoiceId }) {
                 columnResizingMode="widget"
                 showRowLines
                 rowAlternationEnabled
+                onRowUpdating={handleRowUpdating}
             >
                 <Editing
                     mode="batch"
@@ -148,7 +175,7 @@ function InvoiceMgmtMain({ param, setInvoiceId }) {
                 <Column dataField="invoiceMonth">
                     <RequiredRule />
                 </Column>
-                <Column dataField="invoiceDate">
+                <Column dataField="invoiceDate" dataType="date" format="yyyy-MM-dd">
                     <RequiredRule />
                 </Column>
                 <Column dataField="invoiceId" />
@@ -160,10 +187,10 @@ function InvoiceMgmtMain({ param, setInvoiceId }) {
                 <Column dataField="vendorCode"visible={false} />
                 <Column dataField="vendorName"visible={false} />
                 <Column dataField="vendorInvoiceCount"visible={false} />
-                <Column dataField="chargeStartDate">
+                <Column dataField="chargeStartDate" dataType="date" format="yyyy-MM-dd">
                     <RequiredRule />
                 </Column>
-                <Column dataField="chargeEndDate">
+                <Column dataField="chargeEndDate" dataType="date" format="yyyy-MM-dd">
                     <RequiredRule />
                 </Column>
                 <Column dataField="partner_amount_pretax" caption="partner_amount" visible={true}>
