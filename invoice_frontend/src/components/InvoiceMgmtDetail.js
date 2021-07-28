@@ -1,80 +1,46 @@
 import React, { useEffect } from 'react';
 import DataGrid, {
-    Button,
+    Scrolling,
+    Summary,
+    TotalItem,
     Column,
-    Editing,
-    RequiredRule,
-    ColumnChooser,
-    FilterRow,
-    Pager,
-    Paging,
-    PatternRule,
+    Format,
 } from 'devextreme-react/data-grid';
 import axios from 'axios';
 import CustomStore from 'devextreme/data/custom_store';
 import DataSource from 'devextreme/data/data_source';
 
-const urlInvoiceDetail = "/api/v1/invoice_azaz/"
-const headers = {
-    'Content-Type': 'application/json',
-    'accept': 'application/json',
+const urlInvoiceDetail = "/api/v1/invoice/detail/azure/"
+function loadStore(loadOptions, invoiceId) {
+    if (invoiceId === "") { return }
+    const url = urlInvoiceDetail + invoiceId
+    return axios.get(url)
+        .then((res) => {
+            console.log(`GET ${url} ok - len: ${res.data.results.length}`)
+            return res.data.results.map((data) => (
+                {
+                    ...data,
+                    partner_price: parseFloat(data.partner_price),
+                    partner_amount: parseFloat(data.partner_amount),
+                    rrp_price: parseFloat(data.rrp_price),
+                    rrp_amount: parseFloat(data.rrp_amount),
+                    our_price: parseFloat(data.our_price),
+                    our_amount: parseFloat(data.our_amount)
+                }
+            ))
+        })
+        .catch((err) => {
+            console.log(err)
+            throw new Error("Load 실패")
+        })
 }
 
-const isEmpty = (val) => {
-    return val === undefined || val === null || val === "";
-}
-const store = new CustomStore({
-    key: 'seq',
-    load: function(loadOptions) {
-        if (isEmpty(loadOptions.filter)) {
-            return
-        }
-
-        let params = "?"
-        for (let i in loadOptions.filter) {
-            if (loadOptions.filter[i][0] === "invoiceid" && loadOptions.filter[i][2] === 0) {
-                return
-            } else {
-                params += `${loadOptions.filter[i].join("")}&`
-            }
-        }
-        params = params.slice(0, -1);
-        const url = urlInvoiceDetail + params
-
-        return axios.get(url)
-            .then((res) => {
-                console.log(`GET ${url} ok - len: ${res.data.results.length}`)
-                // console.log(res.data.results)
-                return res.data.results
-            })
-            .catch((err) => {
-                console.log(err)
-                throw new Error("Load 실패")
-            })
-    },
-    insert: function(values) {
-        return axios.post(urlInvoiceDetail, values, { headers })
-            .then((res) => {
-                console.log(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-    
-});
-
-function DetailGrid({ invoiceId }) {
+function InvoiceMgmtDetail({ invoiceId }) {
+    const store = new CustomStore({
+        key: 'seq',
+        load: (loadOptions)=>loadStore(loadOptions, invoiceId)
+    });
     const ds = new DataSource({store: store})
-
-    useEffect(() => {
-        ds.filter([
-            ["invoiceid", "=", invoiceId],
-            ["limit", "=", 1000],
-        ])
-        ds.load()
-    }, [invoiceId])
-
     return (
         <>
             <DataGrid
@@ -83,17 +49,65 @@ function DetailGrid({ invoiceId }) {
                 dataSource={ds}
                 remoteOperations={{ filtering: true }}
                 style={{height: '50vh', paddingTop: 20}}
+                allowColumnResizing={true}
+                columnResizingMode="widget"
+                showRowLines
+                rowAlternationEnabled
             >
-                <Editing
-                    mode="batch"
-                    allowAdding
-                    allowDeleting
-                    allowUpdating
-                    startEditAction="dblClick"
-                />
+                <Scrolling mode="virtual" />
+                <Column dataField="seq" />
+                <Column dataField="orgId" />
+                <Column dataField="invoiceId" />
+                <Column dataField="orgName" />
+                <Column dataField="vendorCode" />
+                <Column dataField="vendorName" />
+                <Column dataField="tenantId" />
+                <Column dataField="subscriptionId" />
+                <Column dataField="subscriptionName" />
+                <Column dataField="sku" />
+                <Column dataField="unit" />
+                <Column dataField="chargeStartDate" />
+                <Column dataField="chargeEndDate" />
+                <Column dataField="orderId" />
+                <Column dataField="region" />
+                <Column dataField="serviceType" />
+                <Column dataField="serviceName" />
+                <Column dataField="resourceName" />
+                <Column dataField="overageQuantity" />
+                <Column dataField="currency" />
+                <Column dataField="partner_price">
+                    <Format type="fixedPoint" precision={2} />
+                </Column>
+                <Column dataField="partner_amount">
+                    <Format type="fixedPoint" precision={2} />
+                </Column>
+                <Column dataField="rrp_price">
+                    <Format type="fixedPoint" precision={2} />
+                </Column>
+                <Column dataField="rrp_amount">
+                    <Format type="fixedPoint" precision={2} />
+                </Column>
+                <Column dataField="our_price" caption="price">
+                    <Format type="fixedPoint" precision={2} />
+                </Column>
+                <Column dataField="our_amount" caption="amount">
+                    <Format type="fixedPoint" precision={2} />
+                </Column>
+                <Column dataField="vendorInvoiceId" />
+                <Column dataField="billingCycleType" />
+                <Column dataField="regDate" />
+                <Summary>
+                    <TotalItem column="seq" summaryType="count" valueFormat=",##0" />
+                    <TotalItem column="partner_price" summaryType="sum" valueFormat=",##0" />
+                    <TotalItem column="partner_amount" summaryType="sum" valueFormat=",##0" />
+                    <TotalItem column="rrp_price" summaryType="sum" valueFormat=",##0" />
+                    <TotalItem column="rrp_amount" summaryType="sum" valueFormat=",##0" />
+                    <TotalItem column="our_price" summaryType="sum" valueFormat=",##0" />
+                    <TotalItem column="our_amount" summaryType="sum" valueFormat=",##0" />
+                </Summary>
             </DataGrid>
         </>
     )
 }
 
-export default DetailGrid;
+export default React.memo(InvoiceMgmtDetail);

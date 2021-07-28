@@ -4,16 +4,48 @@ import DataGrid, {
     Column,
     ColumnChooser,
     FilterRow,
-    Scrolling,
     Selection,
     Summary,
     TotalItem,
     Format,
-    Editing,
+    Paging,
 } from 'devextreme-react/data-grid';
+import axios from 'axios';
+import CustomStore from 'devextreme/data/custom_store';
+import DataSource from 'devextreme/data/data_source';
 
+const url = "/api/v1/invoice/"
+function loadStore(loadOptions, param) {
+    console.log("load main store")
+    return axios.get(url + param)
+        .then((res) => {
+            console.log(`GET ${url + param} ok - len:${res.data.results.length}`)
+            return res.data.results.map((data) => (
+                {
+                    ...data,
+                    partner_amount_pretax: parseFloat(data.partner_amount_pretax),
+                    rrp_amount_pretax: parseFloat(data.rrp_amount_pretax),
+                    our_amount_pretax: parseFloat(data.our_amount_pretax),
+                    our_tax: parseFloat(data.our_tax),
+                    our_amount: parseFloat(data.our_amount),
+                    paid: parseFloat(data.paid)
+                }
+            ))
+        })
+        .catch((err) => {
+            console.log(`GET ${url} fail`)
+            console.log(err.response)
+            throw new Error("데이터 불러오기 실패")
+        })
+}
 const getInvoiceIds = (rowsData) => rowsData.map((row) => row.invoiceId)
-function MainGrid({ ds, setInvoiceId, setStartDate, getStartDate }) {
+
+function InvoiceListMain({ param, setInvoiceId }) {
+    const storeMain = new CustomStore({
+        key: 'seq',
+        load: (loadOptions) => param ? loadStore(loadOptions, param) : null
+    });
+    const dsMain = new DataSource({store: storeMain})
     const refDataGrid = useRef(null);
     const handlePDFClick = (e) => {
         e.event.preventDefault()
@@ -31,7 +63,9 @@ function MainGrid({ ds, setInvoiceId, setStartDate, getStartDate }) {
         if (refDataGrid === null) { return }
         const dg = refDataGrid.current.instance;
         const selectedInvoiceIds = getInvoiceIds(dg.getSelectedRowsData())
-        window.parent.proceed_payment(selectedInvoiceIds)
+        if (selectedInvoiceIds.length) {
+            window.parent.proceed_payment(selectedInvoiceIds)
+        }
     }
     const handleToolbarPreparing = (e) => {
         e.toolbarOptions.items.unshift(
@@ -60,17 +94,17 @@ function MainGrid({ ds, setInvoiceId, setStartDate, getStartDate }) {
             }
         }
     }
+    const indexRender = (a) => (<div style={{textAlign: 'center'}}>{a.row.dataIndex+1}</div>)
     return (
         <div>
             <DataGrid
-                dataSource={ds}
+                dataSource={dsMain}
                 showBorders
                 columnAutoWidth
                 style={{height: '45vh'}}
                 hoverStateEnabled={true}
                 ref={refDataGrid}
                 onToolbarPreparing={handleToolbarPreparing}
-                remoteOperations={{ filtering: true }}
                 allowColumnResizing={true}
                 columnResizingMode="widget"
                 showRowLines
@@ -80,13 +114,13 @@ function MainGrid({ ds, setInvoiceId, setStartDate, getStartDate }) {
                 <Selection mode="multiple" />
                 <ColumnChooser enabled />
                 <FilterRow visible={true} />
-                <Scrolling mode="virtual" rowRenderingMode="virtual" />
+                <Paging enabled={false} />
 
                 <Column type="buttons" width="80">
-                    <CellButton icon="pdffile" onClick={handlePDFClick} />
+                    <CellButton icon="pdffile" onClick={handlePDFClick} text="리포트" />
                     <CellButton icon="showpanel" onClick={handleDetailClick} text="상세보기" />
                 </Column>
-                {/* <Column caption="#" cellRender={(a)=><div>{a.row.dataIndex+1}</div>} /> */}
+                <Column caption="#" cellRender={indexRender} />
                 <Column dataField="seq" />
                 <Column dataField="invoiceMonth" />
                 <Column dataField="invoiceDate" />
@@ -142,4 +176,4 @@ function MainGrid({ ds, setInvoiceId, setStartDate, getStartDate }) {
     );
 }
 
-export default React.memo(MainGrid);
+export default React.memo(InvoiceListMain);

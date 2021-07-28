@@ -11,39 +11,34 @@ import CustomStore from 'devextreme/data/custom_store';
 import DataSource from 'devextreme/data/data_source';
 
 const urlInvoiceDetail = "/api/v1/invoice/detail/azure/"
+function loadStore(loadOptions, invoiceId) {
+    if (invoiceId === "") { return }
+    const url = urlInvoiceDetail + invoiceId
+    return axios.get(url)
+        .then((res) => {
+            console.log(`GET ${url} ok - len: ${res.data.results.length}`)
+            return res.data.results.map((data) => (
+                {
+                    ...data,
+                    partner_price: parseFloat(data.partner_price),
+                    partner_amount: parseFloat(data.partner_amount),
+                    rrp_price: parseFloat(data.rrp_price),
+                    rrp_amount: parseFloat(data.rrp_amount),
+                    our_price: parseFloat(data.our_price),
+                    our_amount: parseFloat(data.our_amount)
+                }
+            ))
+        })
+        .catch((err) => {
+            console.log(err)
+            throw new Error("Load 실패")
+        })
+}
 
-function DetailGrid({ invoiceId }) {
+function InvoiceListDetail({ invoiceId }) {
     const store = new CustomStore({
         key: 'seq',
-        load: function(loadOptions) {
-            if (invoiceId === 0) { return }
-            let params = "?"
-            for (let i in loadOptions.filter) {
-                params += `${loadOptions.filter[i].join("")}&`            
-            }
-            params = params.slice(0, -1);
-            const url = urlInvoiceDetail + invoiceId + params
-            return axios.get(url)
-                .then((res) => {
-                    console.log(`GET ${url} ok - len: ${res.data.results.length}`)
-                    // return res.data.results
-                    return res.data.results.map((data) => (
-                        {
-                            ...data,
-                            partner_price: parseFloat(data.partner_price),
-                            partner_amount: parseFloat(data.partner_amount),
-                            rrp_price: parseFloat(data.rrp_price),
-                            rrp_amount: parseFloat(data.rrp_amount),
-                            our_price: parseFloat(data.our_price),
-                            our_amount: parseFloat(data.our_amount)
-                        }
-                    ))
-                })
-                .catch((err) => {
-                    console.log(err)
-                    throw new Error("Load 실패")
-                })
-        }
+        load: (loadOptions)=>loadStore(loadOptions, invoiceId)
     });
     const ds = new DataSource({store: store})
     return (
@@ -115,4 +110,4 @@ function DetailGrid({ invoiceId }) {
     )
 }
 
-export default React.memo(DetailGrid);
+export default React.memo(InvoiceListDetail);
