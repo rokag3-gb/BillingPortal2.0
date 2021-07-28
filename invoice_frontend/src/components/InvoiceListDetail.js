@@ -12,7 +12,7 @@ import DataSource from 'devextreme/data/data_source';
 
 const urlInvoiceDetail = "/api/v1/invoice/detail/azure/"
 
-function DetailGrid({ invoiceId }) {
+function InvoiceListDetail({ invoiceId }) {
     const store = new CustomStore({
         key: 'seq',
         load: function(loadOptions) {
@@ -115,4 +115,4 @@ function DetailGrid({ invoiceId }) {
     )
 }
 
-export default React.memo(DetailGrid);
+export default React.memo(InvoiceListDetail);

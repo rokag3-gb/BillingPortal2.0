@@ -54,7 +54,6 @@ function InvoiceList() {
     const [invoiceId, setInvoiceId] = useState(0)
     const [startDate, setStartDate] = useState(start);
     const [endDate, setEndDate] = useState(end);
-    const [windowSize, setWindowSize] = useState(window.innerWidth)
     const handleSearch = () => {
         dsMain.filter([
             ["invoiceDateStart", "=", utils.getDateFormat(startDate)],
@@ -63,24 +62,17 @@ function InvoiceList() {
         ])
         dsMain.load()
     }
-    const handleResize = () => setWindowSize(window.innerWidth);
-    useEffect(()=>{
-        handleSearch()
-        window.addEventListener('resize', handleResize)
-        return () => {
-            window.removeEventListener('resize', handleResize)
-        }
-    },[])
 
     return (
         <div>
-            <div style={{position: 'absolute', zIndex: 5, width: (windowSize-girdToolbarSize)+'px'}}>
+            <div style={{position: 'absolute', zIndex: 5}}>
                 <GridToolbar
                     startDate={startDate}
                     setStartDate={setStartDate}
                     endDate={endDate}
                     setEndDate={setEndDate}
                     handleSearch={handleSearch}
+                    girdToolbarSize={girdToolbarSize}
                 />
             </div>
             <InvoiceListMain ds={dsMain} setInvoiceId={setInvoiceId} />

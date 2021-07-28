@@ -1,165 +1,145 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import DataGrid, {
-    Button,
+    Button as CellButton,
     Column,
-    Editing,
-    RequiredRule,
     ColumnChooser,
     FilterRow,
-    Pager,
-    Paging,
-    PatternRule,
     Scrolling,
+    Selection,
+    Summary,
+    TotalItem,
+    Format,
+    Editing,
 } from 'devextreme-react/data-grid';
-import axios from 'axios';
-import CustomStore from 'devextreme/data/custom_store';
-import DataSource from 'devextreme/data/data_source';
 
-const urlInvoice = "/api/v1/invoice/"
-const headers = {
-    'Content-Type': 'application/json',
-    'accept': 'application/json'
-}
-
-const store = new CustomStore({
-    key: 'seq',
-    load: function() {
-        const url = urlInvoice + "?limit=1000"
-
-        return axios.get(url)
-            .then((res) => {
-                console.log(`GET ${url} ok - len:${res.data.results.length}`)
-                
-                return res.data.results
-            })
-            .catch((err) => {
-                console.log(`GET ${url} fail`)
-                throw new Error("데이터 불러오기 실패")
-            })
-    },
-    insert: function(values) {
-        return axios.post(urlInvoice, values, { headers })
-            .then((res) => {
-                console.log(`POST ${urlInvoice} ok`)
-            })
-            .catch((err) => {
-                console.log(err.response.data)
-                throw new Error("데이터 생성 실패")
-            })
-    },
-    update: function(key, values) {
-        const url = urlInvoice + key
-
-        return axios.put(url, values, { headers })
-            .then((res) => {
-                console.log(`PUT ${url} ok`)
-            })
-            .catch((err) => {
-                console.log(err.response)
-                throw new Error(`데이터 업데이트 실패(Seq: ${key})`)
-            })
-    },
-    remove: function(key) {
-        const url = urlInvoice + key
-
-        return axios.delete(url, { headers })
-            .then((res) => {
-                console.log(`DELETE ${url} ok`)
-            })
-            .catch((err) => {
-                console.log(err.response)
-                throw new Error(`데이터 삭제 실패(Seq: ${key})`)
-            })
-    }
-});
-
-const ds = new DataSource({
-    store: store
-})
-
-function MainGrid({ setInvoiceId }) {
-    const handlePDF = (e) => {
+const getInvoiceIds = (rowsData) => rowsData.map((row) => row.invoiceId)
+function InvoiceMgmtMain({ ds, setInvoiceId, setStartDate, getStartDate }) {
+    const refDataGrid = useRef(null);
+    const handlePDFClick = (e) => {
         e.event.preventDefault()
         window.open(`report/${e.row.data.invoiceId}`, "_blank")
     }
-    const handleRowUpdating = (e) => {
-        e.newData = {...e.oldData, ...e.newData}
-    }
-    const handleDetail = (e) => {
+    const handleDetailClick = (e) => {
         e.event.preventDefault()
-        // setDetailOrgId(e.row.data.orgId)
         setInvoiceId(e.row.data.invoiceId)
     }
-
+    const handleDbClick = (e) => {
+        e.event.preventDefault()
+        setInvoiceId(e.data.invoiceId)
+    }
+    const handlePaymentClick = () => {
+        if (refDataGrid === null) { return }
+        const dg = refDataGrid.current.instance;
+        const selectedInvoiceIds = getInvoiceIds(dg.getSelectedRowsData())
+        window.parent.proceed_payment(selectedInvoiceIds)
+    }
+    const handleToolbarPreparing = (e) => {
+        e.toolbarOptions.items.unshift(
+            {
+                location: 'after',
+                widget: 'dxButton',
+                options: {
+                    text: '결제하기',
+                    onClick: handlePaymentClick
+                }
+            },
+        )
+    }
+    const calculateCustomSummary = (options) => {
+        if (options.name === "UniqueOrg") {
+            if (options.summaryProcess === "start") {
+                options.totalValue = []
+            }
+            if (options.summaryProcess === "calculate") {
+                if (!options.totalValue.includes(options.value.orgId)) {
+                    options.totalValue.push(options.value.orgId)
+                }
+            }
+            if (options.summaryProcess === "finalize") {
+                options.totalValue = "Count: " + options.totalValue.length
+            }
+        }
+    }
     return (
-        <>
+        <div>
             <DataGrid
                 dataSource={ds}
                 showBorders
                 columnAutoWidth
-                onRowUpdating={handleRowUpdating}
                 style={{height: '45vh'}}
+                hoverStateEnabled={true}
+                ref={refDataGrid}
+                onToolbarPreparing={handleToolbarPreparing}
+                remoteOperations={{ filtering: true }}
+                allowColumnResizing={true}
+                columnResizingMode="widget"
+                showRowLines
+                rowAlternationEnabled
+                onRowDblClick={handleDbClick}
             >
-                <Editing
-                    mode="batch"
-                    allowAdding
-                    allowDeleting
-                    allowUpdating
-                    startEditAction="dblClick"
-                    useIcons
-                />
+                <Selection mode="multiple" />
                 <ColumnChooser enabled />
                 <FilterRow visible={true} />
-                <Scrolling mode="virtual" />
+                <Scrolling mode="virtual" rowRenderingMode="virtual" />
 
-                <Column type="buttons" width="90">
-                    <Button icon="pdffile" onClick={handlePDF} />
-                    <Button icon="showpanel" onClick={handleDetail} />
-                    <Button name="delete" />
+                <Column type="buttons" width="80">
+                    <CellButton icon="pdffile" onClick={handlePDFClick} />
+                    <CellButton icon="showpanel" onClick={handleDetailClick} text="상세보기" />
                 </Column>
-
-                <Column dataField="seq" allowEditting={false} />
-                <Column dataField="invoiceMonth" allowEditting={false}>
-                    <RequiredRule />
+                {/* <Column caption="#" cellRender={(a)=><div>{a.row.dataIndex+1}</div>} /> */}
+                <Column dataField="seq" />
+                <Column dataField="invoiceMonth" />
+                <Column dataField="invoiceDate" />
+                <Column dataField="invoiceId" />
+                <Column dataField="orgId" />
+                <Column dataField="orgKey"visible={false} />
+                <Column dataField="orgName" />
+                <Column dataField="vendorCode"visible={false} />
+                <Column dataField="vendorName"visible={false} />
+                <Column dataField="vendorInvoiceCount"visible={false} />
+                <Column dataField="chargeStartDate" />
+                <Column dataField="chargeEndDate" />
+                <Column dataField="partner_amount_pretax" caption="partner_amount" visible={true}>
+                    <Format type="fixedPoint" precision={2} />
                 </Column>
-                <Column dataField="invoiceDate" allowEditting={true}>
-                    <RequiredRule />
+                <Column dataField="rrp_amount_pretax" caption="rrp_amount">
+                    <Format type="fixedPoint" precision={2} />
                 </Column>
-                <Column dataField="invoiceId" allowEditting={false} />
-                <Column dataField="orgId" allowEditting={false}>
-                    <RequiredRule />
+                <Column dataField="our_amount_pretax" caption="amount">
+                    <Format type="fixedPoint" precision={2} />
                 </Column>
-                <Column dataField="orgKey" allowEditting={false} visible={false} />
-                <Column dataField="orgName" allowEditting={true} />
-                <Column dataField="vendorCode" allowEditting={false} visible={false} />
-                <Column dataField="vendorName" allowEditting={false} visible={false} />
-                <Column dataField="vendorInvoiceCount" allowEditting={false} visible={false} />
-                <Column dataField="chargeStartDate" allowEditting={true}>
-                    <RequiredRule />
+                <Column dataField="our_tax" caption="tax">
+                    <Format type="fixedPoint" precision={2} />
                 </Column>
-                <Column dataField="chargeEndDate" allowEditting={true}>
-                    <RequiredRule />
+                <Column dataField="our_amount" caption="amount + tax">
+                    <Format type="fixedPoint" precision={2} />
                 </Column>
-                <Column dataField="partner_amount_pretax" allowEditting={false} visible={true} />
-                <Column dataField="rrp_amount_pretax" allowEditting={false} />
-                <Column dataField="our_amount_pretax" allowEditting={false} />
-                <Column dataField="our_tax" allowEditting={false} />
-                <Column dataField="our_amount" allowEditting={false} />
-                <Column dataField="paid" allowEditting={false} />
-                <Column dataField="regId" allowEditting={false}>
-                    <RequiredRule />
+                <Column dataField="paid">
+                    <Format type="fixedPoint" precision={2} />
                 </Column>
-                <Column dataField="regDate" allowEditting={false} />
-                <Column dataField="stateCode" allowEditting={true}>
-                    <RequiredRule />
-                </Column>
-                <Column dataField="stateChgId" allowEditting={false} />
-                <Column dataField="stateChgDate" allowEditting={false} />
-                <Column dataField="remark" allowEditting={true} />
-
+                <Column dataField="regId" />
+                <Column dataField="regDate" />
+                <Column dataField="stateCode" />
+                <Column dataField="stateChgId" />
+                <Column dataField="stateChgDate"/ >
+                <Column dataField="remark" />
+                <Summary calculateCustomSummary={calculateCustomSummary}>
+                    <TotalItem column="seq" summaryType="count" valueFormat=",##0" />
+                    <TotalItem
+                        name="UniqueOrg"
+                        summaryType="custom"
+                        showInColumn="orgId"
+                    />
+                    <TotalItem column="partner_amount_pretax" summaryType="sum" valueFormat=",##0" />
+                    <TotalItem column="rrp_amount_pretax" summaryType="sum" valueFormat=",##0" />
+                    <TotalItem column="our_amount_pretax" summaryType="sum" valueFormat=",##0" />
+                    <TotalItem column="our_tax" summaryType="sum" valueFormat=",##0" />
+                    <TotalItem column="our_amount" summaryType="sum" valueFormat=",##0" />
+                    <TotalItem column="paid" summaryType="sum" valueFormat=",##0" />
+                </Summary>
             </DataGrid>
-        </>
+        </div>
     );
 }
 
-export default MainGrid;
+export default React.memo(InvoiceMgmtMain);

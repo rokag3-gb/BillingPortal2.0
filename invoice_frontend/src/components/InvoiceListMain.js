@@ -13,7 +13,7 @@ import DataGrid, {
 } from 'devextreme-react/data-grid';
 
 const getInvoiceIds = (rowsData) => rowsData.map((row) => row.invoiceId)
-function MainGrid({ ds, setInvoiceId, setStartDate, getStartDate }) {
+function InvoiceListMain({ ds, setInvoiceId, setStartDate, getStartDate }) {
     const refDataGrid = useRef(null);
     const handlePDFClick = (e) => {
         e.event.preventDefault()
@@ -142,4 +142,4 @@ function MainGrid({ ds, setInvoiceId, setStartDate, getStartDate }) {
     );
 }
 
-export default React.memo(MainGrid);
+export default React.memo(InvoiceListMain);
