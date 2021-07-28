@@ -10,7 +10,7 @@ const urlInvoice = "/api/v1/invoice/"
 
 function InvoiceList() {
     const [start, end] = utils.getDateSet(initialSearchMonth)
-    const [invoiceId, setInvoiceId] = useState(0)
+    const [invoiceId, setInvoiceId] = useState("")
     const [startDate, setStartDate] = useState(start);
     const [endDate, setEndDate] = useState(end);
     const [mainParam, setMainParam] = useState("")
