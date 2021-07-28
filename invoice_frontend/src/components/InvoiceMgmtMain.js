@@ -109,7 +109,7 @@ function InvoiceMgmtMain({ param, setInvoiceId }) {
             }
         }
     }
-    const indexRender = (a) => (<div style={{textAlign: 'center'}}>{a.row.dataIndex+1}</div>)
+    const indexRender = (a) => typeof a.row.dataIndex === 'number' ? <div style={{textAlign: 'center'}}>{a.row.dataIndex+1}</div> : null;
     return (
         <div>
             <DataGrid
