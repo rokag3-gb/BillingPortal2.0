@@ -171,13 +171,13 @@ function InvoiceMgmtMain({ param, setInvoiceId }) {
                 <ColumnChooser enabled />
                 <FilterRow visible={true} />
                 <Paging enabled={false} />
-
-                <Column type="buttons" width="95">
+                
+                <Column type="buttons" width="95" allowHiding={false} fixed fixedPosition='left' allowResizing={false}>
                     <CellButton icon="pdffile" onClick={handlePDFClick} text="리포트" />
                     <CellButton icon="showpanel" onClick={handleDetailClick} text="상세보기" />
                     <CellButton name="delete" />
                 </Column>
-                <Column caption="#" cellRender={indexRender} />
+                <Column caption="#" cellRender={indexRender} allowHiding={false} fixed={true} />
                 <Column dataField="seq" />
                 <Column dataField="invoiceMonth">
                     <RequiredRule />
