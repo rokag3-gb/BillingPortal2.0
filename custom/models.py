@@ -248,7 +248,7 @@ class InvoiceOrder(models.Model):
                 invoiceMonth = item.invoiceMonth,
                 vendorCode = item.vendorCode,
                 invoiceId = item.invoiceId,
-                amount = item.rrpAmount,
+                amount = item.rrp_amount_pretax,
                 paid = 0
             )
             detail.save()
