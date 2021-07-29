@@ -66,8 +66,8 @@ function InvoiceMgmtDetail({ invoiceId }) {
                 <Column dataField="subscriptionName" />
                 <Column dataField="sku" />
                 <Column dataField="unit" />
-                <Column dataField="chargeStartDate" />
-                <Column dataField="chargeEndDate" />
+                <Column dataField="chargeStartDate" dataType="date" format="yyyy-MM-dd" />
+                <Column dataField="chargeEndDate" dataType="date" format="yyyy-MM-dd" />
                 <Column dataField="orderId" />
                 <Column dataField="region" />
                 <Column dataField="serviceType" />
@@ -95,7 +95,7 @@ function InvoiceMgmtDetail({ invoiceId }) {
                 </Column>
                 <Column dataField="vendorInvoiceId" />
                 <Column dataField="billingCycleType" />
-                <Column dataField="regDate" />
+                <Column dataField="regDate" dataType="date" format="yyyy-MM-dd HH:mm:ss" />
                 <Summary>
                     <TotalItem column="seq" summaryType="count" valueFormat=",##0" />
                     <TotalItem column="partner_price" summaryType="sum" valueFormat=",##0" />

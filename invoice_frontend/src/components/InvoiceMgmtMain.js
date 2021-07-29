@@ -43,6 +43,13 @@ function loadStore(loadOptions, param) {
         .catch((err) => {
             console.log(`GET ${url} fail`)
             console.log(err.response)
+            if (err.response.data) {
+                let msg = ""
+                for (const [key, value] of Object.entries(err.response.data)) {
+                    msg += `${key}: ${value[0]} `
+                }
+                throw new Error(msg)
+            }
             throw new Error("데이터 불러오기 실패")
         })
 }
@@ -164,13 +171,13 @@ function InvoiceMgmtMain({ param, setInvoiceId }) {
                 <ColumnChooser enabled />
                 <FilterRow visible={true} />
                 <Paging enabled={false} />
-
-                <Column type="buttons" width="95">
+                
+                <Column type="buttons" width="95" allowHiding={false} fixed fixedPosition='left' allowResizing={false}>
                     <CellButton icon="pdffile" onClick={handlePDFClick} text="리포트" />
                     <CellButton icon="showpanel" onClick={handleDetailClick} text="상세보기" />
                     <CellButton name="delete" />
                 </Column>
-                <Column caption="#" cellRender={indexRender} />
+                <Column caption="#" cellRender={indexRender} allowHiding={false} fixed={true} />
                 <Column dataField="seq" />
                 <Column dataField="invoiceMonth">
                     <RequiredRule />
@@ -215,10 +222,10 @@ function InvoiceMgmtMain({ param, setInvoiceId }) {
                 <Column dataField="regId">
                     <RequiredRule />
                 </Column>
-                <Column dataField="regDate" />
+                <Column dataField="regDate" dataType="date" format="yyyy-MM-dd HH:mm:ss" />
                 <Column dataField="stateCode" />
                 <Column dataField="stateChgId" />
-                <Column dataField="stateChgDate"/ >
+                <Column dataField="stateChgDate" dataType="date" format="yyyy-MM-dd HH:mm:ss" />
                 <Column dataField="remark" />
                 <Summary calculateCustomSummary={calculateCustomSummary}>
                     <TotalItem column="seq" summaryType="count" valueFormat=",##0" />

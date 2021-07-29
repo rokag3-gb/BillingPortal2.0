@@ -2,15 +2,28 @@ import React, { useState, useEffect } from 'react';
 import DateBox from 'devextreme-react/date-box';
 import Button from 'devextreme-react/button';
 import TextBox from 'devextreme-react/text-box';
+import {
+    Validator,
+    PatternRule,
+
+} from 'devextreme-react/validator';
 import * as utils from '../utils';
 
-function makeParam(startDate, endDate) {
-    return `?invoiceDateStart=${startDate}&invoiceDateEnd=${endDate}&limit=10000`
+function makeParam(startDate, endDate, orgId) {
+    let ret = `?invoiceDateStart=${startDate}&invoiceDateEnd=${endDate}&limit=10000`
+    if (orgId) {
+        ret += '&orgId=' + orgId
+    }
+    return ret
 }
-const OrgBox = ({ onValueChanged }) => {
+const OrgBox = ({ value, onValueChanged }) => {
     return (
         <div style={{paddingLeft: 5}}>
-            <TextBox onValueChanged={onValueChanged} width={80} placeholder="Org ID" />
+            <TextBox value={value} onValueChanged={onValueChanged} width={80} placeholder="Org ID">
+                <Validator>
+                    <PatternRule message="숫자만 입력해주세요." pattern={/\d/} />
+                </Validator>
+            </TextBox>
         </div>
     )
 }
@@ -18,14 +31,14 @@ const OrgBox = ({ onValueChanged }) => {
 function GridToolbar({startDate, setStartDate, endDate, setEndDate, setMainParam, girdToolbarSize, enableIdSearch=false}) {
     // const [windowSize, setWindowSize] = useState(window.innerWidth)
     // const handleResize = () => setWindowSize(window.innerWidth);
-    const [orgId, setOrgId] = useState(0);
+    const [orgId, setOrgId] = useState(null);
     const handleDateClick = (mm) => {
         const [start, end] = utils.getDateSet(mm)
         setStartDate(start)
         setEndDate(end)   
     }
     const handleSearch = () => {
-        setMainParam(makeParam(utils.getDateFormat(startDate), utils.getDateFormat(endDate)))
+        setMainParam(makeParam(utils.getDateFormat(startDate), utils.getDateFormat(endDate), orgId))
     }
     useEffect(()=>{
         handleSearch()
@@ -34,12 +47,6 @@ function GridToolbar({startDate, setStartDate, endDate, setEndDate, setMainParam
         //     window.removeEventListener('resize', handleResize)
         // }
     },[])
-
-    const tt = (e) => {
-        console.log('hihi')
-        setOrgId(e.value)
-    }
-    
 
     return (
         // <div style={{display: "flex", justifyContent: "space-between", width: (windowSize-girdToolbarSize)+'px'}}>
@@ -60,12 +67,11 @@ function GridToolbar({startDate, setStartDate, endDate, setEndDate, setMainParam
                 <Button text="3m" onClick={()=>handleDateClick(3)} />
                 <Button text="6m" onClick={()=>handleDateClick(6)} />
                 <Button text="12m" onClick={()=>handleDateClick(12)} />
-                {enableIdSearch && <OrgBox onValueChanged={tt} />}
+                {enableIdSearch && <OrgBox onValueChanged={(e) => setOrgId(e.value)} value={orgId}/>}
             </div>
             <div style={{paddingLeft: 5}}>
                 <Button text="조회" onClick={handleSearch} />
             </div>
-            {orgId}
         </div>
     );
 }
