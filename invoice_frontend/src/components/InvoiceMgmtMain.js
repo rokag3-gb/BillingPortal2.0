@@ -43,6 +43,13 @@ function loadStore(loadOptions, param) {
         .catch((err) => {
             console.log(`GET ${url} fail`)
             console.log(err.response)
+            if (err.response.data) {
+                let msg = ""
+                for (const [key, value] of Object.entries(err.response.data)) {
+                    msg += `${key}: ${value[0]} `
+                }
+                throw new Error(msg)
+            }
             throw new Error("데이터 불러오기 실패")
         })
 }
