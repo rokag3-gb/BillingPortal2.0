@@ -152,10 +152,10 @@ function InvoiceListMain({ param, setInvoiceId }) {
                     <Format type="fixedPoint" precision={2} />
                 </Column>
                 <Column dataField="regId" />
-                <Column dataField="regDate" />
+                <Column dataField="regDate" dataType="date" format="yyyy-MM-dd HH:mm:ss" />
                 <Column dataField="stateCode" />
                 <Column dataField="stateChgId" />
-                <Column dataField="stateChgDate"/ >
+                <Column dataField="stateChgDate" dataType="date" format="yyyy-MM-dd HH:mm:ss" />
                 <Column dataField="remark" />
                 <Summary calculateCustomSummary={calculateCustomSummary}>
                     <TotalItem column="seq" summaryType="count" valueFormat=",##0" />
