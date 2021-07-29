@@ -24,6 +24,7 @@ function InvoiceMgmt() {
                     setEndDate={setEndDate}
                     girdToolbarSize={girdToolbarSize}
                     setMainParam={setMainParam}
+                    enableIdSearch
                 />
             </div>
             <InvoiceMgmtMain setInvoiceId={setInvoiceId} param={mainParam} />
