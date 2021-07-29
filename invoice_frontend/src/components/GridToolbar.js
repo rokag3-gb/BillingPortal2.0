@@ -14,19 +14,20 @@ function GridToolbar({startDate, setStartDate, endDate, setEndDate, girdToolbarS
         setStartDate(start)
         setEndDate(end)   
     }
-    const handleResize = () => setWindowSize(window.innerWidth);
+    // const handleResize = () => setWindowSize(window.innerWidth);
     const handleSearch = () => {
         setMainParam(makeParam(utils.getDateFormat(startDate), utils.getDateFormat(endDate)))
     }
     useEffect(()=>{
         handleSearch()
-        window.addEventListener('resize', handleResize)
-        return () => {
-            window.removeEventListener('resize', handleResize)
-        }
+        // window.addEventListener('resize', handleResize)
+        // return () => {
+        //     window.removeEventListener('resize', handleResize)
+        // }
     },[])
     return (
-        <div style={{display: "flex", justifyContent: "space-between", width: (windowSize-girdToolbarSize)+'px'}}>
+        // <div style={{display: "flex", justifyContent: "space-between", width: (windowSize-girdToolbarSize)+'px'}}>
+        <div style={{display: "flex", justifyContent: "space-between"}}>
             <div style={{display: "flex"}}>
                 <DateBox
                     width={120}
@@ -44,7 +45,7 @@ function GridToolbar({startDate, setStartDate, endDate, setEndDate, girdToolbarS
                 <Button text="6m" onClick={()=>handleDateClick(6)} />
                 <Button text="12m" onClick={()=>handleDateClick(12)} />
             </div>
-            <div>
+            <div style={{paddingLeft: 5}}>
                 <Button text="조회" onClick={handleSearch} />
             </div>
         </div>
