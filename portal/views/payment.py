@@ -41,12 +41,12 @@ def payment(request: HttpRequest) -> HttpResponse:
         if len(invoice_details) <= 0:
             return redirect('/invoice_list?error=alreadypaid')
         else:
-            subtotal = invoice_details.aggregate(Sum("rrp_amount_pretax"))
+            subtotal = invoice_details.aggregate(Sum("our_amount"))
             order = InvoiceOrder(
                 orderDate = datetime.datetime.now(),
                 orderUserId = request.user,
                 orgId = org,
-                totalAmount = subtotal['rrp_amount_pretax__sum'],
+                totalAmount = subtotal['our_amount__sum'],
                 paid = 0,
                 isCancel = True,
             )
