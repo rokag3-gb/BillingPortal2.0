@@ -11,6 +11,7 @@ import DataGrid, {
     Editing,
     RequiredRule,
     Paging,
+    PatternRule,
 } from 'devextreme-react/data-grid';
 import axios from 'axios';
 import CustomStore from 'devextreme/data/custom_store';
@@ -46,6 +47,7 @@ function loadStore(loadOptions, param) {
         })
 }
 function insertStore(values) {
+    console.log(values)
     return axios.post(url, values, { headers })
         .then((res) => {
             console.log(`POST ${url} ok`)
@@ -172,6 +174,7 @@ function InvoiceMgmtMain({ param, setInvoiceId }) {
                 <Column dataField="seq" />
                 <Column dataField="invoiceMonth">
                     <RequiredRule />
+                    <PatternRule message={"yyyyMM 형식으로 입력해주세요."} pattern={/\d{6}/} />
                 </Column>
                 <Column dataField="invoiceDate" dataType="date" format="yyyy-MM-dd">
                     <RequiredRule />
