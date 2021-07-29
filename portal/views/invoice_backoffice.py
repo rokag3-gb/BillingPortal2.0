@@ -196,7 +196,7 @@ class InvoiceDetailAzureRestListView(generics.ListAPIView):
         invoice_id = self.kwargs['invoice_id']
         result = VwInvoiceDetailAzureAzure.objects.all().prefetch_related('orgId')
         if not self.request.user.is_staff:
-            result = result.filter(orgid=get_organization(self.request)).prefetch_related('orgId')
+            result = result.filter(orgId=get_organization(self.request)).prefetch_related('orgId')
         if invoice_id:
             result = result.filter(invoiceId=invoice_id)
         return result
