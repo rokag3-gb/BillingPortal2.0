@@ -22,7 +22,6 @@ const headers = {
     'Content-Type': 'application/json',
     'accept': 'application/json'
 }
-
 function loadStore(loadOptions, param) {
     console.log("load main store")
     return axios.get(url + param)
@@ -54,7 +53,6 @@ function loadStore(loadOptions, param) {
         })
 }
 function insertStore(values) {
-    console.log(values)
     return axios.post(url, values, { headers })
         .then((res) => {
             console.log(`POST ${url} ok`)
@@ -74,7 +72,7 @@ function updateStore(key, values) {
             throw new Error(`데이터 업데이트 실패(Seq: ${key})`)
         })    
 }
-function removeStore(key) {
+async function removeStore(key) {
     return axios.delete(url + key, { headers })
         .then((res) => {
             console.log(`DELETE ${url} ok`)
@@ -92,7 +90,7 @@ function InvoiceMgmtMain({ param, setInvoiceId }) {
         load: (loadOptions) => param ? loadStore(loadOptions, param) : null,
         insert: insertStore,
         update: updateStore,
-        remove: removeStore
+        remove: removeStore,
     });
     const dsMain = new DataSource({store: storeMain})
     const refDataGrid = useRef(null);
@@ -112,6 +110,19 @@ function InvoiceMgmtMain({ param, setInvoiceId }) {
             window.parent.proceed_payment(selectedInvoiceIds)
         }
     }
+    const handleDeleteClick = () => {
+        if (refDataGrid === null) { return }
+        const dg = refDataGrid.current.instance;
+        const selectedKeys = dg.getSelectedRowKeys()
+        const endIdx = selectedKeys.length -1
+        selectedKeys.forEach((key, idx) => {
+            if (idx === endIdx) {
+                dsMain.store().remove(key).then(() => dsMain.reload())
+            } else {
+                dsMain.store().remove(key)
+            }
+        })
+    }
     const handleToolbarPreparing = (e) => {
         e.toolbarOptions.items.unshift(
             {
@@ -122,6 +133,19 @@ function InvoiceMgmtMain({ param, setInvoiceId }) {
                     onClick: handlePaymentClick
                 }
             },
+
+        )
+        e.toolbarOptions.items.push(
+            {
+                location: 'after',
+                locationInMenu: 'auto',
+                widget: 'dxButton',
+                options: {
+                    icon: "trash",
+                    hint: "Delete select items",
+                    onClick: handleDeleteClick
+                }
+            }
         )
     }
     const calculateCustomSummary = (options) => {
@@ -172,10 +196,9 @@ function InvoiceMgmtMain({ param, setInvoiceId }) {
                 <FilterRow visible={true} />
                 <Paging enabled={false} />
                 
-                <Column type="buttons" width="95" allowHiding={false} fixed fixedPosition='left' allowResizing={false}>
+                <Column type="buttons" width="80" allowHiding={false} fixed fixedPosition='left' allowResizing={false}>
                     <CellButton icon="pdffile" onClick={handlePDFClick} text="리포트" />
                     <CellButton icon="showpanel" onClick={handleDetailClick} text="상세보기" />
-                    <CellButton name="delete" />
                 </Column>
                 <Column caption="#" cellRender={indexRender} allowHiding={false} fixed={true} />
                 <Column dataField="seq" />
