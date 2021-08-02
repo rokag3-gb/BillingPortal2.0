@@ -4,9 +4,11 @@ def run_raw_proc(proc_statement, *proc_args):
     cursor =  connection.cursor().execute(proc_statement, *proc_args)
     resultarr = []
     while True:
-        columns = [col[0] for col in cursor.description]
-        dictset = [dict(zip(columns, row)) for row in cursor.fetchall()]
-        if len(dictset) > 0: resultarr.append(dictset)
+        if cursor.description != None:
+            columns = [col[0] for col in cursor.description]
+            dictset = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        
+            if len(dictset) > 0: resultarr.append(dictset)
         if not cursor.nextset(): break
     return resultarr
 
