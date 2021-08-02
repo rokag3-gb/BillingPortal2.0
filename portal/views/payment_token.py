@@ -139,6 +139,7 @@ def charge_token_payment(request: HttpRequest) -> HttpResponse:
                     order_details = order_item.getOrderDetails()
                     for detail in order_details:
                         detail.paid = detail.amount
+                        detail.isCancel = False
                         detail.save()
                     payment = Payment(
                         paydate = datetime.datetime.strptime(pgresult['approvedAt'], "%Y%m%d%H%M%S")

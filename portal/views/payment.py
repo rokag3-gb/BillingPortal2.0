@@ -89,6 +89,7 @@ def charge_oneimte_payment(request: HttpRequest) -> HttpResponse:
             try:
                 with transaction.atomic():
                     order_item.paid = int(pgresult['totalPaymentAmount'])
+                    order_item.isCancel = False
                     order_item.save()
                     order_details = order_item.getOrderDetails()
                     for detail in order_details:
