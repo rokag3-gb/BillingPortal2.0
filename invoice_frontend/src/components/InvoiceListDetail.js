@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import DataGrid, {
-    Scrolling,
+    Paging,
     Summary,
     TotalItem,
     Column,
@@ -41,6 +41,7 @@ function InvoiceListDetail({ invoiceId }) {
         load: (loadOptions)=>loadStore(loadOptions, invoiceId)
     });
     const ds = new DataSource({store: store})
+    const indexRender = (a) => typeof a.row.dataIndex === 'number' ? <div style={{textAlign: 'center'}}>{a.row.dataIndex+1}</div> : null;
     return (
         <>
             <DataGrid
@@ -54,7 +55,9 @@ function InvoiceListDetail({ invoiceId }) {
                 showRowLines
                 rowAlternationEnabled
             >
-                <Scrolling mode="virtual" />
+                <Paging enabled={false} />
+                
+                <Column caption="#" cellRender={indexRender} allowHiding={false} fixed={true} />
                 <Column dataField="seq" />
                 <Column dataField="orgId" />
                 <Column dataField="invoiceId" />
