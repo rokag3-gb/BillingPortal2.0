@@ -93,8 +93,6 @@ const AdditionalTable = ({columns, size, rows}) => {
 }
 
 function DocPDF({ data }) {
-    console.log(data)
-    
     const detailTableColumns = ["No.", "Supplier", "Service", "Service Name", "Q`ty", "Unit Price", "Total"]
     const detailTableSize = [20,70,100,200,30,70,70]//40
     const commonData = data[0][0]
@@ -105,8 +103,6 @@ function DocPDF({ data }) {
     let additional = false
     let additionalServiceRows = null
     let totalData = data[3]
-
-
 
     if (data.length === 5) {
         // Additional 서비스 있음
