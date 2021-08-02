@@ -4,7 +4,7 @@ import { Page, Text, View, Document, StyleSheet, Font, Image } from '@react-pdf/
 import font from '../assets/malgun.ttf'
 import fontBd from '../assets/malgunbd.ttf'
 import logo from '../assets/logo.png'
-import { COMPANY, ADDRESS, EMAIL, CALL_LOCAL, URL_APP, URL_HOME, REMARKS } from '../config'
+import { URL_APP, URL_HOME } from '../config'
 import TablePDF from './TablePDF';
 
 const styles = StyleSheet.create({
@@ -100,7 +100,6 @@ function DocPDF({ data }) {
     const cloudServiceRows = data[2].map((item, idx) =>
         [idx +1, item.supplier, item.service, item.serviceName, item.quantity, item.price, item.amount]
     )
-
     let additional = false
     let additionalServiceRows = null
     let totalData = data[3]
