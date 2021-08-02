@@ -45,7 +45,7 @@ function loadStore(loadOptions, param) {
             if (err.response.data) {
                 let msg = ""
                 for (const [key, value] of Object.entries(err.response.data)) {
-                    msg += `${key}: ${value[0]} `
+                    msg += `${key}: ${value} `
                 }
                 throw new Error(msg)
             }

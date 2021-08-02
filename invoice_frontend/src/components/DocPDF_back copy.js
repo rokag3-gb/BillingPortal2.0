@@ -78,9 +78,8 @@ const styles = StyleSheet.create({
 
     },
 })
-const nullMsg = "없음"
 
-function DocPDF({ id, clientInfoOld, paymentInfo, cloudServiceUsageInfo, additionalServiceUsageInfo, data }) {
+function DocPDF({ id, clientInfo, paymentInfo, cloudServiceUsageInfo, additionalServiceUsageInfo }) {
     const usagePeriod = `${paymentInfo.period[0]} ~ ${paymentInfo.period[1]}`
     const payYear = paymentInfo.paymentYear
     const payMonth = paymentInfo.paymentMonth
@@ -96,11 +95,7 @@ function DocPDF({ id, clientInfoOld, paymentInfo, cloudServiceUsageInfo, additio
     )
     const additionalServiceRows = additionalServiceUsageInfo.map((item, idx) =>
         [idx + 1, item.supplier, item.service, item.serviceName, item.quantity, item.price, item.total]
-    )
-
-    console.log(data)
-    const commonData = data[0][0]
-    console.log(commonData)
+    )    
 
     Font.register({
         family: 'malgun',
@@ -109,7 +104,7 @@ function DocPDF({ id, clientInfoOld, paymentInfo, cloudServiceUsageInfo, additio
             { src: fontBd, fontWeight: 600}
         ]
     })
-
+    
     return (
         <Document>
             <Page size='A4' style={styles.page}>
@@ -119,21 +114,21 @@ function DocPDF({ id, clientInfoOld, paymentInfo, cloudServiceUsageInfo, additio
                     </View>
                     <View style={styles.headerMain}>
                         <Text style={styles.textTitle}>
-                            {commonData.ProviderName}
+                            {COMPANY}
                         </Text>
-                        <Text>{commonData.ProviderAddress}</Text>
+                        <Text>{ADDRESS} / {CALL_LOCAL} / {EMAIL}</Text>
                     </View>
                     <View style={styles.headerSub}>
                         <Text>{URL_APP}</Text>
                         <Text>{URL_HOME}</Text>
                         <Text style={styles.textInvoiceID}>
-                            Invoice No: {commonData.InvoiceId}
+                            Invoice No: {id}
                         </Text>
                     </View>
                 </View>
                 <View style={styles.sectionTitle}>
                     <Text style={styles.textSubTitle}>
-                        {commonData.InvoiceTitle}
+                        {payYear}년 {payMonth}월 분 청구서
                     </Text>
                 </View>
                 <View style={styles.sectionSummary}>
@@ -143,19 +138,19 @@ function DocPDF({ id, clientInfoOld, paymentInfo, cloudServiceUsageInfo, additio
                             // columns={["col_1", "col_2"]}
                             size={[80, 150]}
                             rows={[
-                                ["기업명", commonData.OrgName],
-                                ["담당자", clientInfoOld.manager],
-                                ["연락처", clientInfoOld.call],
-                                ["이메일", commonData.UserEmail? commonData.UserEmail : nullMsg],
+                                ["기업명", clientInfo.name],
+                                ["담당자", clientInfo.manager],
+                                ["연락처", clientInfo.call],
+                                ["이메일", clientInfo.mail],
                             ]}
                         />
                         <Text style={{fontWeight: 'bold', paddingTop: '5px'}}>청구정보</Text>
                         <TablePDF
                             size={[80, 150]}
                             rows={[
-                                ["사용기간", commonData.ChargePeriod],
-                                ["결제방법", commonData.PaymentMethod],
-                                ["결제조건", commonData.PaymentCondition]
+                                ["사용기간", usagePeriod],
+                                ["결제방법", paymentInfo.payment[0]],
+                                ["결제조건", paymentInfo.paymentCondition]
                             ]}
                         />
                     </View>
@@ -205,9 +200,7 @@ function DocPDF({ id, clientInfoOld, paymentInfo, cloudServiceUsageInfo, additio
                 </View>
                 <View style={styles.sectionRemark}>
                     <Text style={styles.textHeader}>Remarks</Text>
-                    <Text style={{marginLeft: 5}}>
-                        {commonData.Remark}
-                    </Text>
+                    {REMARKS.map((text, idx) => <Text key={'rm'+idx} style={{marginLeft: 5}}>{`${idx+1}. ${text}`}</Text>)}
                 </View>
             </Page>
         </Document>
