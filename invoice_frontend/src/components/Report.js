@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { PDFViewer } from '@react-pdf/renderer';
+import DocPDF from './DocPDF';
 
-import DocPDF from './DocPDF'
-
-const clientInfo = {
+const clientInfoOld = {
     name: "주식회사 어디",
     manager: "정떙땡그룹장님",
     call: "010-1111-2222",
@@ -26,22 +26,33 @@ const additionalServiceUsageInfo = [
 ]
 
 function Report({ match }) {
+    const [data ,setData] = useState(null)
     const id = match.params.id;
+    const url = `/api/v1/invoice_report/${id}`
 
-    useState(()=>{
-        // TODO: load invoice info
+    useEffect(()=>{
+        axios.get(url)
+            .then((res) => {
+                setData(res.data)
+            })
+            .catch((err) => {
+                console.log(err.response)
+            })
     },[])
-
+    
     return (
         <>
-            <PDFViewer style={{position: 'fixed', top: 0, left: 0, height: '100%', width: '100%', margin: 0}}>
-                <DocPDF
-                    id={id}
-                    clientInfo={clientInfo}
-                    paymentInfo={paymentInfo}
-                    cloudServiceUsageInfo={cloudServiceUsageInfo}
-                    additionalServiceUsageInfo={additionalServiceUsageInfo}
-                />
+            <PDFViewer frameBorder={0} style={{position: 'fixed', top: 0, left: 0, height: '100%', width: '100%', margin: 0}}>
+                {data &&
+                    <DocPDF
+                        id={id}
+                        clientInfoOld={clientInfoOld}
+                        paymentInfo={paymentInfo}
+                        cloudServiceUsageInfo={cloudServiceUsageInfo}
+                        additionalServiceUsageInfo={additionalServiceUsageInfo}
+                        data={data}
+                    />
+                }
             </PDFViewer>
         </>
     )

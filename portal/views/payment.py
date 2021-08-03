@@ -37,16 +37,16 @@ def payment(request: HttpRequest) -> HttpResponse:
         return render(request, 'portal/payment.html', context)
     if request.method == "POST":
         invoice_ids = request.POST.getlist("invoice")
-        invoice_details = Invoice.objects.filter(invoiceId__in=invoice_ids, paid=0)
+        invoice_details = Invoice.objects.filter(invoiceId__in=invoice_ids, paid=0, our_amount__gt=0)
         if len(invoice_details) <= 0:
-            return redirect('/invoices?error=alreadypaid')
+            return redirect('/invoice_list?error=alreadypaid')
         else:
-            subtotal = invoice_details.aggregate(Sum("rrp_amount_pretax"))
+            subtotal = invoice_details.aggregate(Sum("our_amount"))
             order = InvoiceOrder(
                 orderDate = datetime.datetime.now(),
                 orderUserId = request.user,
                 orgId = org,
-                totalAmount = subtotal['rrp_amount_pretax__sum'],
+                totalAmount = subtotal['our_amount__sum'],
                 paid = 0,
                 isCancel = True,
             )
@@ -89,6 +89,7 @@ def charge_oneimte_payment(request: HttpRequest) -> HttpResponse:
             try:
                 with transaction.atomic():
                     order_item.paid = int(pgresult['totalPaymentAmount'])
+                    order_item.isCancel = False
                     order_item.save()
                     order_details = order_item.getOrderDetails()
                     for detail in order_details:

@@ -1,11 +1,12 @@
 import 'devextreme/dist/css/dx.common.css';
 import 'devextreme/dist/css/dx.light.css';
+import './components/over.css'
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-
 import InvoiceList from './pages/InvoiceList';
 import InvoiceMgmt from './pages/InvoiceMgmt';
 import Report from './components/Report';
+import CSRFToken from './components/CSRFToken';
 
 function App() {
   return (

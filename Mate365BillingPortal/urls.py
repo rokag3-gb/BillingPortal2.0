@@ -26,7 +26,7 @@ from portal.views import payment, dashboard, index, preference, invoices, charge
     cert_form, issue_token, issue_param, issue_param_callback, charge_token_payment, invoice_backoffice_iframe, \
     invoice_list_iframe
 from portal.views.invoice_backoffice import InvoiceCreateListView, InvoiceRestView, InvoiceDetailAzAzCreateListView, \
-    InvoiceDetailAzAzRestView, swagger_view
+    InvoiceDetailAzureRestListView, swagger_view, get_invoice_report
 from django.conf import settings # import the settings file
 
 branding = getattr(settings, "BRANDING", {})
@@ -72,8 +72,9 @@ urlpatterns = [
     path('policy/', include('policy.urls')),
     path('api/v1/invoice/', InvoiceCreateListView.as_view()),
     path('api/v1/invoice/<int:pk>/', InvoiceRestView.as_view()),
-    path('api/v1/invoice_azaz/', InvoiceDetailAzAzCreateListView.as_view()),
-    path('api/v1/invoice_azaz/<int:pk>/', InvoiceDetailAzAzRestView.as_view()),
+    path('api/v1/invoice/detail/azure/', InvoiceDetailAzAzCreateListView.as_view()),
+    path('api/v1/invoice/detail/azure/<str:invoice_id>', InvoiceDetailAzureRestListView.as_view()),
+    path('api/v1/invoice_report/<str:invoice_id>/', get_invoice_report),
     path('api-auth/', include('rest_framework.urls')),
     path('swagger/schema-json.json', swagger_view.without_ui(cache_timeout=0), name='schema-json'),
     path('swagger/', swagger_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
