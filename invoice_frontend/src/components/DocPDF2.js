@@ -1,11 +1,11 @@
 import React from 'react'
 import { Page, Text, View, Document, StyleSheet, Font, Image } from '@react-pdf/renderer';
-
-import font from '../assets/malgun.ttf'
-import fontBd from '../assets/malgunbd.ttf'
-import logo from '../assets/logo.png'
-import { COMPANY, ADDRESS, EMAIL, CALL_LOCAL, URL_APP, URL_HOME, REMARKS } from '../config'
+import font from '../assets/malgun.ttf';
+import fontBd from '../assets/malgunbd.ttf';
+import logo from '../assets/logo.png';
+import { URL_APP, URL_HOME } from '../config';
 import TablePDF from './TablePDF';
+import * as utils from '../utils';
 
 const styles = StyleSheet.create({
     page: {
@@ -77,25 +77,61 @@ const styles = StyleSheet.create({
     sectionRemark: {
 
     },
+    pageNumber: {
+        position: 'absolute',
+        bottom: 20,
+        left: 0,
+        right: 0,
+        textAlign: 'center',
+    },
+    printTime: {
+        position: 'absolute',
+        bottom: 30,
+        left: 0,
+        right: 20,
+        textAlign: 'right',
+    }
 })
-
-function DocPDF({ id, clientInfo, paymentInfo, cloudServiceUsageInfo, additionalServiceUsageInfo }) {
-    const usagePeriod = `${paymentInfo.period[0]} ~ ${paymentInfo.period[1]}`
-    const payYear = paymentInfo.paymentYear
-    const payMonth = paymentInfo.paymentMonth
-    const sumCloud = cloudServiceUsageInfo.reduce((prv, cur) => prv + cur.total, 0)
-    const sumAdditional = additionalServiceUsageInfo.reduce((prv, cur) => prv + cur.total, 0)
-    const supply = sumCloud + sumAdditional
-    const vat = supply * 0.1
-    const total = supply + vat
-    const detailTableColumns = ["No.", "Supplier", "Service", "Service Name", "Q`ty", "Unit Price", "Total"]
-    const detailTableSize = [20,70,100,0,30,70,70]//40
-    const cloudServiceRows = cloudServiceUsageInfo.map((item, idx) => 
-        [idx + 1, item.supplier, item.service, item.serviceName, item.quantity, item.price, item.total]
+const nullMsg = (t) => t ? t : "없음"
+const AdditionalTable = ({columns, size, rows}) => {
+    return (
+        <>
+            <Text style={styles.detailTitle}>2. Additional Services</Text>
+            <TablePDF
+                columns={columns}
+                size={size}
+                rows={rows}
+            />
+        </>
     )
-    const additionalServiceRows = additionalServiceUsageInfo.map((item, idx) =>
-        [idx + 1, item.supplier, item.service, item.serviceName, item.quantity, item.price, item.total]
-    )    
+}
+
+function DocPDF({ data }) {
+    const detailTableColumns = ["No.", "Supplier", "Service", "Service Name", "Q`ty", "Unit Price", "Total"]
+    const detailTableSize = [20,70,100,200,30,70,70]//40
+    const commonData = data[0][0]
+    const summaryRows = data[1].sort((a, b) => a.sort - b.sort).map((item) => [item.itemName, item.amount])
+    const cloudServiceRows = data[2].map((item, idx) =>
+        [idx +1, item.supplier, item.service, item.serviceName, item.quantity, item.price, item.amount]
+    )
+    let additional = false
+    let additionalServiceRows = null
+    let totalData = data[3]
+
+    const now = new Date()
+    const date = utils.getDateFormat(now)
+    const times = utils.getTimeFormat(now)
+
+    if (data.length === 5) {
+        // Additional 서비스 있음
+        additional = true
+        additionalServiceRows = data[3].map((item, idx) =>
+            [idx +1, item.supplier, item.service, item.serviceName, item.quantity, item.price, item.amount]
+        )
+        totalData = data[4]
+    }
+
+    const totalRows = totalData.sort((a, b) => a.sort - b.sort).map((item) => [item.itemName, item.amount])
 
     Font.register({
         family: 'malgun',
@@ -104,7 +140,7 @@ function DocPDF({ id, clientInfo, paymentInfo, cloudServiceUsageInfo, additional
             { src: fontBd, fontWeight: 600}
         ]
     })
-    
+
     return (
         <Document>
             <Page size='A4' style={styles.page}>
@@ -114,21 +150,21 @@ function DocPDF({ id, clientInfo, paymentInfo, cloudServiceUsageInfo, additional
                     </View>
                     <View style={styles.headerMain}>
                         <Text style={styles.textTitle}>
-                            {COMPANY}
+                            {commonData.ProviderName}
                         </Text>
-                        <Text>{ADDRESS} / {CALL_LOCAL} / {EMAIL}</Text>
+                        <Text>{commonData.ProviderAddress}</Text>
                     </View>
                     <View style={styles.headerSub}>
                         <Text>{URL_APP}</Text>
                         <Text>{URL_HOME}</Text>
                         <Text style={styles.textInvoiceID}>
-                            Invoice No: {id}
+                            Invoice No: {commonData.InvoiceId}
                         </Text>
                     </View>
                 </View>
                 <View style={styles.sectionTitle}>
                     <Text style={styles.textSubTitle}>
-                        {payYear}년 {payMonth}월 분 청구서
+                        {commonData.InvoiceTitle}
                     </Text>
                 </View>
                 <View style={styles.sectionSummary}>
@@ -138,19 +174,19 @@ function DocPDF({ id, clientInfo, paymentInfo, cloudServiceUsageInfo, additional
                             // columns={["col_1", "col_2"]}
                             size={[80, 150]}
                             rows={[
-                                ["기업명", clientInfo.name],
-                                ["담당자", clientInfo.manager],
-                                ["연락처", clientInfo.call],
-                                ["이메일", clientInfo.mail],
+                                ["기업명", commonData.OrgName],
+                                ["담당자", nullMsg(commonData.UserName)],
+                                ["연락처", nullMsg(commonData.UserPhone)],
+                                ["이메일", nullMsg(commonData.UserEmail)],
                             ]}
                         />
                         <Text style={{fontWeight: 'bold', paddingTop: '5px'}}>청구정보</Text>
                         <TablePDF
                             size={[80, 150]}
                             rows={[
-                                ["사용기간", usagePeriod],
-                                ["결제방법", paymentInfo.payment[0]],
-                                ["결제조건", paymentInfo.paymentCondition]
+                                ["사용기간", commonData.ChargePeriod],
+                                ["결제방법", commonData.PaymentMethod],
+                                ["결제조건", commonData.PaymentCondition]
                             ]}
                         />
                     </View>
@@ -159,13 +195,7 @@ function DocPDF({ id, clientInfo, paymentInfo, cloudServiceUsageInfo, additional
                         <Text style={{fontWeight: 'bold', paddingTop: '5px'}}>청구항목</Text>
                         <TablePDF
                             size={[120, 180]}
-                            rows={[
-                                [`${payYear}년 ${payMonth}월 분 청구금액`, total],
-                                ["CSP서비스(1번항목)", sumCloud],
-                                ["부가서비스(2번항목)", sumAdditional],
-                                ["공급금액", supply],
-                                ["부가가치세", vat]
-                            ]}
+                            rows={summaryRows}
                             border
                             boldText
                         />
@@ -179,29 +209,30 @@ function DocPDF({ id, clientInfo, paymentInfo, cloudServiceUsageInfo, additional
                         size={detailTableSize}
                         rows={cloudServiceRows}
                     />
-                    <Text style={styles.detailTitle}>2. Additional Services</Text>
-                    <TablePDF
-                        columns={detailTableColumns}
-                        size={detailTableSize}
-                        rows={additionalServiceRows}
-                    />
+                    {additional && <AdditionalTable columns={detailTableColumns} size={detailTableSize} rows={additionalServiceRows} />}
                 </View>
                 <View style={styles.sectionTotal}>
                     <TablePDF
                         size={[110, 100]}
-                        rows={[
-                            ["공급가액 (부가가치세 별도)", supply],
-                            ["부가가치세 (10%)", vat],
-                            ["합 계 액", total]
-                        ]}
+                        rows={totalRows}
                         border
                         boldText
                     />
                 </View>
                 <View style={styles.sectionRemark}>
                     <Text style={styles.textHeader}>Remarks</Text>
-                    {REMARKS.map((text, idx) => <Text key={'rm'+idx} style={{marginLeft: 5}}>{`${idx+1}. ${text}`}</Text>)}
+                    <Text style={{marginLeft: 5}}>
+                        {commonData.Remark}
+                    </Text>
                 </View>
+                <Text style={styles.printTime} fixed>Document printing time: {`${date} ${times}`}</Text>
+                <Text
+                    style={styles.pageNumber}
+                    render={({ pageNumber, totalPages }) => (
+                        `Page ${pageNumber} of ${totalPages}`
+                    )}
+                    fixed
+                />
             </Page>
         </Document>
     )
