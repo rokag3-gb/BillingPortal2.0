@@ -9,8 +9,10 @@ import * as utils from '../utils';
 
 const styles = StyleSheet.create({
     page: {
-        // flexDirection: 'column',
-        padding: 20,
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 20,
+        paddingBottom: 40,
         fontFamily: 'malgun',
         fontSize: '8px',
         lineHeight: '1.6',
