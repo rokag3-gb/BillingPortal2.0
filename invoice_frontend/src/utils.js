@@ -15,6 +15,14 @@ export function getDateFormat(date){
     return year + "-" + month + "-" + day;
 }
 
+export function getTimeFormat(date){
+    const hh = ("0" + date.getHours()).slice(-2)
+    const mm = ("0" + date.getMinutes()).slice(-2)
+    const ss = ("0" + date.getSeconds()).slice(-2)
+
+    return `${hh}:${mm}:${ss}`
+}
+
 export function isEmpty(val){
     return val === undefined || val === null || val === "";
 }
