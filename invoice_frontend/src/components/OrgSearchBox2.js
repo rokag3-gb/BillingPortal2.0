@@ -39,6 +39,7 @@ function OrgSearchBox({ value, setValue }) {
         setValue(e.selectedRowKeys[0])
         setOpen(false)
     }
+    const handleValueChanged = ({ value }) => setValue(value)
     const gridRender = () => (
         <DataGrid
             dataSource={ds}
@@ -59,7 +60,7 @@ function OrgSearchBox({ value, setValue }) {
     return (
         <div style={{paddingLeft: 5}}>
             <DropDownBox
-                width={100}
+                width={80}
                 placeholder="Org ID"
                 value={value}
                 //  deferRendering={false}
@@ -69,6 +70,9 @@ function OrgSearchBox({ value, setValue }) {
                 contentRender={gridRender}
                 opened={open}
                 onOptionChanged={handleDropBoxOptionChanged}
+                showDropDownButton={false}
+                showClearButton
+                onValueChanged={handleValueChanged}
             />
         </div>
     )
