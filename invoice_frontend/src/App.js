@@ -14,8 +14,9 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Route exact path="/app/" component={InvoiceList} />
-          <Route path="/app/management" component={InvoiceMgmt} />
+          <Route exact path="/app/management" component={InvoiceMgmt} />
           <Route path={`/app/report/:id`} component={Report} />
+          <Route path={`/app/management/report/:id`} component={Report} />
         </Switch>
       </BrowserRouter>
     </>
