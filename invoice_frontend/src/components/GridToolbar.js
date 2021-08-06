@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DateBox from 'devextreme-react/date-box';
 import Button from 'devextreme-react/button';
 
-import OrgSearchBox from './OrgSearchBox2';
+import OrgSearchBox from './OrgSearchBox';
 import * as utils from '../utils';
 
 function makeParam(startDate, endDate, orgId) {
