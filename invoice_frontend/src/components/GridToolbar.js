@@ -52,7 +52,7 @@ function GridToolbar({startDate, setStartDate, endDate, setEndDate, setMainParam
                 <Button text="3m" onClick={()=>handleDateClick(3)} />
                 <Button text="6m" onClick={()=>handleDateClick(6)} />
                 <Button text="12m" onClick={()=>handleDateClick(12)} />
-                {enableIdSearch && <OrgSearchBox onValueChanged={(e) => setOrgId(e.value)} value={orgId}/>}
+                {enableIdSearch && <OrgSearchBox setValue={setOrgId} value={orgId}/>}
             </div>
             <div style={{paddingLeft: 5}}>
                 <Button text="조회" onClick={handleSearch} />
