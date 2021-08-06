@@ -57,12 +57,15 @@ function OrgSearchBox({ value, setValue }) {
             <Column dataField="orgName" cpation="Name" />
         </DataGrid>
     )
+
+
     return (
         <div style={{paddingLeft: 5}}>
             <DropDownBox
                 width={80}
                 placeholder="Org ID"
                 value={value}
+                dropDownOptions={{ width: 250 }}
                 //  deferRendering={false}
                 // dataSource={ds}
                 // dataSource={dataSample}
