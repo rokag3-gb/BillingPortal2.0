@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DateBox from 'devextreme-react/date-box';
 import Button from 'devextreme-react/button';
 
-import OrgSearchBox from './OrgSearchBox';
+import OrgSearchBox from './OrgSearchBox2';
 import * as utils from '../utils';
 
 function makeParam(startDate, endDate, orgId) {
@@ -52,7 +52,7 @@ function GridToolbar({startDate, setStartDate, endDate, setEndDate, setMainParam
                 <Button text="3m" onClick={()=>handleDateClick(3)} />
                 <Button text="6m" onClick={()=>handleDateClick(6)} />
                 <Button text="12m" onClick={()=>handleDateClick(12)} />
-                {enableIdSearch && <OrgSearchBox onValueChanged={(e) => setOrgId(e.value)} value={orgId}/>}
+                {enableIdSearch && <OrgSearchBox setValue={setOrgId} value={orgId}/>}
             </div>
             <div style={{paddingLeft: 5}}>
                 <Button text="조회" onClick={handleSearch} />

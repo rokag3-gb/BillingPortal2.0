@@ -1,4 +1,13 @@
 .dx-command-select {  
     width: 40px!important;  
     min-width: 40px!important;  
-}  
+}
+
+/* .dx-popup-content {  
+    height: auto!important;  
+    width: 200px!important;
+    flex: 1  
+} */
+.dx-overlay-content {  
+    width: 295px!important;
+}
