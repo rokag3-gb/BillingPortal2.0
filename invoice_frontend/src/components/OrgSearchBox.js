@@ -9,17 +9,17 @@ import DataGrid, {
 import CustomStore from 'devextreme/data/custom_store';
 
 const dataSample = [
-    {'orgId': 31, 'orgKey': 123, 'orgName': "org company"},
-    {'orgId': 30, 'orgKey': 123, 'orgName': "org company"},
-    {'orgId': 29, 'orgKey': 123, 'orgName': "org company"},
-    {'orgId': 114, 'orgKey': 123, 'orgName': "org company"},
-    {'orgId': 115, 'orgKey': 123, 'orgName': "org company"},
-    {'orgId': 116, 'orgKey': 123, 'orgName': "org company"},
-    {'orgId': 117, 'orgKey': 123, 'orgName': "org company"},
-    {'orgId': 118, 'orgKey': 123, 'orgName': "org company"},
-    {'orgId': 99, 'orgKey': 123, 'orgName': "org company"},
-    {'orgId': 10, 'orgKey': 123, 'orgName': "org company"},
-    {'orgId': 11, 'orgKey': 123, 'orgName': "org company"},
+    {'orgId': 31, 'orgKey': "F100594", 'orgName': "Clooudmate Test"},
+    {'orgId': 1, 'orgKey': '', 'orgName': "CloudMate"},
+    {'orgId': 30, 'orgKey': '123', 'orgName': "org company"},
+    {'orgId': 29, 'orgKey': '123', 'orgName': "org company"},
+    {'orgId': 114, 'orgKey': '123', 'orgName': "org company"},
+    {'orgId': 115, 'orgKey': '123', 'orgName': "org company"},
+    {'orgId': 116, 'orgKey': '123', 'orgName': "org company"},
+    {'orgId': 117, 'orgKey': '123', 'orgName': "org company"},
+    {'orgId': 118, 'orgKey': '123', 'orgName': "org company"},
+    {'orgId': 99, 'orgKey': '123', 'orgName': "org company"},
+    {'orgId': 10, 'orgKey': '123', 'orgName': "org company"},
 ]
 const ds = new CustomStore({
     key: 'orgId',
@@ -28,7 +28,11 @@ const ds = new CustomStore({
         return dataSample
     }
 })
-function OrgSearchBox({ value, setValue }) {
+
+function OrgSearchBox({ orgId, setOrgId, data }) {
+    const gridType = data ? true : false
+    const value = gridType ? data.value : orgId
+    const setValue = gridType ? data.setValue : setOrgId
     const [open, setOpen] = useState(false)
     const handleDropBoxOptionChanged = (e) => {
         if (e.name === "opened") {
@@ -38,6 +42,10 @@ function OrgSearchBox({ value, setValue }) {
     const handleSelectionChanged = (e) => {
         setValue(e.selectedRowKeys[0])
         setOpen(false)
+        if (gridType) {
+            data.data.orgName = e.selectedRowsData[0].orgName
+            data.data.orgKey = e.selectedRowsData[0].orgKey
+        }
     }
     const handleValueChanged = ({ value }) => setValue(value)
     const gridRender = () => (
@@ -58,14 +66,13 @@ function OrgSearchBox({ value, setValue }) {
         </DataGrid>
     )
 
-
     return (
         <div style={{paddingLeft: 5}}>
             <DropDownBox
                 width={80}
                 placeholder="Org ID"
                 value={value}
-                dropDownOptions={{ width: 250 }}
+                dropDownOptions={{ width: 300 }}
                 //  deferRendering={false}
                 // dataSource={ds}
                 // dataSource={dataSample}
@@ -73,8 +80,8 @@ function OrgSearchBox({ value, setValue }) {
                 contentRender={gridRender}
                 opened={open}
                 onOptionChanged={handleDropBoxOptionChanged}
-                showDropDownButton={false}
-                showClearButton
+                showDropDownButton={gridType}
+                showClearButton={!gridType}
                 onValueChanged={handleValueChanged}
             />
         </div>
