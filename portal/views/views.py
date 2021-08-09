@@ -86,9 +86,9 @@ def search_orgs(request: HttpRequest) -> HttpResponse:
     else:
         result = request.user.organizations_organization
     if query is None or query == "":
-        result = result.filter(is_active=True).values("name", "slug", "id")[:8]
+        result = result.filter(is_active=True).values("name", "slug", "id", "orgkey__key")[:8]
     else:
-        result = result.filter(name__contains=query, is_active=True).values("name", "slug", "id")
+        result = result.filter(name__contains=query, is_active=True).values("name", "slug", "id", "orgkey__key")
     print(list(result))
     return JsonResponse({'result':list(result)})
 
