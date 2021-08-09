@@ -7,6 +7,7 @@ import DataGrid, {
     Column,
 } from 'devextreme-react/data-grid';
 import CustomStore from 'devextreme/data/custom_store';
+import axios from 'axios';
 
 const dataSample = [
     {'orgId': 31, 'orgKey': "F100594", 'orgName': "Clooudmate Test"},
@@ -22,10 +23,16 @@ const dataSample = [
     {'orgId': 10, 'orgKey': '123', 'orgName': "org company"},
 ]
 const ds = new CustomStore({
-    key: 'orgId',
+    key: 'id',
     load: () => {
         console.log("load")
-        return dataSample
+        return axios.get('/api/v1/search_orgs/')
+            .then((res) => {
+                return res.data.result
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 })
 
@@ -60,9 +67,9 @@ function OrgSearchBox({ orgId, setOrgId, data }) {
             <Selection mode="single" />
             <FilterRow visible />
             
-            <Column dataField="orgId" caption="ID" />
-            <Column dataField="orgKey" caption="Key" />
-            <Column dataField="orgName" cpation="Name" />
+            <Column dataField="id" />
+            <Column dataField="orgkey__key" caption="Key" />
+            <Column dataField="name" />
         </DataGrid>
     )
 
