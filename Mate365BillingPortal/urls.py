@@ -70,6 +70,7 @@ urlpatterns = [
     path('settings/org/', orgsettings, name='organization_list'),
 
     path('policy/', include('policy.urls')),
+    path('api/v1/search_orgs/', login_required(search_orgs), name='search_orgs'),
     path('api/v1/invoice/', InvoiceCreateListView.as_view()),
     path('api/v1/invoice/<int:pk>/', InvoiceRestView.as_view()),
     path('api/v1/invoice/detail/azure/', InvoiceDetailAzAzCreateListView.as_view()),
