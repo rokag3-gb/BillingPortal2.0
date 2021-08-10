@@ -248,10 +248,8 @@ def send_invoice_notify_mail(request, invoice_id):
             for orgMember in orgMembers:
                 message = get_template("email/invoice_notify_body.html").render({
                     "user": orgMember.user.get_full_name(),
-                    "invoiceId": invoice_id,
+                    "invoice": invoice,
                     "org": invoice.orgId.name,
-                    "invoiceMonth": invoice.invoiceMonth,
-                    "vendor": invoice.vendorName,
                     "invoiceUrl": f"/app/report/{invoice_id}/",
                     "BASE_URL": baseurl
                 })
