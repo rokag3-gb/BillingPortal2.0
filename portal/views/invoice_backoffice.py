@@ -230,7 +230,7 @@ def get_invoice_report(request, invoice_id):
     if request.user.is_staff:
         return Response(get_invoice_report_data(invoice_id))
     else:
-        orgOfInvoice = InvoiceTable.objects.get(invoiceid=invoice_id).orgId
+        orgOfInvoice = Invoice.objects.get(invoiceId=invoice_id).orgId
         org = OrganizationUser.objects.get(
             user=request.user, organization=orgOfInvoice)
         if org is not None:
