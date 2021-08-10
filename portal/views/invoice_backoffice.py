@@ -253,7 +253,7 @@ def send_invoice_notify_mail(request, invoice_id):
                     "invoiceUrl": f"/app/report/{invoice_id}/",
                     "BASE_URL": baseurl
                 })
-                mailMsg = mail.EmailMessage('MateBilling 인보이스가 발급되었습니다.', message, None, [orgMember.user.email], connection=conn)
+                mailMsg = mail.EmailMessage('mateBilling 인보이스가 발급되었습니다.', message, None, [orgMember.user.email], connection=conn)
                 mailMsg.content_subtype = "html"
                 mailMsg.send()
         return JsonResponse({"result": "이메일 발송이 완료 되었습니다."})
