@@ -1,4 +1,5 @@
 from django.http import Http404
+from django.http.response import JsonResponse
 from rest_framework import permissions, status, generics, mixins
 from rest_framework.views import APIView
 from django_filters import rest_framework as drf_filters
@@ -7,36 +8,45 @@ from custom.services import get_organization
 from rest_framework.response import Response
 from .rest_serializers import InvoiceDetailAzAzSerializer, InvoiceSerializer, InvoiceTableSerializer
 from drf_yasg.views import get_schema_view
-from drf_yasg import openapi    
+from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action, api_view
 from portal.raw_queries import get_invoice_report_data
+from django.core import mail
+from django.conf import settings
+from django.template.loader import get_template
+from collections import namedtuple
 
 
 swagger_view = get_schema_view(
-   openapi.Info(
-      title="MateBilling Invoice REST API",
-      default_version='v1',
-      description="MateBilling Invoice REST API"
-   ),
-   public=True,
-   permission_classes=[permissions.IsAuthenticated],
+    openapi.Info(
+        title="MateBilling Invoice REST API",
+        default_version='v1',
+        description="MateBilling Invoice REST API"
+    ),
+    public=True,
+    permission_classes=[permissions.IsAuthenticated],
 )
 
+
 class InvoiceFilter(drf_filters.FilterSet):
-    invoiceDateStart = drf_filters.DateFilter(field_name='invoiceDate', lookup_expr='gte')
-    invoiceDateEnd = drf_filters.DateFilter(field_name='invoiceDate', lookup_expr='lte')
+    invoiceDateStart = drf_filters.DateFilter(
+        field_name='invoiceDate', lookup_expr='gte')
+    invoiceDateEnd = drf_filters.DateFilter(
+        field_name='invoiceDate', lookup_expr='lte')
+
     class Meta:
         model = Invoice
         fields = [
-            # 'invoiceMonth', 
-            # 'invoiceDate', 
-            'orgId', 
-            # 'orgKey', 
-            # 'orgName', 
-            # 'vendorCode', 
+            # 'invoiceMonth',
+            # 'invoiceDate',
+            'orgId',
+            # 'orgKey',
+            # 'orgName',
+            # 'vendorCode',
             # 'vendorName'
-            ]
+        ]
+
 
 class InvoiceCreateListView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
     model = Invoice
@@ -69,8 +79,10 @@ class InvoiceCreateListView(mixins.ListModelMixin, mixins.CreateModelMixin, gene
         else:
             raise Http404
 
+
 class InvoiceRestView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+
     def get_object(self, request, pk):
         try:
             if(request.user.is_staff):
@@ -79,7 +91,7 @@ class InvoiceRestView(APIView):
                 return Invoice.objects.get(pk=pk, orgId=get_organization(request))
         except Invoice.DoesNotExist:
             raise Http404
-    
+
     def get_tblrow_object(self, request, pk):
         try:
             if(request.user.is_staff):
@@ -118,8 +130,11 @@ class InvoiceRestView(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             raise Http404
+
+
 class InvoiceDetailAzAzRestView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+
     def get_object(self, request, pk):
         try:
             if(request.user.is_staff):
@@ -137,7 +152,8 @@ class InvoiceDetailAzAzRestView(APIView):
     def put(self, request, pk: int, format=None):
         if request.user.is_staff:
             snippet = self.get_object(request, pk)
-            serializer = InvoiceDetailAzAzSerializer(snippet, data=request.data)
+            serializer = InvoiceDetailAzAzSerializer(
+                snippet, data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
@@ -152,6 +168,7 @@ class InvoiceDetailAzAzRestView(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             raise Http404
+
 
 class InvoiceDetailAzAzCreateListView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
     model = VwInvoiceDetailAzureAzure
@@ -168,12 +185,14 @@ class InvoiceDetailAzAzCreateListView(mixins.ListModelMixin, mixins.CreateModelM
         # 'orgkey',
         # 'vendorcode',
         # 'vendorname'
-        ]
+    ]
     permission_classes = [permissions.IsAuthenticated]
+
     def get_queryset(self):
         result = VwInvoiceDetailAzureAzure.objects.all().prefetch_related('orgid')
         if not self.request.user.is_staff:
-            result = result.filter(orgid=get_organization(self.request)).prefetch_related('orgid')
+            result = result.filter(orgid=get_organization(
+                self.request)).prefetch_related('orgid')
         return result
 
     @swagger_auto_schema(method='post', request_body=InvoiceDetailAzAzSerializer, responses={200: InvoiceDetailAzAzSerializer()})
@@ -188,19 +207,22 @@ class InvoiceDetailAzAzCreateListView(mixins.ListModelMixin, mixins.CreateModelM
         else:
             raise Http404
 
+
 class InvoiceDetailAzureRestListView(generics.ListAPIView):
     model = VwInvoiceDetailAzureAzure
     serializer_class = InvoiceDetailAzAzSerializer
     permission_classes = [permissions.IsAuthenticated]
+
     def get_queryset(self):
         invoice_id = self.kwargs['invoice_id']
         result = VwInvoiceDetailAzureAzure.objects.all().prefetch_related('orgId')
         if not self.request.user.is_staff:
-            result = result.filter(orgId=get_organization(self.request)).prefetch_related('orgId')
+            result = result.filter(orgId=get_organization(
+                self.request)).prefetch_related('orgId')
         if invoice_id:
             result = result.filter(invoiceId=invoice_id)
         return result
-        
+
 
 @swagger_auto_schema(method='get')
 @api_view(["GET"])
@@ -208,7 +230,31 @@ def get_invoice_report(request, invoice_id):
     if request.user.is_staff:
         return Response(get_invoice_report_data(invoice_id))
     else:
-        orgOfInvoice = InvoiceTable.objects.get(invoiceid=invoice_id).orgId
-        org = OrganizationUser.objects.get(user=request.user, organization=orgOfInvoice)
+        orgOfInvoice = Invoice.objects.get(invoiceId=invoice_id).orgId
+        org = OrganizationUser.objects.get(
+            user=request.user, organization=orgOfInvoice)
         if org is not None:
             return Response(get_invoice_report_data(invoice_id))
+
+@swagger_auto_schema(method='get')
+@api_view(["GET"])
+def send_invoice_notify_mail(request, invoice_id):
+    if request.user.is_staff:
+        baseurl = getattr(settings, "BASE_URL", "")
+        invoice = Invoice.objects.get(invoiceId=invoice_id)
+        orgMembers = OrganizationUser.objects.filter(
+            organization=invoice.orgId)
+        with mail.get_connection() as conn:
+            for orgMember in orgMembers:
+                message = get_template("email/invoice_notify_body.html").render({
+                    "user": orgMember.user.get_full_name(),
+                    "invoice": invoice,
+                    "org": invoice.orgId.name,
+                    "invoiceUrl": f"/app/report/{invoice_id}/",
+                    "BASE_URL": baseurl
+                })
+                mailMsg = mail.EmailMessage('mateBilling 인보이스가 발급되었습니다.', message, None, [orgMember.user.email], connection=conn)
+                mailMsg.content_subtype = "html"
+                mailMsg.send()
+        return JsonResponse({"result": "이메일 발송이 완료 되었습니다."})
+    return JsonResponse({"result": "관리자만 인보이스 안내 이메일 발송이 가능합니다."})

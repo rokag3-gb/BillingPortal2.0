@@ -107,6 +107,14 @@ class OrgUser(OrganizationUser):
     class Meta:
         proxy = True
 
+class OrgKey(models.Model):
+    org = models.OneToOneField(Org, db_column="OrgId", primary_key=True, on_delete=models.CASCADE)
+    key = models.CharField(db_column="OrgKey", max_length=16, blank=True)
+    regDate = models.DateTimeField(db_column="RegDate", null=True, default=None, blank=True)
+    class Meta:
+        managed = False
+        db_table = 'OrgKey'
+
 class OrganizationVendor(models.Model):
     class VendorCode(models.TextChoices):
         ALI = "VEN-ALI", "Alibaba Cloud"

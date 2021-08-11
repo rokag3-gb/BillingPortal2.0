@@ -80,7 +80,7 @@ function InvoiceListMain({ param, setInvoiceId }) {
                 location: 'after',
                 widget: 'dxButton',
                 options: {
-                    text: '결제하기',
+                    text: '결제',
                     onClick: handlePaymentClick
                 }
             },

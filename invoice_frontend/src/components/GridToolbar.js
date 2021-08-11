@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import DateBox from 'devextreme-react/date-box';
 import Button from 'devextreme-react/button';
-import TextBox from 'devextreme-react/text-box';
-import {
-    Validator,
-    PatternRule,
 
-} from 'devextreme-react/validator';
+import OrgSearchBox from './OrgSearchBox';
 import * as utils from '../utils';
 
 function makeParam(startDate, endDate, orgId) {
@@ -15,17 +11,6 @@ function makeParam(startDate, endDate, orgId) {
         ret += '&orgId=' + orgId
     }
     return ret
-}
-const OrgBox = ({ value, onValueChanged }) => {
-    return (
-        <div style={{paddingLeft: 5}}>
-            <TextBox value={value} onValueChanged={onValueChanged} width={80} placeholder="Org ID">
-                <Validator>
-                    <PatternRule message="숫자만 입력해주세요." pattern={/\d/} />
-                </Validator>
-            </TextBox>
-        </div>
-    )
 }
 
 function GridToolbar({startDate, setStartDate, endDate, setEndDate, setMainParam, girdToolbarSize, enableIdSearch=false}) {
@@ -67,7 +52,7 @@ function GridToolbar({startDate, setStartDate, endDate, setEndDate, setMainParam
                 <Button text="3m" onClick={()=>handleDateClick(3)} />
                 <Button text="6m" onClick={()=>handleDateClick(6)} />
                 <Button text="12m" onClick={()=>handleDateClick(12)} />
-                {enableIdSearch && <OrgBox onValueChanged={(e) => setOrgId(e.value)} value={orgId}/>}
+                {enableIdSearch && <OrgSearchBox setOrgId={setOrgId} orgId={orgId}/>}
             </div>
             <div style={{paddingLeft: 5}}>
                 <Button text="조회" onClick={handleSearch} />

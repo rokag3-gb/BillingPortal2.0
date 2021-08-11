@@ -16,6 +16,7 @@ import DataGrid, {
 import axios from 'axios';
 import CustomStore from 'devextreme/data/custom_store';
 import DataSource from 'devextreme/data/data_source';
+import OrgSearchBox from './OrgSearchBox';
 
 const url = "/api/v1/invoice/"
 const headers = {
@@ -129,7 +130,7 @@ function InvoiceMgmtMain({ param, setInvoiceId }) {
                 location: 'after',
                 widget: 'dxButton',
                 options: {
-                    text: '결제하기',
+                    text: '결제',
                     onClick: handlePaymentClick
                 }
             },
@@ -210,11 +211,11 @@ function InvoiceMgmtMain({ param, setInvoiceId }) {
                     <RequiredRule />
                 </Column>
                 <Column dataField="invoiceId" />
-                <Column dataField="orgId">
+                <Column dataField="orgId" editCellComponent={OrgSearchBox}>
                     <RequiredRule />
                 </Column>
-                <Column dataField="orgKey"visible={false} />
-                <Column dataField="orgName" />
+                <Column dataField="orgKey"visible={false} allowEditing={false} />
+                <Column dataField="orgName" allowEditing={false} />
                 <Column dataField="vendorCode"visible={false} />
                 <Column dataField="vendorName"visible={false} />
                 <Column dataField="vendorInvoiceCount"visible={false} />

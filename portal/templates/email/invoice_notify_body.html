@@ -1,0 +1,48 @@
+<style type="text/css">
+    table,
+    th,
+    td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 8px;
+    }
+</style>
+
+{{user}}님 안녕하세요, 클라우드메이트 mateBilling팀 입니다.<br />
+<br />
+{{org}} 조직에 대한 {{invoice.invoiceMonth}}월 새 인보이스가 발급되었습니다.<br />
+<a href="{{BASE_URL}}{{invoiceUrl}}">여기를 클릭하셔서 새로 발급된 인보이스를 확인하실 수 있습니다.</a><br />
+<br />
+<table>
+    <tr>
+        <td>청구 대상 조직</td>
+        <td>{{org}}</td>
+    </tr>
+    <tr>
+        <td>인보이스 ID</td>
+        <td>{{invoice.invoiceId}}</td>
+    </tr>
+    <tr>
+        <td>청구 대상 기간</td>
+        <td>{{invoice.chargeStartDate}} ~ {{invoice.chargeEndDate}}</td>
+    </tr>
+    <tr>
+        <td>청구 날짜</td>
+        <td>{{invoice.invoiceDate}}</td>
+    </tr>
+    <tr>
+        <td>청구 금액</td>
+        <td>{{invoice.our_amount}}원</td>
+    </tr>
+</table>
+
+<br />
+발급된 인보이스의 청구 금액을 지불하려면, <a href='{{BASE_URL}}{% url "invoice_list" %}'>여기를 클릭하여 mateBilling의 Invoice List화면으로 이동하신 후,</a><br />
+결제할 인보이스를 선택하셔서 카드로 결제해 주시기 바랍니다.<br />
+<br />
+<br />
+감사합니다.<br />
+mateBilling팀 드림.<br />
+<br />
+----------<br />
+<a href="https://cloudmt.co.kr">클라우드메이트</a> | <a href="{{BASE_URL}}">mateBilling</a> | <a href="{{BASE_URL}}/policy/info_gathering/">개인정보처리방침</a>

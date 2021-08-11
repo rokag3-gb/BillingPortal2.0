@@ -126,6 +126,8 @@ USE_L10N = True
 USE_TZ = True
 
 AUTH_USER_MODEL = 'custom.User'
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
