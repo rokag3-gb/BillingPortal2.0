@@ -15,8 +15,7 @@ from portal.raw_queries import get_invoice_report_data
 from django.core import mail
 from django.conf import settings
 from django.template.loader import get_template
-from collections import namedtuple
-
+from django_q.tasks import async_task
 
 swagger_view = get_schema_view(
     openapi.Info(
@@ -236,6 +235,26 @@ def get_invoice_report(request, invoice_id):
         if org is not None:
             return Response(get_invoice_report_data(invoice_id))
 
+def send_invoice_mail_task(invoice_id: str):
+    baseurl = getattr(settings, "BASE_URL", "")
+    try:
+        invoice = Invoice.objects.get(invoiceId=invoice_id)
+    except Invoice.DoesNotExist:
+        return
+    orgMembers = OrganizationUser.objects.filter(organization=invoice.orgId)
+    with mail.get_connection() as conn:
+        for orgMember in orgMembers:
+            message = get_template("email/invoice_notify_body.html").render({
+                "user": orgMember.user.get_full_name(),
+                "invoice": invoice,
+                "org": invoice.orgId.name,
+                "invoiceUrl": f"/app/report/{invoice.seq}/",
+                "BASE_URL": baseurl
+            })
+            mailMsg = mail.EmailMessage('mateBilling 인보이스가 발급되었습니다.', message, None, [orgMember.user.email], connection=conn)
+            mailMsg.content_subtype = "html"
+            mailMsg.send()
+
 @swagger_auto_schema(method='get', manual_parameters=[
     openapi.Parameter('invoice', openapi.IN_QUERY, description="Invoice ids", type=openapi.TYPE_STRING, multi=True)
 ])
@@ -243,25 +262,15 @@ def get_invoice_report(request, invoice_id):
 def send_invoice_notify_mail(request):
     if request.user.is_staff:
         invoice_ids = request.GET.getlist("invoice")
-        baseurl = getattr(settings, "BASE_URL", "")
+        print(invoice_ids)
         for invoice_id in invoice_ids:
-            try:
-                invoice = Invoice.objects.get(invoiceId=invoice_id)
-            except Invoice.DoesNotExist:
-                continue
-            orgMembers = OrganizationUser.objects.filter(
-                organization=invoice.orgId)
-            with mail.get_connection() as conn:
-                for orgMember in orgMembers:
-                    message = get_template("email/invoice_notify_body.html").render({
-                        "user": orgMember.user.get_full_name(),
-                        "invoice": invoice,
-                        "org": invoice.orgId.name,
-                        "invoiceUrl": f"/app/report/{invoice_id}/",
-                        "BASE_URL": baseurl
-                    })
-                    mailMsg = mail.EmailMessage('mateBilling 인보이스가 발급되었습니다.', message, None, [orgMember.user.email], connection=conn)
-                    mailMsg.content_subtype = "html"
-                    mailMsg.send()
+            # try:
+            #     invoice = Invoice.objects.get(invoiceId=invoice_id)
+            # except Invoice.DoesNotExist:
+            #     continue
+            print(invoice_id)
+            async_task('portal.views.invoice_backoffice.send_invoice_mail_task', invoice_id)
+            
         return JsonResponse({"result": "이메일 발송이 완료 되었습니다."})
     return JsonResponse({"result": "관리자만 인보이스 안내 이메일 발송이 가능합니다."})
+
