@@ -26,4 +26,4 @@ COPY --from=node /app/build /app/invoice_backoffice/build
 RUN rm -rf invoice_frontend && pip install -r requirements.txt && python manage.py collectstatic --noinput
 
 EXPOSE 8000
-CMD ["bash", "-c", "run.sh"]
+CMD ["supervisord", "-c", "supervisord.conf", "-n"]
