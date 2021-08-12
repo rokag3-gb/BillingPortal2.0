@@ -75,7 +75,7 @@ urlpatterns = [
     path('api/v1/invoice/<int:pk>/', InvoiceRestView.as_view()),
     path('api/v1/invoice/detail/azure/', InvoiceDetailAzAzCreateListView.as_view()),
     path('api/v1/invoice/detail/azure/<str:invoice_id>', InvoiceDetailAzureRestListView.as_view()),
-    path('api/v1/invoice/<int:invoice_id>/notify', login_required(send_invoice_notify_mail), name='send_invoice_notify_mail'),
+    path('api/v1/invoice/notify', login_required(send_invoice_notify_mail), name='send_invoice_notify_mail'),
     path('api/v1/invoice_report/<str:invoice_id>/', get_invoice_report),
     path('api-auth/', include('rest_framework.urls')),
     path('swagger/schema-json.json', swagger_view.without_ui(cache_timeout=0), name='schema-json'),
