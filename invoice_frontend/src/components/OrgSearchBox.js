@@ -9,19 +9,6 @@ import DataGrid, {
 import CustomStore from 'devextreme/data/custom_store';
 import axios from 'axios';
 
-const dataSample = [
-    {'orgId': 31, 'orgKey': "F100594", 'orgName': "Clooudmate Test"},
-    {'orgId': 1, 'orgKey': '', 'orgName': "CloudMate"},
-    {'orgId': 30, 'orgKey': '123', 'orgName': "org company"},
-    {'orgId': 29, 'orgKey': '123', 'orgName': "org company"},
-    {'orgId': 114, 'orgKey': '123', 'orgName': "org company"},
-    {'orgId': 115, 'orgKey': '123', 'orgName': "org company"},
-    {'orgId': 116, 'orgKey': '123', 'orgName': "org company"},
-    {'orgId': 117, 'orgKey': '123', 'orgName': "org company"},
-    {'orgId': 118, 'orgKey': '123', 'orgName': "org company"},
-    {'orgId': 99, 'orgKey': '123', 'orgName': "org company"},
-    {'orgId': 10, 'orgKey': '123', 'orgName': "org company"},
-]
 const ds = new CustomStore({
     key: 'id',
     load: () => {

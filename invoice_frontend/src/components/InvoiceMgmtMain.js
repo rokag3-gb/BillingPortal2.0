@@ -17,6 +17,7 @@ import axios from 'axios';
 import CustomStore from 'devextreme/data/custom_store';
 import DataSource from 'devextreme/data/data_source';
 import OrgSearchBox from './OrgSearchBox';
+import notify from 'devextreme/ui/notify'
 
 const url = "/api/v1/invoice/"
 const headers = {
@@ -103,13 +104,59 @@ function InvoiceMgmtMain({ param, setInvoiceId }) {
         e.event.preventDefault()
         setInvoiceId(e.row.data.invoiceId)
     }
-    const handlePaymentClick = () => {
+    const getSelectedInvoiceIds = () => {
         if (refDataGrid === null) { return }
         const dg = refDataGrid.current.instance;
-        const selectedInvoiceIds = getInvoiceIds(dg.getSelectedRowsData())
+        
+        return getInvoiceIds(dg.getSelectedRowsData())
+    }
+    const handlePaymentClick = () => {
+        const selectedInvoiceIds = getSelectedInvoiceIds()
         if (selectedInvoiceIds.length) {
             window.parent.proceed_payment(selectedInvoiceIds)
         }
+    }
+    const handleNotifyClick = () => {
+        const selectedInvoiceIds = getSelectedInvoiceIds()
+        if (selectedInvoiceIds.length === 0) {
+            const noti_options = {
+                message: "선택된 Invoice가 없습니다.",
+                position: {
+                    my: 'center top',
+                    at: 'center top'
+                }   
+            }
+            notify(noti_options,'warning', 2000)
+            return
+        }
+        let param = "notify?"
+        selectedInvoiceIds.forEach((id) => {
+            param += `invoice=${id}&`
+        })
+        param = param.slice(0, -1)
+        axios.get(url + param)
+            .then((res) => {
+                console.log(res)
+                const noti_options = {
+                    message: res.data.result,
+                    position: {
+                        my: 'center top',
+                        at: 'center top'
+                    }   
+                }
+                notify(noti_options,'success', 2000)
+            })
+            .catch((err) => {
+                console.log(err.response)
+                const noti_options = {
+                    message: "메일 발송에 실패하였습니다.",
+                    position: {
+                        my: 'center top',
+                        at: 'center top'
+                    }   
+                }
+                notify(noti_options,'error', 2000)
+            })
     }
     const handleDeleteClick = () => {
         if (refDataGrid === null) { return }
@@ -130,11 +177,18 @@ function InvoiceMgmtMain({ param, setInvoiceId }) {
                 location: 'after',
                 widget: 'dxButton',
                 options: {
+                    text: '메일',
+                    onClick: handleNotifyClick
+                }
+            },
+            {
+                location: 'after',
+                widget: 'dxButton',
+                options: {
                     text: '결제',
                     onClick: handlePaymentClick
                 }
             },
-
         )
         e.toolbarOptions.items.push(
             {
