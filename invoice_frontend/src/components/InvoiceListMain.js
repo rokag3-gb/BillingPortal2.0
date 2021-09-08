@@ -56,7 +56,7 @@ function InvoiceListMain({ param, setInvoiceId }) {
     const refDataGrid = useRef(null);
     const handlePDFClick = (e) => {
         e.event.preventDefault()
-        window.open(`report/${e.row.data.invoiceId}`, "_blank")
+        window.open(`../report/${e.row.data.invoiceId}`, "_blank")
     }
     const handleDetailClick = (e) => {
         e.event.preventDefault()
