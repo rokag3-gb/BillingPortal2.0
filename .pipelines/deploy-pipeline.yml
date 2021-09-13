@@ -53,8 +53,9 @@ stages:
       inputs:
         azureSubscription: $(azSubscription)
         appName: $(azWebAppName)
-        containers: $(containerRegistry)/$(imageRepository):$(tag)
+        imageName: $(containerRegistry)/$(imageRepository):$(tag)
         slotName: staging
+        deployToSlotOrASE: true
     
     - task: AzureWebAppContainer@1 # Add this at the end of your file
       displayName: 'Deploy to Web App $(environmentName)'
@@ -62,5 +63,7 @@ stages:
       inputs:
         azureSubscription: $(azSubscription)
         appName: $(azWebAppName)
-        containers: $(containerRegistry)/$(imageRepository):$(tag)
+        imageName: $(containerRegistry)/$(imageRepository):$(tag)
+        slotName: production
+        deployToSlotOrASE: true
 
