@@ -97,6 +97,11 @@
             </form>
           </div>
           <span class="d-flex align-items-center mb-2 fs-1">사전에 등록한 카드로 결제</span>
+            {% if not token_payments %}
+            <div class="col-sm-6 col-lg-4 mb-4">
+            <b>등록된 결제수단이 없습니다.</b>
+            </div>
+            {% endif %}
             {% for payment in token_payments %}
             <div class="col-sm-6 col-lg-4 mb-4">
               <div class="card text-white bg-primary">
