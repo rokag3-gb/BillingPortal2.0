@@ -48,7 +48,8 @@
         </div>
         <div class="card-body">
           <div class="custom-control custom-radio">
-            <input class="custom-control-input" type="radio" name="payment-method" id="pay_onetime" value="pay_onetime"/>
+            <input class="custom-control-input" type="radio" name="payment-method" id="pay_onetime" value="pay_onetime"
+              {% if not token_payments %} checked="true" {% endif %}/>
             <label class="custom-control-label" for="pay_onetime">
               <span class="d-flex align-items-center mb-2 fs-1">신용카드/직불카드 정보 입력하여 결제</span>
             </label>
@@ -109,7 +110,8 @@
                 
                   <div class="card-title">
                     <div class="custom-control custom-radio">
-                      <input class="custom-control-input" type="radio" name="payment-method" id="{{payment.seq}}" value="{{payment.seq}}"/>
+                      <input class="custom-control-input" type="radio" name="payment-method" id="{{payment.seq}}" value="{{payment.seq}}"
+                        {% if forloop.counter == 1 %} checked="true" {% endif %}/>
                       <label class="custom-control-label" for="{{payment.seq}}">
                         <span class="d-flex align-items-center mb-2 fs-1">{{payment.alias}}</span>
                       </label>
