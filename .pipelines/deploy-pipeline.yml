@@ -20,7 +20,7 @@ variables:
   vmImageName: 'ubuntu-20.04'
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
-  azSubscription: 'Azure_Deploy_to_MPN-Production-스폰서쉽-Gold'
+  azSubscription: 'MIcrosoft_Azure_Sponsorship_Gold_2021Q3'
   azWebAppName: 'matebilling'
   # Environment name
   ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
