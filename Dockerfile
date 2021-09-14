@@ -1,6 +1,3 @@
-
-
-
 # Node.js build environment (react frontend app)
 FROM node:16-slim AS node
 WORKDIR /app
@@ -8,7 +5,7 @@ COPY invoice_frontend /app
 RUN npm install && npm run build
 
 # Runtime image
-FROM python:3.9-slim AS runtime
+FROM python:3.9-slim-buster AS runtime
 ENV PYTHONUNBUFFERED=1
 
 RUN apt-get update && apt-get install -y g++ build-essential unixodbc-dev ca-certificates curl libgssapi-krb5-2 && \

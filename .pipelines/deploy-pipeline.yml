@@ -20,15 +20,17 @@ variables:
   vmImageName: 'ubuntu-20.04'
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
-  azSubscription: 'Azure_Deploy_to_MPN-Production-스폰서쉽-Gold'
+  azSubscription: 'Microsoft_Azure_Sponsorship_Gold_2021Q3'
   azWebAppName: 'matebilling'
   # Environment name
   ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
     environmentName: 'BillingPortal-Production'
     imageRepository: 'prod'
+    webAppSlot: 'production'
   ${{ if eq(variables['Build.SourceBranchName'], 'develop') }}:
     environmentName: 'BillingPortal-Staging'
     imageRepository: 'dev'
+    webAppSlot: 'staging'
 
 stages:
 - stage: BuildAndDeploy
@@ -49,18 +51,10 @@ stages:
 
     - task: AzureWebAppContainer@1 # Add this at the end of your file
       displayName: 'Deploy to Web App $(environmentName)'
-      condition: eq(variables['Build.SourceBranchName'], 'develop')
       inputs:
         azureSubscription: $(azSubscription)
         appName: $(azWebAppName)
-        containers: $(containerRegistry)/$(imageRepository):$(tag)
-        slotName: staging
-    
-    - task: AzureWebAppContainer@1 # Add this at the end of your file
-      displayName: 'Deploy to Web App $(environmentName)'
-      condition: eq(variables['Build.SourceBranchName'], 'main')
-      inputs:
-        azureSubscription: $(azSubscription)
-        appName: $(azWebAppName)
-        containers: $(containerRegistry)/$(imageRepository):$(tag)
+        imageName: $(containerRegistry)/$(imageRepository):$(tag)
+        slotName: $(webAppSlot)
+        deployToSlotOrASE: true
 
