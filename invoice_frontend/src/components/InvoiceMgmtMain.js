@@ -279,10 +279,10 @@ function InvoiceMgmtMain({ param, setInvoiceId }) {
                 <Column dataField="chargeEndDate" dataType="date" format="yyyy-MM-dd">
                     <RequiredRule />
                 </Column>
-                <Column dataField="partner_amount_pretax" caption="partner_amount" visible={true}>
+                <Column dataField="partner_amount_pretax" caption="partner_amount" visible={false}>
                     <Format type="fixedPoint" precision={2} />
                 </Column>
-                <Column dataField="rrp_amount_pretax" caption="rrp_amount">
+                <Column dataField="rrp_amount_pretax" caption="rrp_amount" visible={false}>
                     <Format type="fixedPoint" precision={2} />
                 </Column>
                 <Column dataField="our_amount_pretax" caption="amount">
