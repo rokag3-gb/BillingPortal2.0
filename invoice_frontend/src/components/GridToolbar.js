@@ -5,8 +5,8 @@ import Button from 'devextreme-react/button';
 import OrgSearchBox from './OrgSearchBox';
 import * as utils from '../utils';
 
-function makeParam(startDate, endDate, orgId) {
-    let ret = `?invoiceDateStart=${startDate}&invoiceDateEnd=${endDate}&limit=10000`
+function makeParam(startDate, endDate, orgId, limit) {
+    let ret = `?invoiceDateStart=${startDate}&invoiceDateEnd=${endDate}&limit=${limit}`
     if (orgId) {
         ret += '&orgId=' + orgId
     }
@@ -17,13 +17,15 @@ function GridToolbar({startDate, setStartDate, endDate, setEndDate, setMainParam
     // const [windowSize, setWindowSize] = useState(window.innerWidth)
     // const handleResize = () => setWindowSize(window.innerWidth);
     const [orgId, setOrgId] = useState(null);
+    const [limit, setLimit] = useState(10000)
     const handleDateClick = (mm) => {
         const [start, end] = utils.getDateSet(mm)
         setStartDate(start)
         setEndDate(end)   
     }
     const handleSearch = () => {
-        setMainParam(makeParam(utils.getDateFormat(startDate), utils.getDateFormat(endDate), orgId))
+        setLimit(limit +1)
+        setMainParam(makeParam(utils.getDateFormat(startDate), utils.getDateFormat(endDate), orgId, limit))
     }
     useEffect(()=>{
         handleSearch()
