@@ -168,7 +168,7 @@ def charge_token_payment(request: HttpRequest) -> HttpResponse:
 
                 cancelresult = requests.put(pg_config["PG_API_URL"]+"/pay/withtoken", json={
                     "storeId": pg_config["STORE_ID"],
-                    "cancelType": 40,
+                    "cancelType": "CANCEL_CARD_PAYMENT_IMMEDIATELY",
                     "txNumber": pgresult['txNumber'],
                     "orderNumber": str(order_item.orderNo),
                     "requesterID": request.user.username,
