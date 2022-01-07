@@ -12,25 +12,27 @@ trigger:
 - develop
 
 variables:
-  containerRegistryServiceConnection: 'MateBilling ACR'
-  containerRegistry: 'matebillingapp.azurecr.io'
+  containerRegistryServiceConnection: 'MateBilling_Services_ACR'
+  containerRegistry: 'matebillingsvcimgs.azurecr.io'
   dockerfilePath: '**/Dockerfile'
-  tag: '$(Build.BuildId)'
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
   azSubscription: 'Cloudmate_Internal_MateBilling'
   azWebAppName: 'matebillingapp'
+  imageRepository: 'portal'
   # Environment name
   ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
     environmentName: 'BillingPortal-Production'
-    imageRepository: 'prod'
+    imageTagPrefix: 'prod'
     webAppSlot: 'production'
+    tag: '$(imageTagPrefix)-$(Build.BuildId)'
   ${{ if eq(variables['Build.SourceBranchName'], 'develop') }}:
     environmentName: 'BillingPortal-Staging'
-    imageRepository: 'dev'
+    imageTagPrefix: 'dev'
     webAppSlot: 'staging'
+    tag: '$(imageTagPrefix)-$(Build.BuildId)'
 
 stages:
 - stage: BuildAndDeploy
