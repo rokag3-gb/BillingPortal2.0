@@ -125,7 +125,7 @@ def charge_oneimte_payment(request: HttpRequest) -> HttpResponse:
 
                 cancelresult = requests.put(pg_config["PG_API_URL"]+"/pay/onetime", json={
                    "storeId": pg_config["STORE_ID"],
-                    "cancelType": 40,
+                    "cancelType": "CANCEL_CARD_PAYMENT_IMMEDIATELY",
                     "txNumber": pgresult['txNumber'],
                     "orderNumber": str(order_item.orderNo),
                     "cancelAmount": pgresult['totalPaymentAmount'],
