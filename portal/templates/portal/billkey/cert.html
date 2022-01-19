@@ -80,7 +80,7 @@
         <div class="card-body p-4 p-sm-5">
             <h2>신규 결제수단 등록</h2>
             <p><b>대상 조직</b> {{ request.user.org_last_selected }}</p>
-            <p>결제 수단 등록 화면이 곧 자동으로 열립니다. 열리지 않으면 버튼을 눌러 열러주세요.</p>
+            <p>결제 수단 등록 화면이 곧 팝업으로 열립니다. 열리지 않으면 버튼을 눌러 열거나 팝업이 차단 되어 있는지 확인 해 주세요.</p>
             <p>등록 절차가 완료되면 자동으로 결제수단 관리 화면으로 이동됩니다.</p>
             <p>결제 수단 등록 대상 조직을 변경하려면, 먼저 등록 절차를 취소하고 조직을 변경하세요.</p>
             <a class="btn btn-block mt-3" href="../" type="submit" name="submit">등록 취소(이전 화면으로)</a>
@@ -189,7 +189,7 @@
 
 
         /* 가맹점에서 원하는 인증창 호출 방법을 선택 */
-            easypay_webpay(frm_pay,"../issue_param/","hiddenifr","0","0","iframe",30);
+            easypay_webpay(frm_pay,"../issue_param/","hiddenifr","0","0","popup",30);
 
             if( frm_pay.EP_charset.value == "UTF-8" )
             {
