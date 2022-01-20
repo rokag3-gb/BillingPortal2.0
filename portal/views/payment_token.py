@@ -46,8 +46,13 @@ def cert_form(request):
 
 @csrf_exempt
 @xframe_options_sameorigin
-def issue_param(request):  # 인증 요청 iframe/submit 페이지 호출
-    return render(request, 'portal/billkey/issue_param.html')
+def issue_param_iframe(request):  # 인증 요청 iframe/submit 페이지 호출
+    return render(request, 'portal/billkey/issue_param_iframe.html')
+
+@csrf_exempt
+@xframe_options_sameorigin
+def issue_param_popup(request):  # 인증 요청 popup/submit 페이지 호출
+    return render(request, 'portal/billkey/issue_param_popup.html')
 
 @csrf_exempt
 @xframe_options_sameorigin
