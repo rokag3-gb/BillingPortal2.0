@@ -1,7 +1,8 @@
 안녕하세요, mateBilling 팀 입니다.
-{{ sender.get_full_name|safe }} 님이 {{ organization|safe }} 조직에 가입하도록 초대하셨습니다.
+{{ sender.get_full_name|safe }}님이 {{ organization|safe }} 조직에 가입하도록 초대하셨습니다.
 
-<a href='{{baseurl}}{% url "invitations_register" user.pk token %}'>여기를 클릭하셔서 초대를 수락하고 회원가입을 완료하세요.</a>
+아래 URL을 클릭하셔서 초대를 수락하고 회원가입을 완료하세요.
+{{baseurl}}{% url "invitations_register" user.pk token %}
 
 본 초대 메일을 수신하신 이유를 잘 모르는 경우, 가입하지 마시고 무시 하시거나 mateBilling 팀에 연락 주시기 바랍니다.
 
@@ -9,4 +10,6 @@
 mateBilling 팀 드림.
 
 ----------
-<a href="https://cloudmt.co.kr">클라우드메이트</a> | <a href="{{baseurl}}">mateBilling</a> | <a href="{{baseurl}}/policy/info_gathering/">개인정보처리방침</a>
+클라우드메이트 https://cloudmt.co.kr
+mateBilling {{baseurl}}
+개인정보처리방침 {{baseurl}}/policy/info_gathering/
