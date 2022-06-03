@@ -37,7 +37,7 @@ def orgsettings(request: HttpRequest) -> HttpResponse:
         if user_email is None:
             context["error"] = "새로 초대할 사람의 이메일을 입력하세요."
         else:
-            invitation_backend().invite_by_email(user_email, sender=request.user, request=request)
+            invitation_backend().invite_by_email(user_email, sender=request.user, request=request, content_subtype="html")
             context["result"] = "{}로 회원 가입 및 조직 초대 메일이 발송되었습니다.".format(user_email)
     context["members"] = OrgUser.objects.filter(organization=get_organization(request))
     return render(request, 'portal/settings/org.html', context)
