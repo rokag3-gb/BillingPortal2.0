@@ -23,4 +23,4 @@ COPY --from=node /app/build /app/invoice_backoffice/build
 RUN rm -rf invoice_frontend && pip install -r requirements.txt && python manage.py collectstatic --noinput
 
 EXPOSE 8000
-CMD ["supervisord", "-c", "supervisord.conf", "-n"]
+CMD ["daphne", "-b", "0.0.0.0", "Mate365BillingPortal.asgi:application"]
